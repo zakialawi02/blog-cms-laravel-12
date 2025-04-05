@@ -1,0 +1,217 @@
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../../node_modules/flowbite";
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+@plugin '@tailwindcss/aspect-ratio';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@utility container {
+    margin-inline: auto;
+    padding-inline: 2rem;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        Figtree, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    /* Back Panel Color Scheme */
+    --color-back-base-100: oklch(98% 0.001 106.423);
+    --color-back-base-200: oklch(97% 0.001 106.424);
+    --color-back-base-300: oklch(92% 0.003 48.717);
+    --color-back-primary: oklch(50% 0.134 242.749);
+    --color-back-secondary: oklch(60% 0.25 292.717);
+    --color-back-accent: oklch(60% 0.118 184.704);
+    --color-back-neutral: oklch(21% 0.006 56.043);
+    --color-back-info: oklch(60% 0.126 221.723);
+    --color-back-success: oklch(59% 0.145 163.225);
+    --color-back-warning: oklch(68% 0.162 75.834);
+    --color-back-error: oklch(57% 0.245 27.325);
+    --color-back-light: oklch(97% 0.013 236.62);
+    --color-back-dark: oklch(21% 0.006 56.043);
+    --color-back-muted: oklch(43% 0 0);
+
+    --color-back-dark-base-100: oklch(21% 0.006 285.885);
+    --color-back-dark-base-200: oklch(27% 0.006 286.033);
+    --color-back-dark-base-300: oklch(37% 0.013 285.805);
+    --color-back-dark-primary: oklch(60% 0.126 221.723);
+    --color-back-dark-secondary: oklch(68% 0.162 75.834);
+    --color-back-dark-accent: oklch(0% 0 0);
+    --color-back-dark-neutral: oklch(27% 0.033 256.848);
+    --color-back-dark-light: oklch(96% 0.001 286.375);
+    --color-back-dark-dark: oklch(26% 0 0);
+    --color-back-dark-muted: oklch(0.69 0 91);
+
+    /* Front Color Scheme */
+    --color-base-100: #f2f2f2;
+    --color-base-200: oklch(92% 0 0);
+    --color-base-300: oklch(87% 0 0);
+    --color-primary: #2e62af;
+    --color-secondary: #162f55;
+    --color-accent: oklch(66% 0.179 58.318);
+    --color-neutral: #ded9da;
+    --color-info: #aea679;
+    --color-success: #31a640;
+    --color-warning: #edae49;
+    --color-error: #d1495b;
+    --color-light: #fafbfc;
+    --color-dark: #02132b;
+    --color-muted: #767676;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
+    }
+    button:disabled,
+    [role="button"]:disabled {
+        cursor: not-allowed;
+        opacity: 0.6 !important;
+    }
+    button:disabled:hover {
+        opacity: 0.6 !important;
+    }
+    input:is(:read-only, [readonly]) {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+}
+@custom-variant hover (&:hover);
+
+button.btn {
+    @apply px-2 py-[5px] rounded-md text-back-light;
+}
+.btn {
+    @apply px-2 py-1.5 rounded-md text-back-light;
+}
+.btn:hover {
+    @apply opacity-75;
+}
+
+.badge {
+    @apply text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm text-back-light;
+}
+
+/* Datatables */
+.table {
+    @apply w-full text-left border-collapse table-auto;
+}
+
+.table td,
+.table th {
+    @apply px-4 py-2 border-b border-gray-300 dark:border-gray-400;
+}
+
+.table thead {
+    @apply bg-gray-200 dark:bg-gray-800;
+}
+.table thead th {
+    @apply dark:text-white;
+}
+
+.table tbody tr:nth-child(odd) {
+    @apply bg-white dark:bg-gray-400;
+}
+.table tbody tr:nth-child(even) {
+    @apply bg-gray-100 dark:bg-gray-600;
+}
+
+.dt-container > div:first-child {
+    @apply flex items-center justify-between flex-col md:flex-row;
+}
+
+.dt-container > div:nth-child(3) {
+    @apply flex items-center justify-between flex-col md:flex-row;
+    -webkit-overflow-scrolling: touch;
+}
+
+.dt-empty {
+    @apply p-2 text-center;
+}
+
+.dt-back-info {
+    @apply text-sm text-back-muted dark:text-back-light/80;
+}
+
+.dt-paging .pagination a:first-child {
+    @apply rounded-l;
+}
+.dt-paging .pagination a:last-child {
+    @apply rounded-r;
+}
+.dt-paging .pagination a {
+    @apply bg-back-base-100 dark:bg-back-base-300 border-back-dark border-[1px] text-back-dark font-normal px-2 py-1.5;
+    &[aria-current] {
+        @apply bg-back-muted text-back-light;
+    }
+    &[aria-disabled] {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}
+
+.dt-length {
+    @apply gap-0! -space-y-1!;
+}
+.dt-length select {
+    @apply md:order-first order-last px-6 mr-2 text-sm text-gray-700 border-gray-400 rounded-md shadow-xs outline-hidden bg-back-light ring-0 focus:border-back-primary focus:ring-2 focus:ring-back-primary;
+}
+
+.dt-search input {
+    @apply text-sm text-gray-700 border-gray-400 rounded-md shadow-xs outline-hidden bg-back-light ring-0 focus:border-back-primary focus:ring-2 focus:ring-back-primary;
+}
+
+/* Tags input selector */
+.tags-look .tagify__dropdown__item {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 3px;
+    padding: 0.3em 0.5em;
+    border: 1px solid #ccc;
+    background: #f3f3f3;
+    margin: 0.2em;
+    font-size: 0.85em;
+    color: black;
+    transition: 0s;
+}
+
+.tags-look .tagify__dropdown__item--active {
+    border-color: black;
+}
+
+.tags-look .tagify__dropdown__item:hover {
+    background: lightyellow;
+    border-color: gold;
+}
+
+.tags-look .tagify__dropdown__item--hidden {
+    max-width: 0;
+    max-height: initial;
+    padding: 0.3em 0;
+    margin: 0.2em 0;
+    white-space: nowrap;
+    text-indent: -20px;
+    border: 0;
+}

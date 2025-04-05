@@ -1,0 +1,156 @@
+@section('title', $data['title'] ?? '')
+@section('meta_description', '')
+
+<x-app-layout>
+    <section class="p-1 md:p-4">
+        <div class="mb-4 px-1 text-2xl font-medium">
+            <h2>{{ $data['title'] ?? '' }}</h2>
+        </div>
+
+        <x-card class="mb-3">
+            <form method="POST" action="{{ route('admin.settings.web.update') }}" enctype="multipart/form-data">
+                @csrf
+                @method('put')
+                <div class="align-center mb-0 flex items-end justify-end">
+                    <div class="space-x-0.5 md:space-x-1.5">
+                        <x-dashboard.primary-button class="text-back-light" type="submit">
+                            <i class="ri-save-3-line"></i>
+                            <span>{{ __('Save') }}</span>
+                        </x-dashboard.primary-button>
+                    </div>
+                </div>
+
+                <div class="grid gap-4">
+                    <div class="mb-3">
+                        <x-input-label class="block text-lg font-semibold" for="app_logo" value="{{ __('App Logo') }}" />
+                        <span class="text-sm text-gray-500">Logo size must be less than 700 Kb and png format</span>
+                        <div class="mt-2 flex items-center gap-x-3">
+                            <div class="space-y-4">
+                                <x-application-logo id="app_logo_preview" />
+                            </div>
+                            <div class="mt-4 flex text-sm text-gray-600">
+                                <x-input-label class="block cursor-pointer text-lg font-semibold" for="app_logo">
+                                    <span class="bg-back-neutral text-back-light shadow-xs hover:bg-back-neutral/70 focus:outline-hidden rounded-md border border-gray-300 px-2.5 py-1.5 text-center text-sm font-medium transition duration-150 ease-in-out focus:ring-1 focus:ring-indigo-500 focus:ring-offset-1 disabled:opacity-40">
+                                        {{ __('Change') }}
+                                    </span>
+                                    <input class="sr-only" id="app_logo" name="app_logo" type="file" accept="image/png" />
+                                </x-input-label>
+                            </div>
+                        </div>
+                        <x-input-error class="mt-2" :messages="$errors->get('app_logo')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label class="block text-lg font-semibold" for="favicon" value="{{ __('Favicon') }}" />
+                        <span class="text-sm text-gray-500">File size must be ratio 1:1, less than 512x512 pixels, transparent background, and png format</span>
+                        <div class="mt-2 flex items-center gap-x-3">
+                            <div class="space-y-4">
+                                <img class="max-h-12 w-12 max-w-12 rounded-md object-cover" id="favicon_preview" src="{{ asset('assets/app_logo/' . $data['web_setting']['favicon'] ?? 'favicon.png') }}" alt="Favicon">
+                            </div>
+                            <div class="mt-4 flex text-sm text-gray-600">
+                                <x-input-label class="block cursor-pointer text-lg font-semibold" for="favicon">
+                                    <span class="bg-back-neutral text-back-light shadow-xs hover:bg-back-neutral/70 focus:outline-hidden rounded-md border border-gray-300 px-2.5 py-1.5 text-center text-sm font-medium transition duration-150 ease-in-out focus:ring-1 focus:ring-indigo-500 focus:ring-offset-1 disabled:opacity-40">
+                                        {{ __('Change') }}
+                                    </span>
+                                    <input class="sr-only" id="favicon" name="favicon" type="file" accept="image/png" />
+                                </x-input-label>
+                            </div>
+                        </div>
+                        <x-input-error class="mt-2" :messages="$errors->get('favicon')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="web_name" value="{{ __('Web Name') }}"></x-input-label>
+                        <span class="text-sm text-gray-500">Main Title Website, Show in header</span>
+                        <x-text-input id="web_name" name="web_name" type="text" value="{{ old('web_name', $data['web_setting']['web_name']) }}" placeholder="Web Name" required></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('web_name')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="description" value="{{ __('Description') }}"></x-input-label>
+                        <x-textarea-input name="description" rows="3" placeholder="write your description of website">{{ old('description', $data['web_setting']['description']) }}</x-textarea-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('description')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="keywords" value="{{ __('Keywords') }}"></x-input-label>
+                        <x-textarea-input name="keywords" rows="3" placeholder="keyword1, keyword2, keyword3,">{{ old('keywords', $data['web_setting']['keywords']) }}</x-textarea-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('keywords')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="email" value="{{ __('Email') }}"></x-input-label>
+                        <x-text-input name="email" type="email" value="{{ old('email', $data['web_setting']['email']) }}" placeholder="mail@example.com"></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="link_fb" value="{{ __('Facebook Url') }}"></x-input-label>
+                        <x-text-input name="link_fb" type="url" value="{{ old('link_fb', $data['web_setting']['link_fb']) }}" placeholder="https://www.facebook.com/username"></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('link_fb')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="link_ig" value="{{ __('Instagram Url') }}"></x-input-label>
+                        <x-text-input name="link_ig" type="url" value="{{ old('link_ig', $data['web_setting']['link_ig']) }}" placeholder="https://www.instagram.com/username"></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('link_ig')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="link_tiktok" value="{{ __('Tiktok Url') }}"></x-input-label>
+                        <x-text-input name="link_tiktok" type="url" value="{{ old('link_tiktok', $data['web_setting']['link_tiktok']) }}" placeholder="https://www.tiktok.com/@username"></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('link_tiktok')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="link_youtube" value="{{ __('Youtube Url') }}"></x-input-label>
+                        <x-text-input name="link_youtube" type="url" value="{{ old('link_youtube', $data['web_setting']['link_youtube']) }}" placeholder="https://www.youtube.com/channel/username"></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('link_youtube')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="link_twitter" value="{{ __('Twitter Url / X') }}"></x-input-label>
+                        <x-text-input name="link_twitter" type="url" value="{{ old('link_twitter', $data['web_setting']['link_twitter']) }}" placeholder="https://twitter.com/username"></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('link_twitter')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="link_linkedin" value="{{ __('Linkedin Url') }}"></x-input-label>
+                        <x-text-input name="link_linkedin" type="url" value="{{ old('link_linkedin', $data['web_setting']['link_linkedin']) }}" placeholder="https://www.linkedin.com/in/username"></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('link_linkedin')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="link_github" value="{{ __('Github Url') }}"></x-input-label>
+                        <x-text-input name="link_github" type="url" value="{{ old('link_github', $data['web_setting']['link_github']) }}" placeholder="https://github.com/username"></x-text-input>
+                        <x-input-error class="mt-2" :messages="$errors->get('link_github')" />
+                    </div>
+                </div>
+            </form>
+        </x-card>
+    </section>
+
+    @push('javascript')
+        <script>
+            $(document).ready(function() {
+                function previewImage(input, imgId) {
+                    if (input.files && input.files[0]) {
+                        let reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById(imgId).src = e.target.result;
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+
+                document.getElementById('app_logo').addEventListener('change', function() {
+                    previewImage(this, 'app_logo_preview');
+                });
+
+                document.getElementById('favicon').addEventListener('change', function() {
+                    previewImage(this, 'favicon_preview');
+                });
+            });
+        </script>
+    @endpush
+</x-app-layout>

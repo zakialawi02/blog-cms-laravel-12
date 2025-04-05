@@ -1,0 +1,93 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WebSettingController;
+use App\Http\Controllers\ArticleViewController;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/docs', function () {
+    return view('pages.docs');
+})->name('docs');
+
+Route::prefix('dashboard')->name('admin.')->group(function () {
+    Route::middleware(['auth', 'verified', 'role:superadmin'])->group(function () {
+        Route::resource('users', UserController::class)->except('create', 'edit');
+
+        Route::get('/settings/web', [WebSettingController::class, 'index'])->name('settings.web.index');
+        Route::put('/settings/web', [WebSettingController::class, 'update'])->name('settings.web.update');
+
+        Route::get('/system-back-info', [DashboardController::class, 'info'])->name('info');
+
+        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+        Route::get('/categories/{category:slug}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/categories/{category:slug}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{category:slug}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    });
+
+    Route::middleware(['auth', 'verified', 'role:superadmin,admin'])->group(function () {
+        Route::resource('tags', TagController::class)->parameters(['tags' => 'tag:slug'])->except('show');
+    });
+
+    Route::middleware(['auth', 'verified', 'role:superadmin,admin,writer'])->group(function () {
+        Route::post('/posts/generateSlug', [PostController::class, 'generateSlug'])->name('posts.generateSlug');
+        Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+        Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+        Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+        Route::get('/posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit');
+        Route::put('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
+        Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
+        Route::delete('/posts/{post:slug}/permanent', [PostController::class, 'permanentlyDelete'])->name('posts.destroy-permanent');
+        Route::post('/posts/restore/{slug}', [PostController::class, 'restore'])->name('posts.restore');
+
+        Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
+
+        Route::get('/posts/stats/6months', [ArticleViewController::class, 'getViewsLast6Months'])->name('posts.statslast6months');
+        Route::get('/stats/posts', [ArticleViewController::class, 'getArticleStats'])->name('posts.statsview');
+        Route::get('/stats/posts/locations', [ArticleViewController::class, 'statsByLocation'])->name('posts.statslocation');
+        Route::get('/stats/posts/{article:slug}', [ArticleViewController::class, 'statsPerArticle'])->name('posts.statsdetail');
+    });
+
+    Route::middleware(['auth', 'verified', 'role:superadmin,admin,writer,user'])->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/my-comments', [CommentController::class, 'mycomments'])->name('mycomments.index');
+        Route::delete('/comments/{comment:id}', [CommentController::class, 'destroy'])->name('comment.destroy');
+
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::patch('/photo-profile', [ProfileController::class, 'updatePhoto'])->name('profile.photo-update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/comments/{post:slug}', [CommentController::class, 'store'])->name('comment.store');
+});
+
+Route::get('/admin', function () {
+    return redirect('/dashboard');
+});
+
+Route::get('/blog', [ArticleController::class, 'index'])->name('article.index');
+Route::get('/blog/popular', [ArticleController::class, 'popularPost'])->name('article.popular');
+Route::get('/blog/tags/{slug}', [ArticleController::class, 'getArticlesByTag'])->name('article.tag');
+Route::get('/blog/categories/{slug}', [ArticleController::class, 'getArticlesByCategory'])->name('article.category');
+Route::get('/blog/users/{username}', [ArticleController::class, 'getArticlesByUser'])->name('article.user');
+Route::get('/blog/archive/{year}', [ArticleController::class, 'getArticlesByYear'])->name('article.year');
+Route::get('/blog/archive/{year}/{month}', [ArticleController::class, 'getArticlesByMonth'])->name('article.month');
+Route::get('/blog/{year}/{slug}', [ArticleController::class, 'show'])->name('article.show');
+
+
+require __DIR__ . '/auth.php';
