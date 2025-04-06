@@ -80,4 +80,15 @@ class Article extends Model
             $this->tags()->sync($tagIds->toArray()); // Sinkronisasi tag dengan tabel pivot
         }
     }
+
+    /**
+     * Check if the article is owned by the user or if the user has the superadmin role.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function isOwnedOrSuperadmin(User $user): bool
+    {
+        return $user->role === 'superadmin' || $user->id === $this->user_id;
+    }
 }

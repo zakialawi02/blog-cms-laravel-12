@@ -135,10 +135,14 @@ class PostController extends Controller
         $data = [
             'title' => 'Create Post',
         ];
+
         $categories = Category::all();
         $tags = Tag::all();
+        $users = Auth::user()->role === 'superadmin'
+            ? User::orderBy('username', 'asc')->get()
+            : [Auth::user()];
 
-        return view('pages.dashboard.posts.create', compact('data', 'categories', 'tags'));
+        return view('pages.dashboard.posts.create', compact('data', 'categories', 'tags', 'users'));
     }
 
     /**
@@ -199,8 +203,9 @@ class PostController extends Controller
 
     public function edit(Article $post)
     {
-        if (Auth::user()->role !== 'superadmin' && Auth::id() !== $post->user_id) {
-            abort(403);
+        // Cek apakah user memiliki izin untuk mengeksekusi
+        if (! $post->isOwnedOrSuperadmin(Auth::user())) {
+            abort(403, 'You do not have permission to edit this post.');
         }
 
         $data = [
@@ -209,8 +214,11 @@ class PostController extends Controller
 
         $categories = Category::all();
         $tags = Tag::all();
+        $users = Auth::user()->role === 'superadmin'
+            ? User::orderBy('username', 'asc')->get()
+            : [Auth::user()];
 
-        return view('pages.dashboard.posts.edit', compact('data', 'post', 'categories',  'tags'));
+        return view('pages.dashboard.posts.edit', compact('data', 'post', 'categories',  'tags', 'users'));
     }
 
     /**
@@ -230,8 +238,8 @@ class PostController extends Controller
     public function update(ArticleRequest $request, Article $post)
     {
         try {
-            // Cek apakah user memiliki izin untuk mengedit post ini
-            if (Auth::user()->role !== 'superadmin' && Auth::id() !== $post->user_id) {
+            // Cek apakah user memiliki izin untuk mengeksekusi
+            if (! $post->isOwnedOrSuperadmin(Auth::user())) {
                 abort(403, 'You do not have permission to edit this post.');
             }
 
@@ -276,8 +284,8 @@ class PostController extends Controller
     public function destroy(Article $post): JsonResponse
     {
         try {
-            // Cek apakah user memiliki izin untuk menghapus artikel
-            if (Auth::user()->role !== 'superadmin' && Auth::id() !== $post->user_id) {
+            // Cek apakah user memiliki izin untuk mengeksekusi
+            if (! $post->isOwnedOrSuperadmin(Auth::user())) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Unauthorized action'

@@ -9,6 +9,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\WebSettingController;
 use App\Http\Controllers\ArticleViewController;
 
@@ -38,6 +39,12 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
 
     Route::middleware(['auth', 'verified', 'role:superadmin,admin'])->group(function () {
         Route::resource('tags', TagController::class)->parameters(['tags' => 'tag:slug'])->except('show');
+
+        Route::get('/newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
+        Route::delete('/newsletter/{newsletter:email}', [NewsletterController::class, 'destroy'])->name('newsletter.destroy');
+
+        Route::get('/requestContributor', [UserController::class, 'requestContributor'])->name('requestContributor.index');
+        Route::delete('/requestContributor/{requestContributor:id}', [UserController::class, 'destroyRequestContributor'])->name('requestContributor.destroy');
     });
 
     Route::middleware(['auth', 'verified', 'role:superadmin,admin,writer'])->group(function () {
@@ -59,8 +66,11 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::get('/stats/posts/{article:slug}', [ArticleViewController::class, 'statsPerArticle'])->name('posts.statsdetail');
     });
 
-    Route::middleware(['auth', 'verified', 'role:superadmin,admin,writer,user'])->group(function () {
+    Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::post('/requests-contributors', [UserController::class, 'storeRequestContributor'])->name('requestsContributors');
+        Route::post('/requests-contributors/confirm', [UserController::class, 'confirmCodeContributor'])->name('confirmCodeContributor');
 
         Route::get('/my-comments', [CommentController::class, 'mycomments'])->name('mycomments.index');
         Route::delete('/comments/{comment:id}', [CommentController::class, 'destroy'])->name('comment.destroy');

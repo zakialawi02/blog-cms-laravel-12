@@ -13,7 +13,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        $tags = Tag::latest()->paginate(25)->withQueryString();
+        $tags = Tag::latest()->paginate(25);
 
         $data = [
             'title' => 'Tags List',

@@ -23,5 +23,10 @@ class WebSetting extends Model
         'link_twitter',
         'link_linkedin',
         'link_github',
+        'can_join_contributor',
+    ];
+
+    protected $casts = [
+        'can_join_contributor' => 'boolean',
     ];
 }

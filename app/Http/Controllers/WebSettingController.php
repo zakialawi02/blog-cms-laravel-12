@@ -64,7 +64,10 @@ class WebSettingController extends Controller
 
         $data = WebSetting::first();
         $settings = WebSetting::find($data->id);
-        $request->merge(['id' => $data->id]);
+        $request->merge([
+            'id' => $data->id,
+            'can_join_contributor' => $request->can_join_contributor ? 1 : 0
+        ]);
 
         $settings->fill($request->except(['app_logo', 'favicon']));
 

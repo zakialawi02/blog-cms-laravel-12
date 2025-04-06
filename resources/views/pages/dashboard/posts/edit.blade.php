@@ -96,7 +96,10 @@
                                 <div class="mb-3">
                                     <x-input-label for="user_id" :value="__('Author')" />
                                     <select class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500" id="user_id" name="user_id">
-                                        <option value="{{ Auth::user()->id }}" {{ old('user_id', $post->user_id) == Auth::user()->id ? 'selected' : '' }}>{{ Auth::user()->username }}</option>
+                                        <option value="">-- Select Author --</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}" {{ old('user_id', $post->user_id) == $user->id ? 'selected' : '' }}>{{ $user->username }}</option>
+                                        @endforeach
                                     </select>
                                     <x-input-error class="mt-2" :messages="$errors->get('user_id')" />
                                 </div>
@@ -112,7 +115,7 @@
                                                 <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                                                     <span class="font-semibold">Click to upload</span> or drag and drop
                                                 </p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 2MB)</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, JPEG or WEBP (MAX. 2MB)</p>
                                             </div>
                                             <input class="cover hidden" id="dropzone-file" name="cover" type="file" />
                                         </label>

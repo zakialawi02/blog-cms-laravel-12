@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\ArticleView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\RequestContributor;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -115,10 +116,11 @@ class DashboardController extends Controller
                     'recentComment' => $recentComments,
                 ]);
             }
-
             // data sent by ajax
 
-            return view('pages.dashboard.dashboardUser');
+            $myRequest = RequestContributor::where('user_id', Auth::id())->latest('created_at')->first();
+
+            return view('pages.dashboard.dashboardUser', compact('myRequest'));
         } else {
             return view('pages.dashboard.emptyDashboard');
         }

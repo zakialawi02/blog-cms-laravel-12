@@ -125,6 +125,16 @@
                         <x-text-input name="link_github" type="url" value="{{ old('link_github', $data['web_setting']['link_github']) }}" placeholder="https://github.com/username"></x-text-input>
                         <x-input-error class="mt-2" :messages="$errors->get('link_github')" />
                     </div>
+
+                    <div class="mb-3">
+                        <x-input-label for="can_join_contributor" value="{{ __('Open For Contributor') }}"></x-input-label>
+                        <label class="inline-flex cursor-pointer items-center">
+                            <input class="peer sr-only" name="can_join_contributor" type="checkbox" {{ $data['web_setting']['can_join_contributor'] == 1 ? 'checked' : '' }}>
+                            <div class="peer-checked:bg-back-primary peer-focus:ring-back-primary/80 dark:peer-checked:bg-back-dark-primary dark:peer-focus:ring-back-primary peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700"></div>
+                            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
+                        </label>
+
+                    </div>
                 </div>
             </form>
         </x-card>

@@ -39,10 +39,15 @@
                     @if (Auth::user()->role == 'user')
                         <x-dashboard.nav-dropdown icon="ri-discuss-line" text="Comments" :items="[['route' => 'admin.mycomments.index', 'text' => 'My Comments']]" />
                     @endif
+                    <div class="px-1 pt-3 text-sm font-bold text-gray-600 dark:text-gray-200">
+                        <h5>Manage</h5>
+                    </div>
+                    <x-dashboard.nav-item route="#" icon="ri-notification-3-line" text="Notification" />
+                    @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+                        <x-dashboard.nav-item route="admin.newsletter.index" icon="ri-mail-line" text="Newsletters" />
+                        <x-dashboard.nav-item route="admin.requestContributor.index" icon="ri-git-pull-request-line" text="Request Contributor" />
+                    @endif
                     @if (Auth::user()->role == 'superadmin')
-                        <div class="px-1 pt-3 text-sm font-bold text-gray-600 dark:text-gray-200">
-                            <h5>Management</h5>
-                        </div>
                         <x-dashboard.nav-item route="admin.users.index" icon="ri-user-line" text="User" />
                         <x-dashboard.nav-item route="admin.settings.web.index" icon="ri-settings-3-line" text="Web Setting" />
                         <x-dashboard.nav-item route="admin.info" icon="ri-information-line" text="System Info" />

@@ -12,9 +12,60 @@
         </x-dashboard.primary-button>
     </section>
 
+    @if ($myRequest !== null && $myRequest->valid_code_until > now())
+        <section class="p-1 md:px-4">
+            <x-card>
+                <div class="mb-2 text-center">
+                    <h3 class="font-size-18 mt-3">Enter your code to confirm your request to become a contributor</h3>
+                    <p class="text-muted">We've sent a code to your mail, {{ Auth::user()->email }}</p>
+                </div>
+                <form class="mx-auto max-w-sm text-center" id="codeForm" action="{{ route('admin.confirmCodeContributor') }}" method="POST">
+                    @csrf
+                    <div class="mb-2 flex items-center justify-center space-x-2 rtl:space-x-reverse">
+                        <div>
+                            <x-input-label class="sr-only" for="code-1" value="First code" />
+                            <x-text-input class="h-9! w-9!" id="code-1" name="code" data-focus-input-init data-focus-input-next="code-2" type="text" maxlength="1" required />
+                        </div>
+                        <div>
+                            <x-input-label class="sr-only" for="code-2" value="Second code" />
+                            <x-text-input class="h-9! w-9!" id="code-2" name="code" data-focus-input-init data-focus-input-prev="code-1" data-focus-input-next="code-3" type="text" maxlength="1" required />
+                        </div>
+                        <div>
+                            <x-input-label class="sr-only" for="code-3" value="Third code" />
+                            <x-text-input class="h-9! w-9!" id="code-3" name="code" data-focus-input-init data-focus-input-prev="code-2" data-focus-input-next="code-4" type="text" maxlength="1" required />
+                        </div>
+                        <div>
+                            <x-input-label class="sr-only" for="code-4" value="Fourth code" />
+                            <x-text-input class="h-9! w-9!" id="code-4" name="code" data-focus-input-init data-focus-input-prev="code-3" type="text" maxlength="1" required />
+                        </div>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400" id="helper-text-explanation">Please input the 4 digit code we sent via email.</p>
+                    <x-input-error class="mt-2" :messages="$errors->get('code')" />
+
+                    <div class="mt-4 flex items-center justify-center gap-4">
+                        <x-dashboard.primary-button id="submitCode" type="submit" :size="'small'">
+                            Submit
+                        </x-dashboard.primary-button>
+
+                        <!-- Resend button as a JS-triggered form -->
+                        <x-dashboard.light-button id="resendCodeBtn" type="button" :size="'small'">
+                            Resend
+                        </x-dashboard.light-button>
+                    </div>
+                </form>
+
+                <!-- Hidden resend form -->
+                <form id="resendForm" style="display: none;" action="{{ route('admin.requestsContributors') }}?resend={{ Auth::user()->id }}" method="POST">
+                    @csrf
+                </form>
+
+            </x-card>
+        </section>
+    @endif
+
     <section class="p-1 md:px-4">
         <div class="grid grid-cols-1 gap-1 lg:grid-cols-2 lg:gap-3">
-            <div class="mb-2">
+            <div class="mb-2 space-y-2">
                 <x-card>
                     <div class="flex items-center justify-between p-2">
                         <div>
@@ -29,6 +80,18 @@
                         <div><i class="ri-message-2-fill text-back-muted dark:text-back-dark-muted text-5xl"></i></div>
                     </div>
                 </x-card>
+                @if ($myRequest === null || ($myRequest->valid_code_until < now() && $data['web_setting']['can_join_contributor']))
+                    <x-card>
+                        <p>Want to be a part of our community and contribute as a writer? Click the button below to join our team!</p>
+                        <form action="{{ route('admin.requestsContributors') }}" method="POST">
+                            @csrf
+
+                            <x-dashboard.primary-button type="submit" :size="'small'">
+                                Join as Contributor/Writer
+                            </x-dashboard.primary-button>
+                        </form>
+                    </x-card>
+                @endif
             </div>
             <div class="mb-2">
                 <x-card class="">
@@ -51,6 +114,15 @@
                 </x-card>
             </div>
         </div>
+    </section>
+
+    <section class="p-1 md:px-4">
+        <x-card>
+            <div class="mb-3">
+                <h4 class="mb-0 text-2xl">Coming Soon</h4>
+            </div>
+            <p>Coming Soon new features</p>
+        </x-card>
     </section>
 
     @push('javascript')
@@ -122,6 +194,93 @@
                         }
                     });
                 }
+            });
+
+            // JavaScript to handle resend
+            document.getElementById('resendCodeBtn').addEventListener('click', function() {
+                document.getElementById('resendForm').submit();
+            });
+
+            $("#codeForm").submit(function(e) {
+                e.preventDefault();
+                const code = $('input[name="code"]').map(function() {
+                    return $(this).val();
+                }).get().join('');
+                console.log(code);
+
+                const url = $(this).attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        code: code
+                    },
+                    dataType: "json",
+                    beforeSend: function() {
+                        $(this).find(".btn-submit").prop("disabled", true).html("Sending...");
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        MyZkToast.success(response.message);
+                        MyZkToast.info(response.info);
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 3000)
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        MyZkToast.error(error.responseJSON.message ?? error.statusText);
+                    },
+                    complete: function() {
+                        $(this).find(".btn-submit").prop("disabled", false).html("Submit");
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            // use this simple function to automatically focus on the next input
+            function focusNextInput(el, prevId, nextId) {
+                if (el.value.length === 0) {
+                    if (prevId) {
+                        document.getElementById(prevId).focus();
+                    }
+                } else {
+                    if (nextId) {
+                        document.getElementById(nextId).focus();
+                    }
+                }
+            }
+
+            document.querySelectorAll('[data-focus-input-init]').forEach(function(element) {
+                element.addEventListener('keyup', function() {
+                    const prevId = this.getAttribute('data-focus-input-prev');
+                    const nextId = this.getAttribute('data-focus-input-next');
+                    focusNextInput(this, prevId, nextId);
+                });
+
+                // Handle paste event to split the pasted code into each input
+                element.addEventListener('paste', function(event) {
+                    event.preventDefault();
+                    const pasteData = (event.clipboardData || window.clipboardData).getData('text');
+                    const digits = pasteData.replace(/\D/g, ''); // Only take numbers from the pasted data
+
+                    // Get all input fields
+                    const inputs = document.querySelectorAll('[data-focus-input-init]');
+
+                    // Iterate over the inputs and assign values from the pasted string
+                    inputs.forEach((input, index) => {
+                        if (digits[index]) {
+                            input.value = digits[index];
+                            // Focus the next input after filling the current one
+                            const nextId = input.getAttribute('data-focus-input-next');
+                            if (nextId) {
+                                document.getElementById(nextId).focus();
+                            }
+                        }
+                    });
+                });
             });
         </script>
     @endpush

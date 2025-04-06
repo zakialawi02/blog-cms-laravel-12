@@ -74,7 +74,7 @@
 
     <section class="p-1 md:px-4">
         <div class="grid grid-cols-1 gap-1 lg:grid-cols-2 lg:gap-3">
-            <div class="mb-2">
+            <div class="mb-2 space-y-2">
                 <x-card class="">
                     <div class="mb-2 flex items-center justify-between">
                         <div class="">
@@ -88,6 +88,24 @@
 
                     <!-- Ajax Posts -->
                     <div class="space-y-2" id="posts-container"><span class="my-2 block h-20 min-w-full max-w-sm animate-pulse rounded bg-gray-200 dark:bg-gray-700"></span></div>
+                </x-card>
+                <x-card class="">
+                    <div class="mb-2 flex items-center justify-between">
+                        <div class="">
+                            <h4 class="mb-0 text-xl">Recent Comments</h4>
+                            <p class="text-back-muted dark:text-back-dark-muted">Recent comments on your posts</p>
+                        </div>
+                        <x-dashboard.light-button href="{{ route('admin.comments.index') }}" :size="'small'">
+                            View All
+                        </x-dashboard.light-button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Ajax Comments -->
+                        <div class="space-y-2" id="comments-container">
+                            <span class="my-2 block h-20 min-w-full max-w-sm animate-pulse rounded bg-gray-200 dark:bg-gray-700"></span>
+                        </div>
+                    </div>
                 </x-card>
             </div>
             <div class="mb-2">
@@ -124,27 +142,16 @@
                     </div>
                 </x-card>
             </div>
-            <div class="mb-2">
-                <x-card class="">
-                    <div class="mb-2 flex items-center justify-between">
-                        <div class="">
-                            <h4 class="mb-0 text-xl">Recent Comments</h4>
-                            <p class="text-back-muted dark:text-back-dark-muted">Recent comments on your posts</p>
-                        </div>
-                        <x-dashboard.light-button href="{{ route('admin.comments.index') }}" :size="'small'">
-                            View All
-                        </x-dashboard.light-button>
-                    </div>
-
-                    <div class="space-y-4">
-                        <!-- Ajax Comments -->
-                        <div class="space-y-2" id="comments-container">
-                            <span class="my-2 block h-20 min-w-full max-w-sm animate-pulse rounded bg-gray-200 dark:bg-gray-700"></span>
-                        </div>
-                    </div>
-                </x-card>
-            </div>
         </div>
+    </section>
+
+    <section class="p-1 md:px-4">
+        <x-card>
+            <div class="mb-3">
+                <h4 class="mb-0 text-2xl">Coming Soon</h4>
+            </div>
+            <p>Coming Soon new features</p>
+        </x-card>
     </section>
 
     @push('javascript')
