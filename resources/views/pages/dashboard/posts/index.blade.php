@@ -193,7 +193,7 @@
                     const slug = $(this).data('slug');
                     const url = `{{ route('admin.posts.destroy-permanent', ':slug') }}`.replace(':slug', slug);
                     ZkPopAlert.show({
-                        message: "Are you sure you want to delete this post?",
+                        message: "Are you sure you want to delete permanently this post?",
                         confirmText: "Yes, delete it",
                         cancelText: "No, cancel",
                         onConfirm: () => {
@@ -228,7 +228,7 @@
                         },
                         error: function(error) {
                             console.log(error);
-                            MyZkToast.error(error.statusText)
+                            MyZkToast.error(`${error.statusText} <br> ${error.responseJSON.message}`)
                         }
                     });
                 }

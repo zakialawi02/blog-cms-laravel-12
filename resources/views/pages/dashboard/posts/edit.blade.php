@@ -118,12 +118,9 @@
                                         </label>
                                     </div>
                                     <x-input-error class="mt-2" :messages="$errors->get('cover')" />
-                                    @if ($post->cover)
-                                        <div class="preview-cover mt-2">
-                                            <img src="{{ asset('storage/posts/img/' . $post->cover) }}" alt="Featured Image" style="width: 300px; height: 200px; object-fit: cover">
-                                        </div>
-                                    @endif
-                                    <div class="preview-cover mt-2"></div>
+                                    <div class="preview-cover mt-2">
+                                        <img src="{{ $post->cover }}" alt="Featured Image" style="width: 300px; height: 200px; object-fit: cover">
+                                    </div>
                                 </div>
                             </x-card>
                         </div>

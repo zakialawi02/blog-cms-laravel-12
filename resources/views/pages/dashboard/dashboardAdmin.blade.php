@@ -238,6 +238,7 @@
                             $('#allPostsCount').html(loader);
                             $('#allCommentsCount').html(loader);
                             $('#myCommentsCount').html(loader);
+                            $('#viewsMyPosts').html(loader);
                             $('#visitors').html(loader);
                             $('#usersCount').html(loader);
                             $('#posts-container').html(loader2);

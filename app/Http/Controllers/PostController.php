@@ -10,10 +10,12 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Actions\UploadCoverImage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ArticleRequest;
+use App\Actions\DeletePostPermanently;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -167,21 +169,8 @@ class PostController extends Controller
             }
 
             // Handle upload cover
-            if ($request->hasFile('cover')) {
-                $user = auth()->user()->username ?? "shared";
-                $file = $request->file('cover');
-                $filename = time() . '_' . Str::random(20) . '.' . $file->getClientOriginalExtension();
-
-                // Simpan file ke storage
-                $filePath = 'public/posts/img/' . $filename;
-                $stored = $file->storeAs('public/posts/img', $filename);
-
-                if (!$stored) {
-                    throw new Exception('Failed to upload cover image.');
-                }
-
-                $data['cover'] = asset('storage/posts/img/' . $filename);
-            }
+            $uploader = new UploadCoverImage();
+            $data['cover'] = $uploader->execute($request->file('cover'));
 
             // Buat artikel
             Article::create($data);
@@ -258,28 +247,9 @@ class PostController extends Controller
                 $data['published_at'] = null;
             }
 
-            // Handle file upload dengan error handling
-            if ($request->hasFile('cover')) {
-                $user = $post->user->username ?? "shared";
-                $file = $request->file('cover');
-                $filename = time() . '_' . Str::random(20) . '.' . $file->getClientOriginalExtension();
-
-                // Hapus cover lama jika ada
-                if ($post->cover) {
-                    $oldCoverPath = 'public/posts/img/' . basename($post->cover);
-                    if (Storage::exists($oldCoverPath)) {
-                        Storage::delete($oldCoverPath);
-                    } else {
-                        Log::warning("File cover lama tidak ditemukan: " . $oldCoverPath);
-                    }
-                }
-
-                // Simpan cover baru
-                $file->storeAs('public/posts/img', $filename);
-                $data['cover'] = asset('storage/posts/img/' . $filename);
-            } else {
-                $data['cover'] = $post->cover;
-            }
+            // Handle upload cover
+            $uploader = new UploadCoverImage();
+            $data['cover'] = $uploader->execute($request->file('cover'), $post->cover);
 
             // Update post
             $post->update($data);
@@ -350,34 +320,34 @@ class PostController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Http\JsonResponse
      */
-    public function permanentlyDelete($slug): JsonResponse
+    public function permanentlyDelete($slug, DeletePostPermanently $deletePost): JsonResponse
     {
         try {
             // Cari artikel yang sudah dihapus (soft delete)
             $post = Article::onlyTrashed()->where('slug', $slug)->firstOrFail();
 
-            // Restore artikel
-            $restored = $post->restore();
+            // Hapus permanen artikel
+            $deleted = $deletePost->execute($post);
 
-            if (!$restored) {
-                throw new Exception("Failed to delete the post.");
+            if (!$deleted) {
+                throw new Exception("Failed to permanently delete the post.");
             }
 
             return response()->json([
                 'success' => true,
-                'message' => 'Post deleted successfully'
+                'message' => 'Post permanently deleted successfully'
             ], Response::HTTP_OK);
         } catch (QueryException $e) {
-            Log::error("Database error during article deletion: " . $e->getMessage());
+            Log::error("Database error during article permanent deletion: " . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to delete post. Database error.'
+                'message' => 'Failed to permanently delete post. Database error.'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (Exception $e) {
-            Log::error("Unexpected error during article deletion: " . $e->getMessage());
+            Log::error("Unexpected error during article permanent deletion: " . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'An unexpected error occurred while deleting the post.'
+                'message' => 'An unexpected error occurred while permanently deleting the post.'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
