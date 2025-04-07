@@ -91,4 +91,37 @@ class Article extends Model
     {
         return $user->role === 'superadmin' || $user->id === $this->user_id;
     }
+
+    // Scope
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published')
+            ->where('published_at', '<', now());
+    }
+
+    public function scopeWithCategorySlug($query, $slug)
+    {
+        return $query->whereHas('category', fn($q) => $q->where('slug', $slug));
+    }
+
+    public function scopeWithTagSlug($query, $slug)
+    {
+        return $query->whereHas('tags', fn($q) => $q->where('slug', $slug));
+    }
+
+    public function scopeWithUsername($query, $username)
+    {
+        return $query->whereHas('user', fn($q) => $q->where('username', $username));
+    }
+
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where(function ($q) use ($keyword) {
+            $q->where('title', 'like', "%$keyword%")
+                ->orWhere('content', 'like', "%$keyword%")
+                ->orWhere('excerpt', 'like', "%$keyword%")
+                ->orWhereHas('user', fn($q) => $q->where('name', 'like', "%$keyword%")
+                    ->orWhere('username', 'like', "%$keyword%"));
+        });
+    }
 }

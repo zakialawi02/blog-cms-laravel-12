@@ -8,36 +8,66 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Http\Resources\ArticleResource;
 
 class ArticleController extends Controller
 {
     /**
-     * Maps and modifies the provided articles array by updating excerpt, cover image paths, and category ID if necessary.
+     * Fetch filtered and paginated articles.
      *
-     * @param datatype $articles The array of articles to be mapped and modified.
-     * @throws Some_Exception_Class description of exception
-     * @return Some_Return_Value
+     * @param string|null $search
+     * @param string|null $categorySlug
+     * @param string|null $tagSlug
+     * @param string|null $username
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    protected function articlesMappingArray($articles)
+    private function fetchArticles(array $filters = [])
     {
-        $articles = $articles->map(function ($article) {
-            if (empty($article->excerpt)) {
-                $article->excerpt = Str::limit(strip_tags($article->content), 200);
+        $query = Article::with(['user', 'category', 'tags'])
+            ->published()
+            ->orderBy('published_at', 'desc');
+
+        if (!empty($filters['category'])) {
+            if ($filters['category'] === 'uncategorized') {
+                $query->whereNull('category_id');
+            } else {
+                $query->withCategorySlug($filters['category']);
             }
-            if (!empty($article->cover)) {
-                $article->cover = asset("storage/drive/" . $article->user->username . "/img/" . $article->cover);
-            }
-            if (empty($article->cover)) {
-                $article->cover = asset("assets/img/image-placeholder.webp");
-            }
-            if (empty($article->category_id)) {
-                $article->category_id = "Uncategorized";
-            }
-            return $article;
-        });
-        $articles->map(function ($article) {
-            $article->excerpt = Str::limit($article->excerpt, 200);
-        });
+        }
+
+        if (!empty($filters['tag'])) {
+            $query->withTagSlug($filters['tag']);
+        }
+
+        if (!empty($filters['user'])) {
+            $query->withUsername($filters['user']);
+        }
+
+        if (!empty($filters['search'])) {
+            $query->search($filters['search']);
+        }
+
+        return $query->paginate(9)->withQueryString();
+    }
+
+    public function index()
+    {
+        $data = [
+            'title' => 'Posts',
+        ];
+
+        $search = request()->query('search');
+        $articles = $this->fetchArticles([
+            'search' => $search,
+        ]);
+        $articles =  ArticleResource::collection($articles);
+        $featured = $articles->filter(fn($article) => $article->is_featured)->shuffle()->take(5);
+        if ($featured->count() < 5) {
+            $nonFeatured = $articles->reject(fn($article) => $article->is_featured)->shuffle()->take(5 - $featured->count());
+            $featured = $featured->merge($nonFeatured);
+        }
+
+        return view('pages.front.posts.posts', compact('data', 'articles', 'featured'));
     }
 
     /**

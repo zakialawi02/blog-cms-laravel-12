@@ -99,5 +99,14 @@ Route::get('/blog/archive/{year}', [ArticleController::class, 'getArticlesByYear
 Route::get('/blog/archive/{year}/{month}', [ArticleController::class, 'getArticlesByMonth'])->name('article.month');
 Route::get('/blog/{year}/{slug}', [ArticleController::class, 'show'])->name('article.show');
 
+Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
+
+Route::get('privacy-policy', function () {
+    return view('pages.front.privacyPolicy');
+})->name('privacyPolicy');
+Route::get('terms-and-conditions', function () {
+    return view('pages.front.termCondition');
+})->name('termsAndConditions');
+
 
 require __DIR__ . '/auth.php';

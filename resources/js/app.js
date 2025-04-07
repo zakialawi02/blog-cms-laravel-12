@@ -35,6 +35,26 @@ function timeAgo(dateStr) {
 window.timeAgo = timeAgo;
 
 $(document).ready(function () {
+    const themeToggle = document.getElementById("theme-toggle");
+    const iconSun = document.getElementById("icon-sun");
+    const iconMoon = document.getElementById("icon-moon");
+    function applyTheme(theme) {
+        document.documentElement.classList.toggle("dark", theme === "dark");
+        localStorage.setItem("theme", theme);
+        iconSun.classList.toggle("hidden", theme !== "dark");
+        iconMoon.classList.toggle("hidden", theme === "dark");
+    }
+    // Cek tema saat ini
+    const savedTheme = localStorage.getItem("theme") || "light";
+    applyTheme(savedTheme);
+    // Toggle tema saat tombol diklik
+    themeToggle.addEventListener("click", function () {
+        const newTheme = document.documentElement.classList.contains("dark")
+            ? "light"
+            : "dark";
+        applyTheme(newTheme);
+    });
+
     (function () {
         const placeholder =
             "https://placehold.co/200x200?text=Image+Placeholder";
@@ -47,7 +67,6 @@ $(document).ready(function () {
         // Fungsi untuk menambahkan event listener ke gambar
         function addImageErrorListener(img) {
             img.addEventListener("error", handleImageError);
-
             // Periksa gambar yang sudah error sebelum event listener terpasang
             if (
                 img.complete &&
@@ -56,29 +75,31 @@ $(document).ready(function () {
                 img.src = placeholder;
             }
         }
-        // Pasang listener ke semua gambar yang ada
-        document.querySelectorAll("img").forEach(addImageErrorListener);
-        // Observer untuk memantau penambahan gambar baru
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    // Cek node langsung yang merupakan gambar
-                    if (node.tagName === "IMG") {
-                        addImageErrorListener(node);
-                    }
-                    // Cek gambar di dalam subtree node yang ditambahkan
-                    if (node.querySelectorAll) {
-                        node.querySelectorAll("img").forEach(
-                            addImageErrorListener,
-                        );
-                    }
+        setTimeout(() => {
+            // Pasang listener ke semua gambar yang ada
+            document.querySelectorAll("img").forEach(addImageErrorListener);
+            // Observer untuk memantau penambahan gambar baru
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        // Cek node langsung yang merupakan gambar
+                        if (node.tagName === "IMG") {
+                            addImageErrorListener(node);
+                        }
+                        // Cek gambar di dalam subtree node yang ditambahkan
+                        if (node.querySelectorAll) {
+                            node.querySelectorAll("img").forEach(
+                                addImageErrorListener,
+                            );
+                        }
+                    });
                 });
             });
-        });
-        // Mulai observasi perubahan DOM
-        observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true,
-        });
+            // Mulai observasi perubahan DOM
+            observer.observe(document.documentElement, {
+                childList: true,
+                subtree: true,
+            });
+        }, 2000);
     })();
 });

@@ -43,9 +43,11 @@
     </head>
 
     <body class="bg-back-base-200 dark:bg-back-dark-base-200 font-sans antialiased">
-        <main class="container w-full p-6 md:p-10">
+        <x-headerNav />
+        <main class="w-full">
             {{ $slot }}
         </main>
+        <x-footer />
 
         <!-- Supporting Components -->
         <x-toast />
