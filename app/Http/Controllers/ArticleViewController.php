@@ -29,8 +29,8 @@ class ArticleViewController extends Controller
         COUNT(*) AS view_count')
             ->where('viewed_at', '>=', $sixMonthsAgo);
 
-        // Cek jika pengguna yang login bukan admin
-        if (Auth::user()->role !== "superadmin" && Auth::user()->role !== "admin") {
+        // Cek jika pengguna yang login bukan superadmin
+        if (Auth::user()->role !== "superadmin") {
             // Hanya mengambil view dari artikel yang dimiliki oleh pengguna
             $query->whereHas('article', function ($q) {
                 $q->where('user_id', auth()->id());
@@ -74,7 +74,7 @@ class ArticleViewController extends Controller
             if (request()->has('type') && request()->get('type') == "popular") {
                 $articles = Article::has('articleViews')->withCount(['articleViews as total_views']);
 
-                if (Auth::user()->role !== "superadmin" && Auth::user()->role !== "admin") {
+                if (Auth::user()->role !== "superadmin") {
                     $articles->where('user_id', auth()->id());
                 }
 
@@ -96,7 +96,7 @@ class ArticleViewController extends Controller
                 $articles = ArticleView::with('article')
                     ->orderBy('viewed_at', 'desc');
 
-                if (Auth::user()->role !== "superadmin" && Auth::user()->role !== "admin") {
+                if (Auth::user()->role !== "superadmin") {
                     $articles->whereHas('article', function ($q) {
                         $q->where('user_id', auth()->id());
                     });
@@ -130,7 +130,7 @@ class ArticleViewController extends Controller
 
     public function statsByLocation()
     {
-        if (Auth::user()->role !== "superadmin" && Auth::user()->role !== "admin") {
+        if (Auth::user()->role !== "superadmin") {
             $articleIds = Article::where('user_id', auth()->id())->pluck('id');
             $views = ArticleView::whereIn('article_id', $articleIds)
                 ->select('code', 'location', DB::raw('count(*) as total_views'))
@@ -163,10 +163,6 @@ class ArticleViewController extends Controller
     public function statsPerArticle(Article $article)
     {
         $article = Article::where('slug', $article->slug)->firstOrFail();
-
-        if (auth()->user()->role !== 'superadmin' && auth()->id() !== $article->user_id) {
-            abort(403);
-        }
 
         $views = ArticleView::where('article_id', $article->id)
             ->selectRaw('COUNT(*) as views, location, code')

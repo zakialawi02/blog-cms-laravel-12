@@ -26,18 +26,18 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="id_user" :value="__('Username/Email')" />
-            <x-text-input class="mt-1 block w-full" id="id_user" name="id_user" type="text" :value="old('id_user')" required autofocus autocomplete="username" placeholder="name@mail.com" />
-            <x-input-error class="mt-2" :messages="$errors->get('id_user')" />
+            <x-dashboard.input-label for="id_user" :value="__('Username/Email')" />
+            <x-dashboard.text-input class="mt-1 block w-full" id="id_user" name="id_user" type="text" :value="old('id_user')" required autofocus autocomplete="username" placeholder="name@mail.com" />
+            <x-dashboard.input-error class="mt-2" :messages="$errors->get('id_user')" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-dashboard.input-label for="password" :value="__('Password')" />
 
-            <x-text-input class="mt-1 block w-full" id="password" name="password" type="password" required autocomplete="current-password" placeholder="**********" />
+            <x-dashboard.text-input class="mt-1 block w-full" id="password" name="password" type="password" required autocomplete="current-password" placeholder="**********" />
 
-            <x-input-error class="mt-2" :messages="$errors->get('password')" />
+            <x-dashboard.input-error class="mt-2" :messages="$errors->get('password')" />
         </div>
 
         <div class="flex items-center justify-between">

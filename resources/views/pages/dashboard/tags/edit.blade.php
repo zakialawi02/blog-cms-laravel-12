@@ -12,19 +12,19 @@
                 @csrf
                 @method('put')
                 <div class="mb-3">
-                    <x-input-label for="tag_name" :value="__('Tag Name')" />
-                    <x-text-input class="mt-1" id="tag_name" name="tag_name" type="text" value="{{ old('tag_name', $tag->tag_name) }}" placeholder="tag_name" required autofocus />
-                    <x-input-error class="mt-2" :messages="$errors->get('tag_name')" />
+                    <x-dashboard.input-label for="tag_name" :value="__('Tag Name')" />
+                    <x-dashboard.text-input class="mt-1" id="tag_name" name="tag_name" type="text" value="{{ old('tag_name', $tag->tag_name) }}" placeholder="tag_name" required autofocus />
+                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('tag_name')" />
                 </div>
 
                 <div class="mb-3">
-                    <x-input-label for="slug" :value="__('Tag Slug / url')" />
+                    <x-dashboard.input-label for="slug" :value="__('Tag Slug / url')" />
                     <div class="relative">
-                        <x-text-input class="mt-1" id="slug" name="slug" type="text" value="{{ old('slug', $tag->slug) }}" placeholder="Slug-tag" readonly required />
+                        <x-dashboard.text-input class="mt-1" id="slug" name="slug" type="text" value="{{ old('slug', $tag->slug) }}" placeholder="Slug-tag" readonly required />
                         <x-dashboard.secondary-button class="text-back-light ri-pencil-fill absolute bottom-0.5 end-2" id="edit-slug" type="button">
                         </x-dashboard.secondary-button>
                     </div>
-                    <x-input-error class="mt-2" :messages="$errors->get('slug')" />
+                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('slug')" />
                 </div>
 
 

@@ -11,9 +11,9 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input class="mt-1 block w-full" id="email" name="email" type="email" :value="old('email')" required autofocus />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <x-dashboard.input-label for="email" :value="__('Email')" />
+            <x-dashboard.text-input class="mt-1 block w-full" id="email" name="email" type="email" :value="old('email')" required autofocus />
+            <x-dashboard.input-error class="mt-2" :messages="$errors->get('email')" />
         </div>
 
         <div class="mt-4 flex items-center justify-end">

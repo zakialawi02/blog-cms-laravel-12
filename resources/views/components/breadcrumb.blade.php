@@ -6,7 +6,7 @@
 @endphp
 
 <nav class="{{ $class }}" aria-label="breadcrumb">
-    <ol class="ms-3 flex items-center whitespace-nowrap">
+    <ol class="flex items-center whitespace-nowrap">
         @if ($totalItems > $showSegment)
             <!-- Tampilkan sejumlah item awal -->
             @foreach (array_slice($items, 0, $startCount) as $item)

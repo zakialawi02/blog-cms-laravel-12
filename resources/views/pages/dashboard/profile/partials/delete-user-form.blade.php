@@ -25,11 +25,11 @@
             </p>
 
             <div class="mt-6">
-                <x-input-label class="sr-only" for="password" value="{{ __('Password') }}" />
+                <x-dashboard.input-label class="sr-only" for="password" value="{{ __('Password') }}" />
 
-                <x-text-input class="mt-1 block w-3/4" id="password" name="password" type="password" placeholder="{{ __('Password') }}" />
+                <x-dashboard.text-input class="mt-1 block w-3/4" id="password" name="password" type="password" placeholder="{{ __('Password') }}" />
 
-                <x-input-error class="mt-2" :messages="$errors->userDeletion->get('password')" />
+                <x-dashboard.input-error class="mt-2" :messages="$errors->userDeletion->get('password')" />
             </div>
 
             <div class="mt-6 flex justify-end">

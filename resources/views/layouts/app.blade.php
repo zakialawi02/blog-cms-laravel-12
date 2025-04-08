@@ -61,7 +61,7 @@
                         <!-- End Navigation Toggle -->
 
                         <!-- Breadcrumb -->
-                        <x-breadcrumb class="w-[calc(100vw-5rem)] flex-auto" :items="generate_breadcrumbs()" />
+                        <x-breadcrumb class="ms-3 w-[calc(100vw-5rem)] flex-auto" :items="generate_breadcrumbs()" />
 
                         <!-- End Breadcrumb -->
                     </div>

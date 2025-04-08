@@ -4,10 +4,10 @@
             <div class="container mx-auto">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-4 xl:grid-cols-6">
                     <div class="md:col-span-2">
-                        <a class="navbar-brand mb-6 block" href="{{ route('article.index') }}">
+                        <a class="navbar-brand mb-3 block" href="{{ route('article.index') }}">
                             <h2 class="text-primary dark:text-dark-primary text-3xl font-bold">Zakialawi Blog</h2>
                         </a>
-                        <p class="text-muted dark:text-dark-muted max-w-xs text-base font-medium">Personal Blog & platform</p>
+                        <p class="text-muted dark:text-dark-muted max-w-xs text-base font-medium">Discover the latest stories, thoughts and inspiration | Zakialawi Personal Blog & web platform</p>
 
                         <h3 class="text-dark dark:text-dark-light mt-5 text-xl font-bold">Follow Us:</h3>
                         <div class="text-dark dark:text-dark-light mt-4 flex gap-3 font-normal">
@@ -58,7 +58,7 @@
 
                     <div class="md:col-span-2">
                         <div class="flex flex-col">
-                            <h5 class="text-dark dark:text-dark-light mb-6 text-2xl font-bold">Contact Us</h5>
+                            <h5 class="text-dark dark:text-dark-light mb-3 text-2xl font-bold">Contact Us</h5>
                             <p class="text-muted dark:text-dark-muted mt-2 text-base font-medium">hallo@zakialawi.my.id</p>
                             <form class="ms-auto mt-6 w-full max-w-lg">
                                 <div class="dark:bg-dark-base-200 relative flex items-center overflow-hidden rounded-md bg-white px-1 shadow">

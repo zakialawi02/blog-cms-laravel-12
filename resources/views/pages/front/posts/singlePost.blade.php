@@ -3,19 +3,19 @@
 
 <x-app-front-layout>
 
-    <div class="mt-6">
+    <div class="container mt-6">
         <x-breadcrumb :showSegment="4" :items="[['text' => 'Home', 'link' => '/'], ['text' => 'Blog', 'link' => route('article.index')], ['text' => request()->segment(2), 'link' => request()->segment(2)], ['link' => route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug])], ['text' => $article->title]]" />
 
-        <div class="text-dark flex flex-auto flex-grow flex-col flex-wrap gap-4 md:flex-row" id="main">
+        <div class="text-dark dark:text-dark-light flex flex-auto flex-grow flex-col flex-wrap gap-4 md:flex-row" id="main">
             <div class="w-full md:w-[60%] md:flex-grow" id="post">
                 <div class="" id="main-content">
                     <div class="my-2 mb-3 py-1" id="post-header">
                         <h1 class="mb-2 text-3xl font-bold">{{ $article->title }}</h1>
                         <div class="inline-flex items-center">
-                            <a class="after:text-secondary hover:text-primary inline-flex items-center gap-1 after:relative after:top-[-3px] after:mx-2 after:px-1 after:font-black after:content-['.']" href="{{ route('article.user', $article->user->username) }}" target="_blank">
+                            <a class="after:text-secondary hover:text-primary dark:after:text-dark-secondary dark:hover:text-dark-primary inline-flex items-center gap-1 after:relative after:top-[-3px] after:mx-2 after:px-1 after:font-black after:content-['.']" href="{{ route('article.user', $article->user->username) }}" target="_blank">
                                 <img class="w-6" src="{{ $article->user->profile_photo_path }}" alt="author {{ $article->user->username }}">{{ $article->user->username }}
                             </a>
-                            <a class="hover:text-primary" href="{{ route('article.month', ['year' => $article->published_at->format('Y'), 'month' => $article->published_at->format('m')]) }}" target="_blank">{{ $article->published_at->format('d M Y') }}</a>
+                            <a class="hover:text-primary dark:hover:text-dark-primary" href="{{ route('article.month', ['year' => $article->published_at->format('Y'), 'month' => $article->published_at->format('m')]) }}" target="_blank">{{ $article->published_at->format('d M Y') }}</a>
                         </div>
                     </div>
                 </div>
@@ -28,17 +28,17 @@
 
                 </div>
 
-                <div class="border-dark my-2 border-b-2 border-opacity-40 py-1"></div>
+                <div class="border-dark dark:border-dark-muted my-2 border-b-2 border-opacity-40 py-1"></div>
 
                 <div class="post-bottom">
-                    <div class="text-secondary flex items-center justify-between">
+                    <div class="text-secondary dark:text-dark-secondary flex items-center justify-between">
                         <div class="">
                             <!-- tags -->
                             @foreach ($article->tags->take(4) as $tag)
-                                <a class="border-secondary hover:border-primary hover:text-primary mr-1 rounded-2xl border-[1px] px-1 py-[0.1rem] transition-all duration-300" href="{{ route('article.tag', $tag->tag_name) }}">#{{ $tag->tag_name }}</a>
+                                <a class="border-secondary dark:border-dark-secondary hover:border-primary dark:hover:border-dark-primary hover:text-primary dark:hover:text-dark-primary mr-1 rounded-2xl border-[1px] px-1 py-[0.1rem] transition-all duration-300" href="{{ route('article.tag', $tag->tag_name) }}">#{{ $tag->tag_name }}</a>
                             @endforeach
                         </div>
-                        <div class="text-2xl">
+                        <div class="text-dark dark:text-dark-light text-2xl">
                             <p class="text-sm">Share:</p>
                             <!-- AddToAny BEGIN -->
                             <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
@@ -60,7 +60,7 @@
 
                 </div>
 
-                <div class="border-dark my-2 border-b-2 border-opacity-40 py-1"></div>
+                <div class="border-dark dark:border-dark-muted my-2 border-b-2 border-opacity-40 py-1"></div>
 
                 <section id="comments">
                     <div class="mb-3">
@@ -81,7 +81,7 @@
             </div>
 
             <div class="mt-10 w-full md:mt-8 md:w-[30%]" id="sidebar">
-                <div class="border-neutral mb-3 rounded-lg border-2 p-2" id="popular-posts">
+                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="popular-posts">
                     <div class="text-center text-xl font-bold">
                         <h3>Popular Posts</h3>
                     </div>
@@ -96,11 +96,11 @@
 
                                     <div>
                                         <h3 class="line-clamp-2 font-medium sm:text-lg">
-                                            <a class="hover:text-primary block" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">{{ $popular->title }}</a>
+                                            <a class="hover:text-primary dark:hover:text-dark-primary block" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">{{ $popular->title }}</a>
                                         </h3>
 
                                         <div class="mt-2 sm:flex sm:items-center sm:gap-2">
-                                            <p class="hidden sm:block sm:text-xs">Posted by <a class="hover:text-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>
+                                            <p class="hidden sm:block sm:text-xs">Posted by <a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>
                                             </p>
                                         </div>
                                     </div>
@@ -111,14 +111,14 @@
                         @endforelse
                     </div>
                 </div>
-                <div class="border-neutral mb-3 rounded-lg border-2 p-2" id="categories">
+                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="categories">
                     <div class="text-center text-xl font-bold">
                         <h3>Categories</h3>
                     </div>
                     <div class="mx-auto p-2">
                         <ul class="flex flex-col gap-4 p-2">
                             @forelse ($categories as $category)
-                                <li><a class="hover:text-primary font-bold" href="{{ route('article.category', $category->slug) }}"><i class="ri-skip-right-line text-info mr-2 text-xl"></i>{{ $category->category }}</a></li>
+                                <li><a class="hover:text-primary dark:hover:text-dark-primary font-bold" href="{{ route('article.category', $category->slug) }}"><i class="ri-skip-right-line text-info mr-2 text-xl"></i>{{ $category->category }}</a></li>
                             @empty
                                 <p class="font-regular my-2 text-center">No Category Available</p>
                             @endforelse

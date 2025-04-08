@@ -42,7 +42,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
-    <body class="bg-back-base-200 dark:bg-back-dark-base-200 font-sans antialiased">
+    <body class="bg-back-base-200 dark:bg-dark-base-300 font-sans antialiased">
         <x-headerNav />
         <main class="w-full">
             {{ $slot }}

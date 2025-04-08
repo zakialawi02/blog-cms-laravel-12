@@ -68,20 +68,20 @@
                         <div class="space-y-2.5">
                             <!-- Name -->
                             <div>
-                                <x-input-label for="name" :value="__('Name')" />
-                                <x-text-input class="px-1! py-1.5! mt-1 block w-full" id="name" name="name" type="text" :value="old('name')" required autofocus autocomplete="name" placeholder="John Doe" />
+                                <x-dashboard.input-label for="name" :value="__('Name')" />
+                                <x-dashboard.text-input class="px-1! py-1.5! mt-1 block w-full" id="name" name="name" type="text" :value="old('name')" required autofocus autocomplete="name" placeholder="John Doe" />
                             </div>
 
                             <div class="flex w-full flex-col items-center justify-between gap-2 md:flex-row">
                                 <!-- Username -->
                                 <div class="w-full md:w-1/2">
-                                    <x-input-label for="username" :value="__('Username')" />
-                                    <x-text-input class="px-1! py-1.5! block w-full" id="username" name="username" type="text" :value="old('username')" required autocomplete="username" placeholder="johndoe" />
+                                    <x-dashboard.input-label for="username" :value="__('Username')" />
+                                    <x-dashboard.text-input class="px-1! py-1.5! block w-full" id="username" name="username" type="text" :value="old('username')" required autocomplete="username" placeholder="johndoe" />
                                 </div>
 
                                 <!-- role -->
                                 <div class="w-full md:w-1/2">
-                                    <x-input-label for="username" :value="__('Username')" />
+                                    <x-dashboard.input-label for="username" :value="__('Username')" />
                                     <select class="focus:ring-back-primary dark:focus:ring-back-dark-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400" id="role" name="role">
                                         @foreach ($roles as $role)
                                             <option value="{{ $role }}">{{ ucfirst($role) }}</option>
@@ -94,12 +94,12 @@
 
                                 <!-- Email Address -->
                                 <div class="w-full md:w-1/2">
-                                    <x-input-label for="email" :value="__('Email')" />
-                                    <x-text-input class="px-1! py-1.5! mt-1 block w-full" id="email" name="email" type="email" :value="old('email')" required autocomplete="email" placeholder="name@mail.com" />
+                                    <x-dashboard.input-label for="email" :value="__('Email')" />
+                                    <x-dashboard.text-input class="px-1! py-1.5! mt-1 block w-full" id="email" name="email" type="email" :value="old('email')" required autocomplete="email" placeholder="name@mail.com" />
                                 </div>
 
                                 <div class="w-full md:w-1/2">
-                                    <x-input-label for="verified" :value="__('Verified Status')" />
+                                    <x-dashboard.input-label for="verified" :value="__('Verified Status')" />
                                     <select class="focus:ring-back-primary dark:focus:ring-back-dark-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400" id="email_verified_at" name="email_verified_at">
                                         <option value="1">Yes</option>
                                         <option value="0">No</option>
@@ -109,8 +109,8 @@
 
                             <!-- Password -->
                             <div class="mt-4">
-                                <x-input-label for="password" :value="__('Password')" />
-                                <x-text-input class="px-1! py-1.5! mt-1 block w-full" id="password" name="password" type="password" required autocomplete="new-password" />
+                                <x-dashboard.input-label for="password" :value="__('Password')" />
+                                <x-dashboard.text-input class="px-1! py-1.5! mt-1 block w-full" id="password" name="password" type="password" required autocomplete="new-password" />
                                 <span class="text-back-muted dark:text-back-dark-muted text-sm" id="passwordHelpBlock"></span>
                             </div>
                         </div>

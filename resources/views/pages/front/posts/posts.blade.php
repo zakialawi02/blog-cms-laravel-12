@@ -23,13 +23,13 @@
                                 </a>
                                 <div class="absolute bottom-0 w-full px-5 pb-5">
                                     <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
-                                        <h2 class="text-light hover:text-info mb-3 line-clamp-2 text-3xl font-bold capitalize">{{ $article->title }}</h2>
+                                        <h2 class="text-light hover:text-info dark:hover:text-dark-info mb-3 line-clamp-2 text-3xl font-bold capitalize">{{ $article->title }}</h2>
                                     </a>
                                     <p class="text-base-100 line-clamp-3 sm:inline-block">{{ $article->excerpt }}</p>
                                     <div class="pt-2">
                                         <div class="text-base-100">
-                                            <div class="border-accent mr-2 inline-block h-3 border-l-2"></div>{{ $article->published_at->format('F j, Y') }}
-                                            <div class="border-accent ml-2 mr-2 inline-block h-3 border-l-2"></div>{{ $article->category->category ?? $article->category_id }}
+                                            <div class="border-accent dark:border-dark-accent mr-2 inline-block h-3 border-l-2"></div>{{ $article->published_at->format('F j, Y') }}
+                                            <div class="border-accent dark:border-dark-accent ml-2 mr-2 inline-block h-3 border-l-2"></div>{{ $article->category->category ?? $article->category_id }}
                                         </div>
                                     </div>
                                 </div>
@@ -48,12 +48,12 @@
                                         </a>
                                         <div class="absolute bottom-0 w-full px-4 pb-4">
                                             <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
-                                                <h2 class="text-light hover:text-info mb-1 line-clamp-3 text-lg font-bold capitalize leading-tight">{{ $article->title }}</h2>
+                                                <h2 class="text-light hover:text-info dark:hover:text-dark-info mb-1 line-clamp-3 text-lg font-bold capitalize leading-tight">{{ $article->title }}</h2>
                                             </a>
                                             <div class="pt-1">
                                                 <div class="text-base-100">
-                                                    <div class="border-accent mr-2 inline-block h-3 border-l-2"></div>{{ $article->published_at->format('F j, Y') }}
-                                                    <div class="border-accent ml-2 mr-2 inline-block h-3 border-l-2"></div>{{ $article->category->category ?? $article->category_id }}
+                                                    <div class="border-accent dark:border-dark-accent mr-2 inline-block h-3 border-l-2"></div>{{ $article->published_at->format('F j, Y') }}
+                                                    <div class="border-accent dark:border-dark-accent ml-2 mr-2 inline-block h-3 border-l-2"></div>{{ $article->category->category ?? $article->category_id }}
                                                 </div>
                                             </div>
                                         </div>
@@ -68,10 +68,10 @@
     @endunless
 
     <!-- Recent Blog Post -->
-    <section class="fluid container px-6 py-10 md:px-4">
+    <section class="fluid text-dark dark:text-dark-light container px-6 py-10 md:px-4">
         <div class="mb-6 text-3xl font-semibold">
             <h2>{{ request()->has('search') && request()->get('search') != '' ? 'Search Result' : 'Recent Post' }}</h2>
-            <div class="to-secondary -z-1 float-end h-[4px] w-[50%] -translate-y-4 bg-gradient-to-r from-transparent md:w-[84%]"></div>
+            <div class="to-secondary dark:to-dark-secondary -z-1 float-end h-[4px] w-[50%] -translate-y-4 bg-gradient-to-r from-transparent md:w-[84%]"></div>
         </div>
 
         <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
@@ -122,19 +122,22 @@
     </section>
 
     <section class="fluid container px-6 py-5 md:px-4">
-        <h2 class="mb-5 text-2xl font-bold">You Missed</h2>
+        <h2 class="text-dark dark:text-dark-light mb-5 text-2xl font-bold">You Missed</h2>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+            {{--  --}}
             <div class="group relative overflow-hidden rounded-lg">
                 <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src={{ asset('assets/img/image-placeholder.png') }} alt="Post Cover" loading="lazy">
                 <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
                     <div class="mb-2 flex space-x-2">
-                        <span class="text-accent bg-light rounded-full px-2 py-1 text-xs font-semibold">Programming</span>
+                        <span class="text-accent dark:text-dark-accent bg-light dark:bg-dark-light rounded-full px-2 py-1 text-xs font-semibold">Programming</span>
                     </div>
-                    <h3 class="text-light hover:text-accent all line-clamp-3 text-lg font-semibold transition duration-300">
+                    <h3 class="text-light hover:text-accent dark:hover:text-dark-accent all line-clamp-3 text-lg font-semibold transition duration-300">
                         <a href="https://zakialawi.com/blog/2024/exploring-the-latest-hype-in-ui-component-libraries-aternity-ui">Exploring the Latest Hype in UI Component Libraries: Aternity UI</a>
                     </h3>
                 </div>
             </div>
+
+
             <div class="group relative overflow-hidden rounded-lg">
                 <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src={{ asset('assets/img/image-placeholder.png') }} alt="Post Cover" loading="lazy">
                 <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">

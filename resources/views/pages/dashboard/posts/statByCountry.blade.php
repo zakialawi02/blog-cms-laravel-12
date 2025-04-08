@@ -35,17 +35,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($views as $view)
+                        @foreach ($views as $view)
                             <tr>
                                 <td>{{ $view->location }}</td>
                                 <td>{{ $view->code }}</td>
                                 <td>{{ $view->total_views }}</td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td class="text-center" colspan="3">No Visitors Data</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>

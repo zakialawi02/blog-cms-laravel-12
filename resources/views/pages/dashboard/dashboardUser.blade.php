@@ -23,24 +23,24 @@
                     @csrf
                     <div class="mb-2 flex items-center justify-center space-x-2 rtl:space-x-reverse">
                         <div>
-                            <x-input-label class="sr-only" for="code-1" value="First code" />
-                            <x-text-input class="h-9! w-9!" id="code-1" name="code" data-focus-input-init data-focus-input-next="code-2" type="text" maxlength="1" required />
+                            <x-dashboard.input-label class="sr-only" for="code-1" value="First code" />
+                            <x-dashboard.text-input class="h-9! w-9!" id="code-1" name="code" data-focus-input-init data-focus-input-next="code-2" type="text" maxlength="1" required />
                         </div>
                         <div>
-                            <x-input-label class="sr-only" for="code-2" value="Second code" />
-                            <x-text-input class="h-9! w-9!" id="code-2" name="code" data-focus-input-init data-focus-input-prev="code-1" data-focus-input-next="code-3" type="text" maxlength="1" required />
+                            <x-dashboard.input-label class="sr-only" for="code-2" value="Second code" />
+                            <x-dashboard.text-input class="h-9! w-9!" id="code-2" name="code" data-focus-input-init data-focus-input-prev="code-1" data-focus-input-next="code-3" type="text" maxlength="1" required />
                         </div>
                         <div>
-                            <x-input-label class="sr-only" for="code-3" value="Third code" />
-                            <x-text-input class="h-9! w-9!" id="code-3" name="code" data-focus-input-init data-focus-input-prev="code-2" data-focus-input-next="code-4" type="text" maxlength="1" required />
+                            <x-dashboard.input-label class="sr-only" for="code-3" value="Third code" />
+                            <x-dashboard.text-input class="h-9! w-9!" id="code-3" name="code" data-focus-input-init data-focus-input-prev="code-2" data-focus-input-next="code-4" type="text" maxlength="1" required />
                         </div>
                         <div>
-                            <x-input-label class="sr-only" for="code-4" value="Fourth code" />
-                            <x-text-input class="h-9! w-9!" id="code-4" name="code" data-focus-input-init data-focus-input-prev="code-3" type="text" maxlength="1" required />
+                            <x-dashboard.input-label class="sr-only" for="code-4" value="Fourth code" />
+                            <x-dashboard.text-input class="h-9! w-9!" id="code-4" name="code" data-focus-input-init data-focus-input-prev="code-3" type="text" maxlength="1" required />
                         </div>
                     </div>
                     <p class="mt-2 text-sm text-gray-500 dark:text-gray-400" id="helper-text-explanation">Please input the 4 digit code we sent via email.</p>
-                    <x-input-error class="mt-2" :messages="$errors->get('code')" />
+                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('code')" />
 
                     <div class="mt-4 flex items-center justify-center gap-4">
                         <x-dashboard.primary-button id="submitCode" type="submit" :size="'small'">

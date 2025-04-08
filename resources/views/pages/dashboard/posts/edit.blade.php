@@ -45,67 +45,67 @@
                         <div class="lg:col-span-2">
                             <x-card>
                                 <div class="mb-3">
-                                    <x-input-label for="title" :value="__('Title')" />
-                                    <x-text-input class="mt-1" id="title" name="title" type="text" value="{{ old('title', $post->title) }}" placeholder="title" required autofocus />
-                                    <x-input-error class="mt-2" :messages="$errors->get('title')" />
+                                    <x-dashboard.input-label for="title" :value="__('Title')" />
+                                    <x-dashboard.text-input class="mt-1" id="title" name="title" type="text" value="{{ old('title', $post->title) }}" placeholder="title" required autofocus />
+                                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('title')" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-input-label for="category_id" :value="__('Category')" />
+                                    <x-dashboard.input-label for="category_id" :value="__('Category')" />
                                     <select class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500" id="category_id" name="category_id">
                                         <option value="">-- Select Category --</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}" {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>{{ $category->category }}</option>
                                         @endforeach
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('category_id')" />
+                                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('category_id')" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-input-label for="excerpt" :value="__('Excerpt/Summary/Intro')" />
-                                    <x-textarea-input id="excerpt" name="excerpt" rows="4" placeholder="Write your excerpt here...">{{ old('excerpt', $post->excerpt) }}</x-textarea-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('excerpt')" />
+                                    <x-dashboard.input-label for="excerpt" :value="__('Excerpt/Summary/Intro')" />
+                                    <x-dashboard.textarea-input id="excerpt" name="excerpt" rows="4" placeholder="Write your excerpt here...">{{ old('excerpt', $post->excerpt) }}</x-dashboard.textarea-input>
+                                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('excerpt')" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-input-label for="tags" :value="__('Tags')" />
-                                    <x-text-input class="tagify--custom-dropdown w-full" id="tags" name="tags" placeholder="Type to add tags. Use comma to separate tags and new tag" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('tags')" />
+                                    <x-dashboard.input-label for="tags" :value="__('Tags')" />
+                                    <x-dashboard.text-input class="tagify--custom-dropdown w-full" id="tags" name="tags" placeholder="Type to add tags. Use comma to separate tags and new tag" />
+                                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('tags')" />
                                 </div>
                             </x-card>
                         </div>
                         <div class="">
                             <x-card>
                                 <div class="mb-3">
-                                    <x-input-label for="slug" :value="__('Slug / url post')" />
+                                    <x-dashboard.input-label for="slug" :value="__('Slug / url post')" />
                                     <div class="relative">
-                                        <x-text-input class="mt-1" id="slug" name="slug" type="text" value="{{ old('slug', $post->slug) }}" placeholder="slug-url" readonly required />
+                                        <x-dashboard.text-input class="mt-1" id="slug" name="slug" type="text" value="{{ old('slug', $post->slug) }}" placeholder="slug-url" readonly required />
                                         <x-dashboard.secondary-button class="text-back-light ri-pencil-fill absolute bottom-0.5 end-2" id="edit-slug" type="button">
                                         </x-dashboard.secondary-button>
                                     </div>
-                                    <x-input-error class="mt-2" :messages="$errors->get('slug')" />
+                                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('slug')" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-input-label for="slug" :value="__('Publish At')" />
+                                    <x-dashboard.input-label for="slug" :value="__('Publish At')" />
                                     <span class="text-back-muted text-sm">*by default immediately</span>
-                                    <x-text-input class="" id="published_at" name="published_at" type="datetime-local" value="{{ old('published_at', $post->published_at) }}" placeholder="Click for choose publish datetime" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('published_at')" />
+                                    <x-dashboard.text-input class="" id="published_at" name="published_at" type="datetime-local" value="{{ old('published_at', $post->published_at) }}" placeholder="Click for choose publish datetime" />
+                                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('published_at')" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-input-label for="user_id" :value="__('Author')" />
+                                    <x-dashboard.input-label for="user_id" :value="__('Author')" />
                                     <select class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500" id="user_id" name="user_id">
                                         <option value="">-- Select Author --</option>
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}" {{ old('user_id', $post->user_id) == $user->id ? 'selected' : '' }}>{{ $user->username }}</option>
                                         @endforeach
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('user_id')" />
+                                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('user_id')" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-input-label for="cover" :value="__('Featured Image')" />
+                                    <x-dashboard.input-label for="cover" :value="__('Featured Image')" />
                                     <div class="mb-5 flex w-full items-center justify-center">
                                         <label class="dropzone flex h-24 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600" id="dropzone">
                                             <div class="flex flex-col items-center justify-center pb-6 pt-5">
@@ -120,7 +120,7 @@
                                             <input class="cover hidden" id="dropzone-file" name="cover" type="file" />
                                         </label>
                                     </div>
-                                    <x-input-error class="mt-2" :messages="$errors->get('cover')" />
+                                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('cover')" />
                                     <div class="preview-cover mt-2">
                                         <img src="{{ $post->cover }}" alt="Featured Image" style="width: 300px; height: 200px; object-fit: cover">
                                     </div>
@@ -135,31 +135,31 @@
             <div class="hidden" id="styled-metadata" role="tabpanel" aria-labelledby="metadata-tab">
                 <x-card>
                     <div class="mb-3">
-                        <x-input-label for="meta_title" :value="__('Meta Title')" />
+                        <x-dashboard.input-label for="meta_title" :value="__('Meta Title')" />
                         <span class="text-back-muted text-sm dark:text-gray-400">Use meta title for customing title on browser tab and SEO</span>
-                        <x-text-input class="mt-1" id="meta_title" name="meta_title" type="text" :value="old('meta_title', $post->meta_title)" placeholder="SEO meta title" />
-                        <x-input-error class="mt-2" :messages="$errors->get('meta_title')" />
+                        <x-dashboard.text-input class="mt-1" id="meta_title" name="meta_title" type="text" :value="old('meta_title', $post->meta_title)" placeholder="SEO meta title" />
+                        <x-dashboard.input-error class="mt-2" :messages="$errors->get('meta_title')" />
                     </div>
                     <div class="mb-3">
-                        <x-input-label for="meta_desc" :value="__('Meta Description')" />
+                        <x-dashboard.input-label for="meta_desc" :value="__('Meta Description')" />
                         <span class="text-back-muted text-sm dark:text-gray-400">Use summary for custom description SEO</span>
-                        <x-textarea-input id="meta_desc" name="meta_desc" rows="4" placeholder="Write your meta description here...">{{ old('meta_desc', $post->meta_desc) }}</x-textarea-input>
-                        <x-input-error class="mt-2" :messages="$errors->get('meta_desc')" />
+                        <x-dashboard.textarea-input id="meta_desc" name="meta_desc" rows="4" placeholder="Write your meta description here...">{{ old('meta_desc', $post->meta_desc) }}</x-dashboard.textarea-input>
+                        <x-dashboard.input-error class="mt-2" :messages="$errors->get('meta_desc')" />
                     </div>
                     <div class="mb-3">
-                        <x-input-label for="meta_keywords" :value="__('Meta Description')" />
+                        <x-dashboard.input-label for="meta_keywords" :value="__('Meta Description')" />
                         <span class="text-back-muted text-sm dark:text-gray-400">Use comma to separate.</span>
-                        <x-textarea-input id="meta_keywords" name="meta_keywords" rows="4" placeholder="Enter meta keywords. Eg: keyword1, keyword2, keyword abc, keyword xyz">{{ old('meta_keywords', $post->meta_keywords) }}</x-textarea-input>
-                        <x-input-error class="mt-2" :messages="$errors->get('meta_keywords')" />
+                        <x-dashboard.textarea-input id="meta_keywords" name="meta_keywords" rows="4" placeholder="Enter meta keywords. Eg: keyword1, keyword2, keyword abc, keyword xyz">{{ old('meta_keywords', $post->meta_keywords) }}</x-dashboard.textarea-input>
+                        <x-dashboard.input-error class="mt-2" :messages="$errors->get('meta_keywords')" />
                     </div>
                 </x-card>
             </div>
 
             <x-card class="my-6">
 
-                <x-input-label for="cover" :value="__('Content')" />
-                <x-input-error class="mt-2" :messages="$errors->get('cover')" />
-                <x-textarea-input id="content" name="content" rows="4" placeholder="Write your thoughts here...">{{ old('content', $post->content) }}</x-textarea-input>
+                <x-dashboard.input-label for="cover" :value="__('Content')" />
+                <x-dashboard.input-error class="mt-2" :messages="$errors->get('cover')" />
+                <x-dashboard.textarea-input id="content" name="content" rows="4" placeholder="Write your thoughts here...">{{ old('content', $post->content) }}</x-dashboard.textarea-input>
 
             </x-card>
 
