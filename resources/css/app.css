@@ -129,7 +129,7 @@
     }
 
     ::-webkit-scrollbar {
-        @apply w-[0.4rem] bg-neutral dark:bg-dark-neutral;
+        @apply w-[0.4rem] h-[0.5rem] bg-neutral dark:bg-dark-neutral;
     }
 
     ::-webkit-scrollbar-thumb {

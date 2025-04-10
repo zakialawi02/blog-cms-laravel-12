@@ -15,14 +15,14 @@
         </script>
         <title>@yield('title') | {{ $data['web_setting']['web_name'] ?? config('app.name') }}</title>
 
-        <meta name="description" content="@yield('meta_description', '')">
+        <meta name="description" content="@yield('meta_description', $data['web_setting']['description'] ?? '')">
         <meta name="author" content="@yield('meta_author', 'Zaki Alawi')">
-        <meta name="keywords" content="@yield('meta_keywords', 'Zaki Alawi')">
-        <meta property="og:title" content="@yield('og_title', config('app.name'))" />
+        <meta name="keywords" content="@yield('meta_keywords', $data['web_setting']['keywords'] ?? 'Zaki Alawi, Blog')">
+        <meta property="og:title" content="@yield('og_title', $data['web_setting']['web_name'] ?? config('app.name')) | {{ $data['web_setting']['web_name'] ?? config('app.name') }}" />
         <meta property="og:type" content="@yield('og_type', 'website')" />
         <meta property="og:url" content="@yield('og_url', url()->current())" />
-        <meta property="og:description" content="@yield('og_description', config('app.name'))" />
-        <meta property="og:image" content="@yield('og_image', asset('assets/img/favicon.png'))" />
+        <meta property="og:description" content="@yield('og_description', $data['web_setting']['description'] ?? config('app.name'))" />
+        <meta property="og:image" content="@yield('og_image', asset('assets/app_logo/' . ($data['web_setting']['favicon'] ?? 'favicon.png')))" />
 
         <meta name="robots" content="@yield('meta_robots', 'index,follow')">
 

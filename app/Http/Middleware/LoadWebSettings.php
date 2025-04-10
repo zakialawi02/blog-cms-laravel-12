@@ -5,8 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\WebSetting;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoadWebSettings
 {
@@ -16,8 +17,10 @@ class LoadWebSettings
         if ($request->is('api/*') || $request->ajax()) {
             return $next($request);
         }
-        // Ambil data WebSetting
-        $webSetting = WebSetting::first();
+        // Ambil data WebSetting dari cache, kalau tidak ada baru query
+        $webSetting = Cache::remember('web_setting', now()->addDays(30), function () {
+            return WebSetting::first();
+        });
         // Composer untuk semua view
         View::composer('*', function ($view) use ($webSetting) {
             // Ambil data yang sudah dikirim ke view (jika ada)

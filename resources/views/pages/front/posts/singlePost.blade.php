@@ -1,8 +1,9 @@
-@section('title', $data['title'] ?? '')
-@section('meta_description', '')
+@section('title', $article->title ?? ($data['title'] ?? $data['web_setting']['web_name']))
+@section('meta_description', $article->excerpt ?? ($data['description'] ?? ''))
+@section('meta_keywords', $article->keywords ?? ($data['keywords'] ?? ''))
+
 
 <x-app-front-layout>
-
     <div class="container mt-6">
         <x-breadcrumb :showSegment="4" :items="[['text' => 'Home', 'link' => '/'], ['text' => 'Blog', 'link' => route('article.index')], ['text' => request()->segment(2), 'link' => request()->segment(2)], ['link' => route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug])], ['text' => $article->title]]" />
 
@@ -121,6 +122,20 @@
                                 <li><a class="hover:text-primary dark:hover:text-dark-primary font-bold" href="{{ route('article.category', $category->slug) }}"><i class="ri-skip-right-line text-info mr-2 text-xl"></i>{{ $category->category }}</a></li>
                             @empty
                                 <p class="font-regular my-2 text-center">No Category Available</p>
+                            @endforelse
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="categories">
+                    <div class="text-center text-xl font-bold">
+                        <h3>Tags</h3>
+                    </div>
+                    <div class="mx-auto p-2">
+                        <ul class="flex flex-wrap">
+                            @forelse ($tags as $tag)
+                                <a class="border-secondary hover:border-primary hover:text-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
+                            @empty
+                                <p class="font-regular my-2 text-center">No Tag Available</p>
                             @endforelse
                         </ul>
                     </div>

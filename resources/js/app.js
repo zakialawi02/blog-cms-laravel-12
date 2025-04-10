@@ -36,9 +36,13 @@ window.timeAgo = timeAgo;
 
 $(document).ready(function () {
     const themeToggle = document.getElementById("theme-toggle");
+    const iconSun = document.getElementById("icon-sun");
+    const iconMoon = document.getElementById("icon-moon");
     function applyTheme(theme) {
         document.documentElement.classList.toggle("dark", theme === "dark");
         localStorage.setItem("theme", theme);
+        iconSun ? iconSun.classList.toggle("hidden", theme !== "dark") : null;
+        iconMoon ? iconMoon.classList.toggle("hidden", theme === "dark") : null;
     }
     // Cek tema saat ini
     const savedTheme = localStorage.getItem("theme") || "light";

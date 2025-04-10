@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\WebSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class WebSettingController extends Controller
@@ -61,12 +62,14 @@ class WebSettingController extends Controller
                 'favicon.dimensions' => 'The favicon should be 512x512 pixels or less.',
             ]
         );
+        Cache::forget('web_setting');
 
         $data = WebSetting::first();
         $settings = WebSetting::find($data->id);
         $request->merge([
             'id' => $data->id,
-            'can_join_contributor' => $request->can_join_contributor ? 1 : 0
+            'can_join_contributor' => $request->can_join_contributor ? 1 : 0,
+            'web_name_variant' => $request->web_name_variant == 'vars1' ? '1' : ($request->web_name_variant == 'vars2' ? '2' : ($request->web_name_variant == 'vars3' ? '3' : '1')),
         ]);
 
         $settings->fill($request->except(['app_logo', 'favicon']));

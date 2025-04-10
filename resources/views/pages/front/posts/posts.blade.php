@@ -1,14 +1,10 @@
 @section('title', $data['title'] ?? 'Blog')
-@section('meta_description', 'Blog of zakialawi.my.id website')
-@section('meta_author', 'zakialawi')
 
-@section('og_title', 'Blog | zakialawi.my.id')
-@section('og_description', 'Blog of zakialawi.my.id website')
+@section('og_title', $data['og_title'] ?? ($data['title'] ?? $data['web_setting']['web_name']))
 
 <x-app-front-layout>
-
     <!-- Sticky/Featured/Popular Blog Post -->
-    @unless ((request()->has('search') && request()->get('search') != '') || (request()->has('page') && request()->get('page') != 1))
+    @unless ((request()->has('search') && request()->get('search') != '') || ((request()->has('page') && request()->get('page') != 1) || request()->url() !== url('/blog')))
         <section class="pb-0 pt-4">
             <div class="mx-auto px-3 2xl:container sm:px-4 xl:px-2">
                 <!-- big grid 1 -->
@@ -67,10 +63,16 @@
         </section>
     @endunless
 
+    @if (!request()->is('blog') || request()->is('blog/*') || request()->query('search'))
+        <x-breadcrumb class="container -mb-5 flex-auto px-6 pt-10 md:px-4" :items="request()->has('search') && request()->get('search') ? [['text' => 'Blog', 'link' => '/blog'], ['text' => 'Search', 'link' => '#'], ['text' => request()->get('search')]] : generate_breadcrumbs()" />
+    @endif
+
     <!-- Recent Blog Post -->
     <section class="fluid text-dark dark:text-dark-light container px-6 py-10 md:px-4">
         <div class="mb-6 text-3xl font-semibold">
-            <h2>{{ request()->has('search') && request()->get('search') != '' ? 'Search Result' : 'Recent Post' }}</h2>
+            <h2>
+                {{ request()->query('search') ? 'Search Result' : (request()->routeIs('article.user') ? 'User Posts: ' . request()->segment(3) : 'Recent Post') }}
+            </h2>
             <div class="to-secondary dark:to-dark-secondary -z-1 float-end h-[4px] w-[50%] -translate-y-4 bg-gradient-to-r from-transparent md:w-[84%]"></div>
         </div>
 
@@ -124,53 +126,19 @@
     <section class="fluid container px-6 py-5 md:px-4">
         <h2 class="text-dark dark:text-dark-light mb-5 text-2xl font-bold">You Missed</h2>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-            {{--  --}}
-            <div class="group relative overflow-hidden rounded-lg">
-                <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src={{ asset('assets/img/image-placeholder.png') }} alt="Post Cover" loading="lazy">
-                <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
-                    <div class="mb-2 flex space-x-2">
-                        <span class="text-accent dark:text-dark-accent bg-light dark:bg-dark-light rounded-full px-2 py-1 text-xs font-semibold">Programming</span>
+            @foreach ($randomPosts->take(4) as $post)
+                <div class="group relative overflow-hidden rounded-lg">
+                    <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->cover }}" alt="Post Cover" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
+                    <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
+                        <div class="mb-2 flex space-x-2">
+                            <span class="text-accent dark:text-dark-accent bg-light dark:bg-dark-light rounded-full px-2 py-1 text-xs font-semibold">{{ $post->category->category }}</span>
+                        </div>
+                        <h3 class="text-light hover:text-accent dark:hover:text-dark-accent all line-clamp-3 text-lg font-semibold transition duration-300">
+                            <a href={{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}>{{ $post->title }}</a>
+                        </h3>
                     </div>
-                    <h3 class="text-light hover:text-accent dark:hover:text-dark-accent all line-clamp-3 text-lg font-semibold transition duration-300">
-                        <a href="https://zakialawi.com/blog/2024/exploring-the-latest-hype-in-ui-component-libraries-aternity-ui">Exploring the Latest Hype in UI Component Libraries: Aternity UI</a>
-                    </h3>
                 </div>
-            </div>
-
-
-            <div class="group relative overflow-hidden rounded-lg">
-                <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src={{ asset('assets/img/image-placeholder.png') }} alt="Post Cover" loading="lazy">
-                <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
-                    <div class="mb-2 flex space-x-2">
-                        <span class="text-accent bg-light rounded-full px-2 py-1 text-xs font-semibold">Programming</span>
-                    </div>
-                    <h3 class="text-light hover:text-accent all line-clamp-3 text-lg font-semibold transition duration-300">
-                        <a href="https://zakialawi.com/blog/2024/5-soft-skills-that-every-programmer-must-have">5 Soft Skills That Every Programmer Must Have</a>
-                    </h3>
-                </div>
-            </div>
-            <div class="group relative overflow-hidden rounded-lg">
-                <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src={{ asset('assets/img/image-placeholder.png') }} alt="Post Cover" loading="lazy">
-                <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
-                    <div class="mb-2 flex space-x-2">
-                        <span class="text-accent bg-light rounded-full px-2 py-1 text-xs font-semibold">Programming</span>
-                    </div>
-                    <h3 class="text-light hover:text-accent all line-clamp-3 text-lg font-semibold transition duration-300">
-                        <a href="https://zakialawi.com/blog/2024/5-reasons-why-python-is-a-great-programming-language-for-beginners">5 Reasons Why Python is a Great Programming Language for Beginners</a>
-                    </h3>
-                </div>
-            </div>
-            <div class="group relative overflow-hidden rounded-lg">
-                <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src={{ asset('assets/img/image-placeholder.png') }} alt="Post Cover" loading="lazy">
-                <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
-                    <div class="mb-2 flex space-x-2">
-                        <span class="text-accent bg-light rounded-full px-2 py-1 text-xs font-semibold">Earth</span>
-                    </div>
-                    <h3 class="text-light hover:text-accent all line-clamp-3 text-lg font-semibold transition duration-300">
-                        <a href="https://zakialawi.com/blog/2024/aerial-mapping-and-photogrammetry-an-overview">Aerial Mapping and Photogrammetry: An Overview</a>
-                    </h3>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
 

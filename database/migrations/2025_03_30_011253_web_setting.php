@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('web_settings', function (Blueprint $table) {
             $table->id();
             $table->string('web_name')->nullable()->index();
+            $table->string('web_name_variant')->nullable()->default('3');
             $table->string('tagline')->nullable()->index();
             $table->string('description')->nullable()->index();
             $table->string('keywords')->nullable()->index();

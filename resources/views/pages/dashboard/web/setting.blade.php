@@ -67,6 +67,48 @@
                     </div>
 
                     <div class="mb-3">
+                        <x-dashboard.input-label for="web_name_variant" value="{{ __('Display Web Name') }}"></x-dashboard.input-label>
+                        <span class="text-sm text-gray-500">Display Web Name and Tagline position</span>
+                        <div class="mt-3">
+                            <fieldset class="inline-flex space-x-2">
+                                <div>
+                                    <label class="has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600 flex min-h-20 min-w-44 items-center justify-between gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50" for="vars1">
+                                        <div class="flex items-center gap-2">
+                                            <img class="max-w-22 h-auto" src={{ asset('assets/app_logo/app_logo.png') }} alt="Logo Application">
+                                            <p class="text-gray-900">Web Name</p>
+                                        </div>
+                                        <input class="size-5 border-gray-300" id="vars1" name="web_name_variant" type="radio" value="vars1" {{ $data['web_setting']['web_name_variant'] == '1' ? 'checked' : '' }} />
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600 flex min-h-20 min-w-44 items-center justify-between gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50" for="vars2">
+                                        <div>
+                                            <img class="max-w-22 h-auto" src={{ asset('assets/app_logo/app_logo.png') }} alt="Logo Application">
+                                        </div>
+                                        <input class="size-5 border-gray-300" id="vars2" name="web_name_variant" type="radio" value="vars2" {{ $data['web_setting']['web_name_variant'] == '2' ? 'checked' : '' }} />
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600 flex min-h-20 min-w-44 items-center justify-between gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50" for="vars3">
+                                        <div>
+                                            <img class="max-w-22 h-auto" src={{ asset('assets/app_logo/app_logo.png') }} alt="Logo Application">
+                                            <p class="text-gray-900">Tagline</p>
+                                        </div>
+                                        <input class="size-5 border-gray-300" id="vars3" name="web_name_variant" type="radio" value="vars3" {{ $data['web_setting']['web_name_variant'] == '3' ? 'checked' : '' }} />
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <x-dashboard.input-error class="mt-2" :messages="$errors->get('web_name_variant')" />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-dashboard.input-label for="tagline" value="{{ __('Tagline') }}"></x-dashboard.input-label>
+                        <x-dashboard.text-input name="tagline" type="text" value="{{ old('tagline', $data['web_setting']['tagline']) }}" placeholder="tagline/slogan"></x-dashboard.text-input>
+                        <x-dashboard.input-error class="mt-2" :messages="$errors->get('tagline')" />
+                    </div>
+
+                    <div class="mb-3">
                         <x-dashboard.input-label for="description" value="{{ __('Description') }}"></x-dashboard.input-label>
                         <x-dashboard.textarea-input name="description" rows="3" placeholder="write your description of website">{{ old('description', $data['web_setting']['description']) }}</x-dashboard.textarea-input>
                         <x-dashboard.input-error class="mt-2" :messages="$errors->get('description')" />

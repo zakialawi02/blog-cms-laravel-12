@@ -10,6 +10,7 @@ class WebSetting extends Model
 
     protected $fillable = [
         'web_name',
+        'web_name_variant',
         'tagline',
         'description',
         'keywords',

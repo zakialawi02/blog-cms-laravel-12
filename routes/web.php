@@ -92,11 +92,11 @@ Route::get('/admin', function () {
 
 Route::get('/blog', [ArticleController::class, 'index'])->name('article.index');
 Route::get('/blog/popular', [ArticleController::class, 'popularPost'])->name('article.popular');
-Route::get('/blog/tags/{slug}', [ArticleController::class, 'getArticlesByTag'])->name('article.tag');
-Route::get('/blog/categories/{slug}', [ArticleController::class, 'getArticlesByCategory'])->name('article.category');
-Route::get('/blog/users/{username}', [ArticleController::class, 'getArticlesByUser'])->name('article.user');
-Route::get('/blog/archive/{year}', [ArticleController::class, 'getArticlesByYear'])->name('article.year');
-Route::get('/blog/archive/{year}/{month}', [ArticleController::class, 'getArticlesByMonth'])->name('article.month');
+Route::get('/blog/tags/{slug}', [ArticleController::class, 'articlesByTag'])->name('article.tag');
+Route::get('/blog/categories/{slug}', [ArticleController::class, 'articlesByCategory'])->name('article.category');
+Route::get('/blog/users/{username}', [ArticleController::class, 'articlesByUser'])->name('article.user');
+Route::get('/blog/archive/{year}', [ArticleController::class, 'articlesByYear'])->name('article.year');
+Route::get('/blog/archive/{year}/{month}', [ArticleController::class, 'articlesByMonth'])->name('article.month');
 Route::get('/blog/{year}/{slug}', [ArticleController::class, 'show'])->name('article.show');
 
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
