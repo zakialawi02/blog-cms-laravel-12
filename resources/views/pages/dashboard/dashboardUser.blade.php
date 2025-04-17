@@ -3,9 +3,9 @@
 
 <x-app-layout>
     <section class="mb-1 flex items-center justify-between p-1 text-xl md:px-4 md:pt-4">
-        <p>
+        <h2>
             {{ __('Welcome') }}, {{ Auth::user()->name }}
-        </p>
+        </h2>
         <x-dashboard.primary-button id="refreshDashboard" type="button" :size="'small'">
             <i class="ri-refresh-line"></i>
             Refresh

@@ -1,0 +1,354 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("ckeditor5/ckeditor5.css");
+
+.wrs_tickContainer {
+    display: none !important;
+}
+.Wirisformula {
+    display: inline;
+}
+
+@media print {
+    body {
+        margin: 0 !important;
+    }
+}
+
+.main-container {
+    font-family: "Lato";
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ck-content {
+    font-family: "Lato";
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.ck.ck-content.ck-editor__editable_inline {
+    padding: 5px 25px;
+}
+
+.ck-editor__editable_inline {
+    min-height: 300px;
+}
+
+.editor-container_include-block-toolbar {
+    margin-left: 30px;
+}
+
+.editor_container__word-count .ck-word-count {
+    display: flex;
+    height: 20px;
+    gap: var(--ck-spacing-small);
+    justify-content: flex-end;
+    font-size: var(--ck-font-size-base);
+    line-height: var(--ck-line-height-base);
+    font-family: var(--ck-font-face);
+    padding: var(--ck-spacing-small) var(--ck-spacing-standard);
+    padding-bottom: 20px;
+}
+
+.editor-container_include-word-count.editor-container_classic-editor
+    .editor_container__word-count {
+    border: 1px solid var(--ck-color-base-border);
+    border-radius: var(--ck-border-radius);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
+}
+
+.editor-container_include-word-count.editor-container_classic-editor
+    .editor-container__editor
+    .ck-editor
+    .ck-editor__editable {
+    border-radius: 0;
+}
+
+/* format style */
+.ck.ck-content p {
+    margin-bottom: 0.5rem;
+}
+
+.ck.ck-content ul {
+    list-style-type: square;
+    margin-left: 20px;
+    padding-left: 10px;
+}
+
+.ck.ck-content ul li {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.ck.ck-content ol {
+    margin-left: 20px;
+    padding-left: 10px;
+}
+
+.ck.ck-content ol li {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.ck.ck-content a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+.ck.ck-content a:hover {
+    color: var(--color-primary);
+    opacity: 0.8;
+    text-decoration: underline;
+}
+.ck.ck-content a:focus {
+    outline: none;
+    border-bottom: 2px solid var(--color-primary);
+}
+.dark .ck.ck-content a {
+    color: var(--color-dark-primary);
+}
+.dark .ck.ck-content a:hover {
+    color: var(--color-dark-primary);
+    opacity: 0.8;
+    text-decoration: underline;
+}
+.dark .ck.ck-content a:focus {
+    border-bottom: 2px solid var(--color-dark-primary);
+}
+
+.ck.ck-content details {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.ck.ck-content summary {
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--color-primary);
+}
+.ck.ck-content summary:hover {
+    color: var(--color-secondary);
+}
+.ck.ck-content details[open] summary {
+    color: var(--color-secondary);
+}
+.dark .ck.ck-content summary {
+    color: var(--color-dark-primary);
+}
+.dark .ck.ck-content summary:hover {
+    color: var(--color-dark-secondary);
+}
+.dark .ck.ck-content details[open] summary {
+    color: var(--color-dark-secondary);
+}
+
+.ck.ck-content span.spoiler {
+    background: #000;
+    color: #000;
+}
+
+.ck.ck-content span.marker {
+    background: yellow;
+}
+
+.ck.ck-content span.spoiler:hover {
+    background: #000;
+    color: #fff;
+}
+
+.ck.ck-content h2.document-title {
+    text-transform: uppercase;
+    font-size: 50px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.ck.ck-content h3.document-subtitle {
+    font-size: 20px;
+    color: var(--color-primary);
+    margin: 0 0 1em;
+    font-weight: normal;
+    padding: 0;
+}
+
+.ck.ck-content blockquote.side-quote {
+    font-style: normal;
+    float: right;
+    width: 40%;
+    position: relative;
+    border: 0;
+    overflow: visible;
+    z-index: 1;
+    margin-left: 1em;
+    background-color: transparent !important;
+    border-left: none !important;
+}
+.ck.ck-content blockquote.side-quote::before {
+    content: "“";
+    position: absolute;
+    top: -60px;
+    left: -10px;
+    display: block;
+    font-size: 200px;
+    color: #e7e7e7;
+    z-index: -1;
+    line-height: 1;
+}
+.ck.ck-content blockquote {
+    margin-top: 3.5rem;
+    position: relative;
+    overflow: visible;
+    z-index: 1;
+}
+.ck.ck-content blockquote::before {
+    content: "“";
+    position: absolute;
+    top: -60px;
+    left: -30px;
+    display: block;
+    font-size: 200px;
+    color: #e7e7e7;
+    z-index: -1;
+    line-height: 1;
+}
+.dark .ck.ck-content blockquote.side-quote {
+    font-style: normal;
+    float: right;
+    width: 40%;
+    position: relative;
+    border: 0;
+    overflow: visible;
+    z-index: 1;
+    margin-left: 1em;
+    background-color: transparent !important;
+    border-left: none !important;
+}
+.dark .ck.ck-content blockquote.side-quote::before {
+    content: "“";
+    position: absolute;
+    top: -60px;
+    left: -10px;
+    display: block;
+    font-size: 200px;
+    color: var(--color-dark-neutral);
+    z-index: -1;
+    line-height: 1;
+}
+.dark .ck.ck-content blockquote {
+    margin-top: 3.5rem;
+    position: relative;
+    overflow: visible;
+    z-index: 1;
+}
+.dark .ck.ck-content blockquote::before {
+    content: "“";
+    position: absolute;
+    top: -60px;
+    left: -30px;
+    display: block;
+    font-size: 200px;
+    color: var(--color-dark-neutral);
+    z-index: -1;
+    line-height: 1;
+}
+
+.ck.ck-content p.info-box {
+    --background-size: 30px;
+    --background-color: var(--color-primary);
+    padding: 1.2em 2em;
+    border: 1px solid var(--background-color);
+    background:
+        linear-gradient(
+            135deg,
+            var(--background-color) 0%,
+            var(--background-color) var(--background-size),
+            transparent var(--background-size)
+        ),
+        linear-gradient(
+            135deg,
+            transparent calc(100% - var(--background-size)),
+            var(--background-color) calc(100% - var(--background-size)),
+            var(--background-color)
+        );
+    border-radius: 5px;
+    margin: 1.5em 2em;
+    box-shadow: 5px 5px 0 var(--color-muted);
+}
+
+.ck.ck-content pre {
+    position: relative;
+}
+
+.dark .ck.ck-content pre code {
+    color: var(--color-dark-light);
+}
+.ck.ck-content pre.fancy-code {
+    border: 0;
+    border-radius: 6px;
+}
+.ck.ck-content pre.fancy-code-bright code {
+    color: #000 !important;
+}
+.ck.ck-content pre.fancy-code-bright {
+    background: #dddfe0;
+    color: #000 !important;
+    box-shadow: 5px 5px 0 #b3b3b3;
+}
+.ck.ck-content pre.fancy-code-dark {
+    background: #191918;
+    color: #fff !important;
+    box-shadow: 5px 5px 0 #0000001f;
+}
+.ck.ck-content pre.fancy-code::before {
+    --ck-fancy-code-disc-radius: 6px;
+    content: "";
+    display: block;
+    height: calc(var(--ck-fancy-code-disc-radius) * 2);
+    background-image:
+        radial-gradient(
+            circle,
+            #f16b5d var(--ck-fancy-code-disc-radius),
+            #0000 var(--ck-fancy-code-disc-radius)
+        ),
+        radial-gradient(
+            circle,
+            #f5be4d var(--ck-fancy-code-disc-radius),
+            #0000 var(--ck-fancy-code-disc-radius)
+        ),
+        radial-gradient(
+            circle,
+            #56c452 var(--ck-fancy-code-disc-radius),
+            #0000 var(--ck-fancy-code-disc-radius)
+        );
+    background-size: calc(var(--ck-fancy-code-disc-radius) * 2)
+        calc(var(--ck-fancy-code-disc-radius) * 2);
+    background-position:
+        0 0,
+        calc(var(--ck-fancy-code-disc-radius) * 3) 0,
+        calc(var(--ck-fancy-code-disc-radius) * 6) 0;
+    margin-bottom: 8px;
+    background-repeat: no-repeat;
+}
+.ck.ck-ck-content pre[data-language]:after {
+    background: var(--ck-color-code-block-label-background);
+    color: #fff;
+    font-family: var(--ck-font-face);
+    font-size: 10px;
+    line-height: 16px;
+    padding: var(--ck-spacing-tiny) var(--ck-spacing-medium);
+    right: 10px;
+    top: -1px;
+    white-space: nowrap;
+}
+.ck.ck-ck-content pre[data-language]:after {
+    content: attr(data-language);
+    position: absolute;
+}

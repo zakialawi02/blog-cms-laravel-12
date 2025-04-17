@@ -160,7 +160,6 @@ class PostController extends Controller
     public function store(ArticleRequest $request)
     {
         try {
-            // Validasi request
             $data = $request->validated();
 
             // Tentukan status publish/unpublish

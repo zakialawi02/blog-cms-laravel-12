@@ -166,6 +166,6 @@ class DashboardController extends Controller
             'Timezone' => date_default_timezone_get(),
         ];
 
-        return view('pages.dashboard.info', compact('data', 'phpInfo'));
+        return view('pages.dashboard.web.info', compact('data', 'phpInfo'));
     }
 }

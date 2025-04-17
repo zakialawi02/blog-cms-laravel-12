@@ -5,13 +5,13 @@
 
 <x-app-front-layout>
     <div class="container mt-6">
-        <x-breadcrumb :showSegment="4" :items="[['text' => 'Home', 'link' => '/'], ['text' => 'Blog', 'link' => route('article.index')], ['text' => request()->segment(2), 'link' => request()->segment(2)], ['link' => route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug])], ['text' => $article->title]]" />
+        <x-breadcrumb :showSegment="4" :items="[['text' => 'Home', 'link' => '/'], ['text' => 'Blog', 'link' => route('article.index')], ['text' => request()->segment(2), 'link' => route('article.year', ['year' => request()->segment(2)])], ['link' => route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug])], ['text' => $article->title]]" />
 
         <div class="text-dark dark:text-dark-light flex flex-auto flex-grow flex-col flex-wrap gap-4 md:flex-row" id="main">
             <div class="w-full md:w-[60%] md:flex-grow" id="post">
                 <div class="" id="main-content">
-                    <div class="my-2 mb-3 py-1" id="post-header">
-                        <h1 class="mb-2 text-3xl font-bold">{{ $article->title }}</h1>
+                    <div class="mb-3 py-1" id="post-header">
+                        <h1 class="mb-2 text-3xl font-bold md:text-4xl">{{ $article->title }}</h1>
                         <div class="inline-flex items-center">
                             <a class="after:text-secondary hover:text-primary dark:after:text-dark-secondary dark:hover:text-dark-primary inline-flex items-center gap-1 after:relative after:top-[-3px] after:mx-2 after:px-1 after:font-black after:content-['.']" href="{{ route('article.user', $article->user->username) }}" target="_blank">
                                 <img class="w-6" src="{{ $article->user->profile_photo_path }}" alt="author {{ $article->user->username }}">{{ $article->user->username }}
@@ -21,9 +21,9 @@
                     </div>
                 </div>
                 <div class="mb-3" id="feature-image">
-                    <img class="max-h-[26rem] w-full rounded-lg object-cover object-center" src="{{ $article->cover }}" alt="{{ $article->title }}" loading="lazy">
+                    <img class="max-h-[26rem] w-full rounded-lg object-cover object-center" src="{{ $article->cover }}" alt="Feature Image" loading="lazy">
                 </div>
-                <div class="text-lg" id="post-content">
+                <div class="ck ck-content text-lg" id="post-content">
 
                     {!! $article->content !!}
 
@@ -90,7 +90,7 @@
                     <div class="mx-auto p-2">
                         @forelse ($popularPosts as $popular)
                             <article>
-                                <div class="flex items-center gap-2 p-2">
+                                <div class="flex items-center gap-2 p-1">
                                     <a class="mr-2 block shrink-0" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">
                                         <img class="size-14 rounded-3xl object-cover" src="{{ $popular->cover }}" alt="post image" />
                                     </a>
@@ -117,7 +117,7 @@
                         <h3>Categories</h3>
                     </div>
                     <div class="mx-auto p-2">
-                        <ul class="flex flex-col gap-4 p-2">
+                        <ul class="flex flex-col gap-2 p-2">
                             @forelse ($categories as $category)
                                 <li><a class="hover:text-primary dark:hover:text-dark-primary font-bold" href="{{ route('article.category', $category->slug) }}"><i class="ri-skip-right-line text-info mr-2 text-xl"></i>{{ $category->category }}</a></li>
                             @empty
@@ -145,8 +145,13 @@
     </div>
 
 
+    @push('css')
+        @vite('resources/css/ckeditor.css')
+        <link href="{{ asset('assets/css/prism.css') }}" rel="stylesheet">
+    @endpush
 
     @push('javascript')
+        <script src="{{ asset('assets/js/prism.js') }}"></script>
         <script>
             const query = new URLSearchParams(window.location.search);
             const source = query.get('source');

@@ -68,7 +68,7 @@
     @endif
 
     <!-- Recent Blog Post -->
-    <section class="fluid text-dark dark:text-dark-light container px-6 py-10 md:px-4">
+    <section class="fluid text-dark dark:text-dark-light container px-6 pb-6 pt-10 md:px-4">
         <div class="mb-6 text-3xl font-semibold">
             <h2>
                 {{ request()->query('search') ? 'Search Result' : (request()->routeIs('article.user') ? 'User Posts: ' . request()->segment(3) : 'Recent Post') }}

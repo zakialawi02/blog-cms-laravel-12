@@ -40,7 +40,7 @@
                         <x-dashboard.nav-dropdown icon="ri-discuss-line" text="Comments" :items="[['route' => 'admin.mycomments.index', 'text' => 'My Comments']]" />
                     @endif
                     <div class="px-1 pt-3 text-sm font-bold text-gray-600 dark:text-gray-200">
-                        <h5>Manage</h5>
+                        <p>Manage</p>
                     </div>
                     <x-dashboard.nav-item route="#" icon="ri-notification-3-line" text="Notification" />
                     @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')

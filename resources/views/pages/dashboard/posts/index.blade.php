@@ -4,7 +4,7 @@
 <x-app-layout>
     <section class="p-1 md:p-4">
         <div class="mb-3 text-xl font-medium">
-            <h1>{{ $data['title'] ?? '' }} <a class="hover:text-accent dark:hover:text-accent" href={{ route('article.index') }} target="_blank"><i class="ri-external-link-line"></i></a></h1>
+            <h2>{{ $data['title'] ?? '' }} <a class="hover:text-accent dark:hover:text-accent" href={{ route('article.index') }} target="_blank"><i class="ri-external-link-line"></i></a></h2>
         </div>
         <x-card>
             <div class="mb-0 flex flex-col items-center justify-between gap-4 px-2 align-middle md:mb-3 md:flex-row">

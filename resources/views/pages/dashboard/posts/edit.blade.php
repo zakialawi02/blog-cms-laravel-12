@@ -159,7 +159,17 @@
 
                 <x-dashboard.input-label for="cover" :value="__('Content')" />
                 <x-dashboard.input-error class="mt-2" :messages="$errors->get('cover')" />
-                <x-dashboard.textarea-input id="content" name="content" rows="4" placeholder="Write your thoughts here...">{{ old('content', $post->content) }}</x-dashboard.textarea-input>
+                <div class="main-container w-full">
+                    <div class="editor-container editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar editor-container_include-word-count editor-container_include-fullscreen" id="editor-container">
+                        <div class="editor-container__editor">
+                            <textarea class="w-full rounded-lg border-gray-300 bg-gray-50" id="post-content" name="content" placeholder="Enter the Description" rows="5">{{ old('content', $post->content ?? '') }}</textarea>
+                        </div>
+                        <div id="editor-content" style="display: none;">
+                            {!! old('content', $post->content ?? '') !!}
+                        </div>
+                        <div class="editor_container__word-count" id="editor-word-count"></div>
+                    </div>
+                </div>
 
             </x-card>
 
@@ -184,6 +194,7 @@
     @endpush
 
     @push('javascript')
+        @vite('resources/js/ckeditor.js')
         <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>

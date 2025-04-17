@@ -48,7 +48,7 @@ class UserController extends Controller
                     return $data->email_verified_at ? $data->email_verified_at->format("d M Y") : '-';
                 })
                 ->editColumn('role', function ($data) {
-                    return '<span class="badge bg-' .
+                    return '<span class="badge bg-back-' .
                         ($data->role === 'superadmin' ? 'success' : ($data->role === 'admin' ? 'primary' : 'secondary'))
                         . '">' . $data->role . '</span>';
                 })

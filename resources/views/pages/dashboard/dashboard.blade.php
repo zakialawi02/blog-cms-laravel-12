@@ -3,9 +3,9 @@
 
 <x-app-layout>
     <section class="mb-1 flex items-center justify-between p-1 text-xl md:px-4 md:pt-4">
-        <p>
+        <h2>
             {{ __('Welcome') }}, {{ Auth::user()->name }}
-        </p>
+        </h2>
         <x-dashboard.primary-button id="refreshDashboard" type="button" :size="'small'">
             <i class="ri-refresh-line"></i>
             Refresh
@@ -229,7 +229,7 @@
                                             </div>
                                             <div class="flex items-center justify-between text-sm">
                                                 <p class="text-back-muted dark:text-back-dark-muted">By:
-                                                    <a class="text-back-primary dark:text-back-dark-primary hover:text-back-primary/80 dark:hover:text-back-dark-primary/80 hover:underline" href="#">
+                                                    <a class="text-back-primary dark:text-back-dark-primary hover:text-back-primary/80 dark:hover:text-back-dark-primary/80 hover:underline" href="/dashboard/posts?status=all&author=${post.user?.username}&category=all&page=1&limit=10">
                                                         ${post.user?.name || 'Unknown'}
                                                     </a>
                                                 </p>

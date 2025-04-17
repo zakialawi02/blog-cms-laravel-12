@@ -1,3 +1,5 @@
+@import url(https://fonts.bunny.net/css?family=lato:100,100i,300,300i,400,400i,700,700i,900,900i|poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i);
+
 @import "tailwindcss";
 @import "flowbite/src/themes/default";
 @plugin "flowbite/plugin";
@@ -25,8 +27,10 @@
     --breakpoint-3xl: 100rem; /* 1600px */
 
     --font-sans:
-        Figtree, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        Lato, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol", "Noto Color Emoji";
+    --font-poppins:
+        Poppins, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 
     /* Back Panel Color Scheme */
     --color-back-base-100: oklch(98% 0.001 106.423);
@@ -102,6 +106,36 @@
     ::backdrop,
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: bold;
+        margin-top: 1.2rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+    h1 {
+        @apply text-3xl;
+    }
+    h2 {
+        @apply text-2xl;
+    }
+    h3 {
+        @apply text-xl;
+    }
+    h4 {
+        @apply text-lg;
+    }
+    h5 {
+        @apply text-lg;
+    }
+    h6 {
+        @apply text-base;
     }
 
     button:not(:disabled),
@@ -250,4 +284,12 @@ button.btn {
     white-space: nowrap;
     text-indent: -20px;
     border: 0;
+}
+
+/* CKEDITOR Extend */
+.ck-editor__editable_inline {
+    @apply bg-back-base-100! dark:bg-back-dark-base-300!;
+}
+.editor_container__word-count .ck-word-count {
+    @apply bg-gray-50 text-back-dark dark:text-back-dark-light dark:bg-back-dark-base-300;
 }
