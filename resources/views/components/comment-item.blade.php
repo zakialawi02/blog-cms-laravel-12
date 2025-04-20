@@ -25,7 +25,11 @@
         @csrf
         <input name="parent_id" type="hidden" value="zkc_0212{{ $comment->id }}">
         <textarea class="w-full rounded-lg border-0 p-2 text-sm text-gray-900 focus:outline-none focus:ring-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" id="reply_input{{ $comment->id }}" name="comment" placeholder="Write a reply..."></textarea>
-        <x-dashboard.primary-button class="btn-submit-reply" type="submit">Submit</x-dashboard.primary-button>
+        @if (Auth::check())
+            <x-dashboard.primary-button class="btn-submit-reply" type="submit">Submit</x-dashboard.primary-button>
+        @else
+            <x-dashboard.primary-button href="{{ route('login') }}">Login to reply</x-dashboard.primary-button>
+        @endif
     </form>
 
     <!-- Nested Comments -->

@@ -6,7 +6,7 @@ use Exception;
 use App\Models\Newsletter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
 
 class NewsletterController extends Controller
 {

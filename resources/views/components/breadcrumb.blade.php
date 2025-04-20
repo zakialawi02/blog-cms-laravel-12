@@ -13,10 +13,10 @@
                 <li class="dark:text-back-dark-light text-back-dark-dark flex items-center text-sm">
                     @if (!empty($item['link']))
                         <a class="hover:underline" href="{{ $item['link'] }}">
-                            {{ Str::limit($item['text'] ?? $item['link'], 25) }}
+                            {{ Str::limit($item['text'] ?? $item['link'], 50) }}
                         </a>
                     @else
-                        {{ Str::limit($item['text'] ?? '', 25) }}
+                        {{ Str::limit($item['text'] ?? '', 50) }}
                     @endif
                     <i class="ri-arrow-right-s-line px-1.5"></i>
                 </li>
@@ -33,10 +33,10 @@
             <li class="dark:text-back-dark-light text-back-dark-dark truncate text-sm font-semibold" aria-current="page">
                 @if (!empty($last['link']))
                     <a class="hover:underline" href="{{ $last['link'] }}">
-                        {{ Str::limit($last['text'] ?? $last['link'], 25) }}
+                        {{ Str::limit($last['text'] ?? $last['link'], 50) }}
                     </a>
                 @else
-                    {{ Str::limit($last['text'] ?? '', 25) }}
+                    {{ Str::limit($last['text'] ?? '', 50) }}
                 @endif
             </li>
         @else
@@ -45,10 +45,10 @@
                 <li class="dark:text-back-dark-light text-back-dark-dark flex items-center text-sm">
                     @if (!empty($item['link']))
                         <a class="hover:underline" href="{{ $item['link'] }}">
-                            {{ Str::limit($item['text'] ?? $item['link'], 25) }}
+                            {{ Str::limit($item['text'] ?? $item['link'], 50) }}
                         </a>
                     @else
-                        {{ Str::limit($item['text'] ?? '', 25) }}
+                        {{ Str::limit($item['text'] ?? '', 50) }}
                     @endif
                     @unless ($loop->last)
                         <i class="ri-arrow-right-s-line px-1.5"></i>

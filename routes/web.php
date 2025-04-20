@@ -50,7 +50,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::resource('tags', TagController::class)->parameters(['tags' => 'tag:slug'])->except('show');
 
         Route::get('/newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
-        Route::delete('/newsletter/{newsletter:email}', [NewsletterController::class, 'destroy'])->name('newsletter.destroy');
+        Route::delete('/newsletter/{newsletter:id}', [NewsletterController::class, 'destroy'])->name('newsletter.destroy');
 
         Route::get('/requestContributor', [UserController::class, 'requestContributor'])->name('requestContributor.index');
         Route::delete('/requestContributor/{requestContributor:id}', [UserController::class, 'destroyRequestContributor'])->name('requestContributor.destroy');

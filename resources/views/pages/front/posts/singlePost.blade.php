@@ -5,7 +5,7 @@
 
 <x-app-front-layout>
     <div class="container mt-6">
-        <x-breadcrumb :showSegment="4" :items="[['text' => 'Home', 'link' => '/'], ['text' => 'Blog', 'link' => route('article.index')], ['text' => request()->segment(2), 'link' => route('article.year', ['year' => request()->segment(2)])], ['link' => route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug])], ['text' => $article->title]]" />
+        <x-breadcrumb :showSegment="5" :items="[['text' => 'Home', 'link' => '/'], ['text' => 'Blog', 'link' => route('article.index')], ['text' => request()->segment(2), 'link' => route('article.year', ['year' => request()->segment(2)])], ['text' => $article->category->category, 'link' => route('article.category', ['slug' => $article->category->slug])], ['link' => route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug])], ['text' => $article->title]]" />
 
         <div class="text-dark dark:text-dark-light flex flex-auto flex-grow flex-col flex-wrap gap-4 md:flex-row" id="main">
             <div class="w-full md:w-[60%] md:flex-grow" id="post">
@@ -36,7 +36,7 @@
                         <div class="">
                             <!-- tags -->
                             @foreach ($article->tags->take(4) as $tag)
-                                <a class="border-secondary dark:border-dark-secondary hover:border-primary dark:hover:border-dark-primary hover:text-primary dark:hover:text-dark-primary mr-1 rounded-2xl border-[1px] px-1 py-[0.1rem] transition-all duration-300" href="{{ route('article.tag', $tag->tag_name) }}">#{{ $tag->tag_name }}</a>
+                                <a class="border-secondary dark:border-dark-secondary hover:border-primary hover:text-primary dark:hover:text-dark-primary dark:hover:border-dark-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->tag_name) }}">#{{ $tag->tag_name }}</a>
                             @endforeach
                         </div>
                         <div class="text-dark dark:text-dark-light text-2xl">
@@ -74,14 +74,18 @@
                             <textarea class="w-full border-0 px-0 text-sm text-gray-900 focus:outline-none focus:ring-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" id="comment_input" name="comment" cols="10" rows="5" placeholder="Write a comment..." required></textarea>
                             <p><span class="text-error text-sm" id="comment-error"></span></p>
                         </div>
-                        <x-dashboard.primary-button id="btn-submit-comment" type="submit">Post comment</x-dashboard.primary-button>
+                        @if (Auth::check())
+                            <x-dashboard.primary-button id="btn-submit-comment" type="submit">Post comment</x-dashboard.primary-button>
+                        @else
+                            <x-dashboard.primary-button href="{{ route('login') }}">Login to comment</x-dashboard.primary-button>
+                        @endif
                     </form>
 
                     <x-comment-section :showCommentsSection="false" />
                 </section>
             </div>
 
-            <div class="mt-10 w-full md:mt-8 md:w-[30%]" id="sidebar">
+            <div class="text-dark dark:text-dark-light mt-10 w-full md:mt-8 md:w-[30%]" id="sidebar">
                 <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="popular-posts">
                     <div class="text-center text-xl font-bold">
                         <h3>Popular Posts</h3>
@@ -119,7 +123,7 @@
                     <div class="mx-auto p-2">
                         <ul class="flex flex-col gap-2 p-2">
                             @forelse ($categories as $category)
-                                <li><a class="hover:text-primary dark:hover:text-dark-primary font-bold" href="{{ route('article.category', $category->slug) }}"><i class="ri-skip-right-line text-info mr-2 text-xl"></i>{{ $category->category }}</a></li>
+                                <li><a class="hover:text-primary dark:hover:text-dark-primary font-bold" href="{{ route('article.category', $category->slug) }}"><i class="ri-skip-right-line text-info dark:text-dark-info mr-2 text-xl"></i>{{ $category->category }}</a></li>
                             @empty
                                 <p class="font-regular my-2 text-center">No Category Available</p>
                             @endforelse
@@ -133,7 +137,7 @@
                     <div class="mx-auto p-2">
                         <ul class="flex flex-wrap">
                             @forelse ($tags as $tag)
-                                <a class="border-secondary hover:border-primary hover:text-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
+                                <a class="border-secondary dark:border-dark-secondary hover:border-primary hover:text-primary dark:hover:text-dark-primary dark:hover:border-dark-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
                             @empty
                                 <p class="font-regular my-2 text-center">No Tag Available</p>
                             @endforelse

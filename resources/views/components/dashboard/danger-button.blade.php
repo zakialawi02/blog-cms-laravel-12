@@ -1,4 +1,4 @@
-@props(['size' => 'normal', 'href' => null])
+@props(['size' => 'normal', 'href' => null, 'disabled' => false])
 
 @php
     $sizes = [
@@ -7,7 +7,10 @@
         'large' => 'text-base px-6 py-3',
     ];
 
-    $classes = 'bg-back-error dark:bg-back-error border border-transparent rounded-md text-back-light font-medium shadow-xs enabled:hover:bg-back-error/70 enabled:dark:hover:bg-back-error/70 focus:outline-none focus:ring-1 focus:ring-back-error dark:focus:ring-back-error focus:ring-offset-1 transition ease-in-out duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-back-error ' . $sizes[$size];
+    // Hover class: berbeda untuk <a> dan <button>
+    $hover = $href ? 'hover:bg-back-error/70 dark:hover:bg-back-error/70' : 'enabled:hover:bg-back-error/70 enabled:dark:hover:bg-back-error/70';
+
+    $classes = 'bg-back-error dark:bg-back-error border border-transparent rounded-md text-back-light font-medium shadow-xs ' . $hover . ' focus:outline-none focus:ring-1 focus:ring-back-error dark:focus:ring-back-error focus:ring-offset-1 disabled:opacity-40 disabled:cursor-not-allowed ' . $sizes[$size];
 @endphp
 
 @if ($href)
@@ -15,7 +18,7 @@
         {{ $slot }}
     </a>
 @else
-    <button {{ $attributes->merge(['type' => 'submit', 'disabled' => false, 'class' => $classes]) }}>
+    <button {{ $attributes->merge(['type' => 'submit', 'disabled' => $disabled, 'class' => $classes]) }}>
         {{ $slot }}
     </button>
 @endif

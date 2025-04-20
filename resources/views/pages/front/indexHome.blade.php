@@ -63,66 +63,125 @@
         </section>
     @endunless
 
-    @if (!request()->is('blog') || request()->is('blog/*') || request()->query('search'))
-        <x-breadcrumb class="container -mb-5 flex-auto px-6 pt-10 md:px-4" :items="request()->has('search') && request()->get('search') ? [['text' => 'Blog', 'link' => '/blog'], ['text' => 'Search', 'link' => '#'], ['text' => request()->get('search')]] : generate_breadcrumbs()" />
-    @endif
 
-    <!-- Recent Blog Post -->
-    <section class="fluid text-dark dark:text-dark-light container px-6 pb-6 pt-10 md:px-4">
-        <div class="mb-6 text-3xl font-semibold">
-            <h2>
-                {{ request()->query('search') ? 'Search Result' : (request()->routeIs('article.user') ? 'User Posts: ' . request()->segment(3) : 'Recent Post') }}
-            </h2>
-            <div class="to-secondary dark:to-dark-secondary -z-1 float-end h-[4px] w-[50%] -translate-y-4 bg-gradient-to-r from-transparent md:w-[84%]"></div>
+    <div class="container grid grid-cols-1 gap-2 md:gap-4 lg:grid-cols-4">
+        <div class="lg:col-span-3">
+            <!-- Recent Blog Post -->
+            <section class="text-dark dark:text-dark-light container mb-6 px-2">
+                <div class="mb-3 flex w-full items-center gap-4 align-middle">
+                    <h3 class="whitespace-nowrap text-3xl font-semibold">{{ request()->query('search') ? 'Search Result' : (request()->routeIs('article.user') ? 'User Posts: ' . request()->segment(3) : 'Recent Post') }}</h3>
+                    <div class="to-secondary dark:to-dark-secondary h-[4px] flex-grow bg-gradient-to-r from-transparent"></div>
+                    <x-dashboard.primary-button class="px-1! py-0.5!" href="{{ route('article.index') }}">More »</x-dashboard.primary-button>
+                </div>
+
+                <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                    @forelse ($articles as $article)
+                        <article>
+                            <img class="h-64 w-full rounded-lg object-cover object-center lg:h-52" src="{{ asset($article->cover) }}" alt="{{ $article->title }}" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
+
+                            <div class="mt-2">
+                                <span class="text-primary dark:text-dark-primary uppercase">
+                                    {{ $article->category->category ?? $article->category_id }}
+                                </span>
+
+                                <h2 class="text-dark dark:text-dark-light hover:text-muted dark:hover:text-dark-muted mt-1 text-xl font-semibold hover:underline">
+                                    <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
+                                        {{ $article->title }}
+                                    </a>
+                                </h2>
+
+                                <p class="text-muted dark:text-dark-muted mt-2 line-clamp-3">
+                                    {{ $article->excerpt }}
+                                </p>
+
+                                <div class="mt-4 flex items-center justify-between">
+                                    <div>
+                                        <a class="text-accent dark:text-dark-accent hover:text-info dark:hover:text-dark-info text-lg font-medium" href="{{ route('article.user', $article->user->username) }}">
+                                            {{ $article?->user?->username }}
+                                        </a>
+
+                                        <p class="text-muted dark:text-dark-muted text-sm">
+                                            {{ $article->published_at->format('F j, Y') }}
+                                        </p>
+                                    </div>
+
+                                    <a class="text-primary dark:text-dark-primary hover:text-accent dark:hover:text-dark-accent inline-block underline" href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
+                                        Read more
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+
+                    @empty
+                        <p class="my-2">No Article Posts Available</p>
+                    @endforelse
+                </div>
+                {{-- <div class="my-8 mt-20">
+                    {{ $articles->links() }}
+                </div> --}}
+            </section>
+
+            <section class="text-dark dark:text-dark-light container px-2">
+                <div class="mb-3 flex w-full items-center gap-4 align-middle">
+                    <h3 class="whitespace-nowrap text-3xl font-semibold">Section 2</h3>
+                    <div class="to-secondary dark:to-dark-secondary h-[4px] flex-grow bg-gradient-to-r from-transparent"></div>
+                    <x-dashboard.primary-button class="px-1! py-0.5!" href="#">More »</x-dashboard.primary-button>
+                </div>
+
+                <!-- Section Here -->
+
+            </section>
         </div>
 
-        <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-            @forelse ($articles as $article)
-                <article>
-                    <img class="h-64 w-full rounded-lg object-cover object-center lg:h-80" src="{{ asset($article->cover) }}" alt="{{ $article->title }}" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
+        <div class="text-dark dark:text-dark-light mt-2 pt-4">
+            <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="popular-posts">
+                <div class="text-center text-xl font-bold">
+                    <h3>Popular Posts</h3>
+                </div>
 
-                    <div class="mt-2">
-                        <span class="text-primary dark:text-dark-primary uppercase">
-                            {{ $article->category->category ?? $article->category_id }}
-                        </span>
-
-                        <h2 class="text-dark dark:text-dark-light hover:text-muted dark:hover:text-dark-muted mt-1 text-xl font-semibold hover:underline">
-                            <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
-                                {{ $article->title }}
-                            </a>
-                        </h2>
-
-                        <p class="text-muted dark:text-dark-muted mt-2 line-clamp-3">
-                            {{ $article->excerpt }}
-                        </p>
-
-                        <div class="mt-4 flex items-center justify-between">
-                            <div>
-                                <a class="text-accent dark:text-dark-accent hover:text-info dark:hover:text-dark-info text-lg font-medium" href="{{ route('article.user', $article->user->username) }}">
-                                    {{ $article?->user?->username }}
+                <div class="mx-auto p-2">
+                    @forelse ($popularPosts as $popular)
+                        <article>
+                            <div class="flex items-center gap-2 p-1">
+                                <a class="mr-2 block shrink-0" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">
+                                    <img class="size-14 rounded-3xl object-cover" src="{{ $popular->cover }}" alt="post image" />
                                 </a>
 
-                                <p class="text-muted dark:text-dark-muted text-sm">
-                                    {{ $article->published_at->format('F j, Y') }}
-                                </p>
+                                <div>
+                                    <h3 class="line-clamp-2 font-medium sm:text-lg">
+                                        <a class="hover:text-primary dark:hover:text-dark-primary block" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">{{ $popular->title }}</a>
+                                    </h3>
+
+                                    <div class="mt-2 sm:flex sm:items-center sm:gap-2">
+                                        <p class="hidden sm:block sm:text-xs">Posted by <a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-
-                            <a class="text-primary dark:text-dark-primary hover:text-accent dark:hover:text-dark-accent inline-block underline" href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
-                                Read more
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
-            @empty
-                <p class="my-2">No Article Posts Available</p>
-            @endforelse
+                        </article>
+                    @empty
+                        <p class="font-regular my-2 text-center">No popular posts</p>
+                    @endforelse
+                </div>
+            </div>
+            <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="categories">
+                <div class="text-center text-xl font-bold">
+                    <h3>Tags</h3>
+                </div>
+                <div class="mx-auto p-2">
+                    <ul class="flex flex-wrap">
+                        @forelse ($tags as $tag)
+                            <a class="border-secondary dark:border-dark-secondary hover:border-primary hover:text-primary dark:hover:text-dark-primary dark:hover:border-dark-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
+                        @empty
+                            <p class="font-regular my-2 text-center">No Tag Available</p>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="my-8 mt-20">
-            {{ $articles->links() }}
-        </div>
-    </section>
+    </div>
 
+    <!-- You Missed/Random Posts Section -->
     <section class="fluid container px-6 py-5 md:px-4">
         <h2 class="text-dark dark:text-dark-light mb-5 text-2xl font-bold">You Missed</h2>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">

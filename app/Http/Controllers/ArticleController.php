@@ -55,12 +55,17 @@ class ArticleController extends Controller
      */
     protected function getIpVisitor($ip)
     {
-        $access_token = env('IPINFO_ACCESS_TOKEN');
-        $client = new IPinfo($access_token);
-        $ip_address = $ip;
-        $details = $client->getDetails($ip_address);
-        $dataV = $details->all;
-        return $dataV;
+        try {
+            $access_token = env('IPINFO_ACCESS_TOKEN');
+            $client = new IPinfo($access_token);
+            $ip_address = $ip;
+            $details = $client->getDetails($ip_address);
+            $dataV = $details->all;
+            return $dataV;
+        } catch (\Throwable $th) {
+            Log::error("Error getting IP visitor details: " . $th);
+            return [];
+        }
     }
 
     /**

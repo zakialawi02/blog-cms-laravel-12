@@ -21,7 +21,7 @@
                     <tbody>
                         @foreach ($newsletters as $row)
                             <tr>
-                                <td>{{ $row->email }}</td>
+                                <td style="max-width: 480px; white-space: normal; word-break: break-word;">{{ $row->email }}</td>
                                 <td>{{ $row->created_at->format('d M Y H:i:s') }}</td>
                                 <td>{{ $row->is_subscribed ? 'Yes' : 'No' }}</td>
                                 <td>
@@ -46,6 +46,7 @@
             let table = new DataTable('#myTable', {
                 responsive: true,
                 scrollX: true,
+                autoWidth: false,
                 columnDefs: [{
                     orderable: false,
                     targets: 3

@@ -5,4 +5,4 @@
     }
 @endphp
 
-<img src="{{ asset($logoPath) }}" alt="Logo Application" {{ $attributes->merge(['class' => 'h-auto max-w-24']) }}>
+<img src="{{ asset($logoPath) }}" alt="Logo Application" {{ $attributes->merge(['class' => 'h-auto max-w-24 dark:invert']) }}>

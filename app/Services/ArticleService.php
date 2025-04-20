@@ -52,7 +52,7 @@ class ArticleService
             $query->search($filters['search']);
         }
 
-        return $query->paginate(9)->withQueryString();
+        return $query->paginate($filters['per_page'] ?? 9)->withQueryString();
     }
 
     /**
