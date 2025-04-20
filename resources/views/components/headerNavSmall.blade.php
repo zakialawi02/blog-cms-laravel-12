@@ -2,9 +2,9 @@
     <div class="container px-5 py-1 md:px-7">
         <div class="items-center text-sm md:flex md:justify-between">
             <div class="hidden md:flex md:gap-4">
-                <a class="hover:text-primary dark:hover:text-primary" href="/">Home</a>
-                <a class="hover:text-primary dark:hover:text-primary" href="https://zakialawi.my.id/">About</a>
-                <a class="hover:text-primary dark:hover:text-primary" href="/p/contact">Contact</a>
+                @foreach ($data['menu']['header-top']['items'] ?? [] as $menu)
+                    <a class="hover:text-primary dark:hover:text-primary" href={{ $menu['link'] }}>{{ $menu['label'] }}</a>
+                @endforeach
             </div>
             <div class="flex flex-row items-center justify-between gap-4">
                 <div class="flex gap-2 text-base">

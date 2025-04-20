@@ -49,11 +49,16 @@
                     @endif
                     @if (Auth::user()->role == 'superadmin')
                         <x-dashboard.nav-item route="admin.users.index" icon="ri-user-line" text="User" />
-                        <x-dashboard.nav-item route="admin.settings.web.index" icon="ri-settings-3-line" text="Web Setting" />
-                        <x-dashboard.nav-item route="admin.info" icon="ri-information-line" text="System Info" />
                         <x-dashboard.nav-item route="docs" icon="ri-file-list-3-line" text="Route Docs" target="_blank" />
                     @endif
-
+                    @if (Auth::user()->role == 'superadmin')
+                        <div class="px-1 pt-3 text-sm font-bold text-gray-600 dark:text-gray-200">
+                            <p>Settings</p>
+                        </div>
+                        <x-dashboard.nav-item route="admin.settings.menu.index" icon="ri-menu-2-line" text="Menu Setting" />
+                        <x-dashboard.nav-item route="admin.settings.web.index" icon="ri-settings-3-line" text="Web Setting" />
+                        <x-dashboard.nav-item route="admin.info" icon="ri-information-line" text="System Info" />
+                    @endif
                 </ul>
             </nav>
         </div>

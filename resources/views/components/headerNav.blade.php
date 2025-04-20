@@ -25,21 +25,21 @@
     <div class="bg-base-100 dark:bg-dark-base-300 border-dark text-dark dark:text-dark-light z-10 flex min-h-20 w-full items-center justify-between border-b border-opacity-50 px-6 md:bg-transparent md:px-14">
         <div class="max-w-[20rem] font-bold uppercase" id="logo-nav">
             @if ($data['web_setting']['web_name_variant'] == '1')
-                <a class="inline-flex max-w-80 items-center text-xl" href="/blog">
+                <a class="inline-flex max-w-80 items-center text-xl" href="/">
                     <x-application-logo class="h-auto max-w-14" />
                     <span class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</span>
                 </a>
             @elseif ($data['web_setting']['web_name_variant'] == '2')
-                <a class="inline-flex max-w-80 items-center" href="/blog">
+                <a class="inline-flex max-w-80 items-center" href="/">
                     <x-application-logo class="h-auto max-w-14" />
                 </a>
             @elseif ($data['web_setting']['web_name_variant'] == '3')
-                <a class="block max-w-80 items-center text-xs font-medium capitalize" href="/blog">
+                <a class="block max-w-80 items-center text-xs font-medium capitalize" href="/">
                     <x-application-logo class="mb-0 h-auto max-w-14" />
                     <span class="px-2" id="web_name">{{ $data['web_setting']['tagline'] ?? config('app.name') }}</span>
                 </a>
             @else
-                <a class="inline-flex max-w-80 items-center text-xl" href="/blog">
+                <a class="inline-flex max-w-80 items-center text-xl" href="/">
                     <x-application-logo class="h-auto max-w-14" />
                     <span class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</span>
                 </a>
@@ -60,11 +60,11 @@
 
     <div class="md:border-dark text-dark dark:text-dark-light flex-none items-center px-6 md:flex md:justify-between md:border-b md:border-opacity-50 md:px-14 md:py-1">
         <nav class="bg-base-100 dark:bg-dark-base-200 container absolute left-0 right-0 z-10 hidden flex-col items-start p-3 text-[1.1rem] font-semibold uppercase md:relative md:top-0 md:flex md:w-[50rem] md:flex-row md:flex-wrap md:items-center md:bg-transparent md:p-0 md:opacity-100 lg:w-full md:dark:bg-transparent" id="nav-menu">
-            <a class="hover:text-accent dark:hover:text-accent p-2 duration-300" href="/">Home</a>
-            <a class="hover:text-accent dark:hover:text-accent p-2 duration-300" href="/blog/categories/programming">Programming</a>
-            <a class="hover:text-accent dark:hover:text-accent p-2 duration-300" href="/blog/categories/technology">Technology</a>
-            <a class="hover:text-accent dark:hover:text-accent p-2 duration-300" href="/blog/categories/tutorial">Tutorial</a>
-            <a class="hover:text-accent dark:hover:text-accent p-2 duration-300" href="/blog/categories/geography-geodesy">Earth</a>
+            @forelse ($data['menu']['header']['items'] ?? [] as $menu)
+                <a class="hover:text-accent dark:hover:text-accent p-2 duration-300" href={{ $menu['link'] }}>{{ $menu['label'] }}</a>
+            @empty
+                <a class="hover:text-accent dark:hover:text-accent p-2 duration-300" href="/">Home</a>
+            @endforelse
         </nav>
         <div class="hover:text-accent dark:hover:text-accent search-btn hidden text-xl font-medium md:block">
             <button><i class="ri-search-line"></i></button>

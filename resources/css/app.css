@@ -115,8 +115,8 @@
     h5,
     h6 {
         font-weight: bold;
-        margin-top: 1.2rem;
-        margin-bottom: 0.5rem;
+        margin-top: 1rem;
+        margin-bottom: 0.3rem;
         line-height: 1.2;
     }
     h1 {
@@ -136,6 +136,9 @@
     }
     h6 {
         @apply text-base;
+    }
+    label {
+        @apply font-semibold!;
     }
 
     button:not(:disabled),

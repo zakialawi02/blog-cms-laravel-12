@@ -10,6 +10,7 @@ use ipinfo\ipinfo\IPinfo;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Services\ArticleService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
@@ -17,135 +18,11 @@ use App\Http\Resources\ArticleResource;
 
 class ArticleController extends Controller
 {
-    /**
-     * Fetch filtered and paginated articles.
-     *
-     * @param string|null $search
-     * @param string|null $categorySlug
-     * @param string|null $tagSlug
-     * @param string|null $username
-     * @param int|null $year
-     * @param int|null $month
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    private function fetchArticles(array $filters = [])
+    protected $articleService;
+
+    public function __construct(ArticleService $articleService)
     {
-        $query = Article::with(['user', 'category', 'tags'])
-            ->published()
-            ->orderBy('published_at', 'desc');
-
-        if (!empty($filters['category'])) {
-            if ($filters['category'] === 'uncategorized') {
-                $query->whereNull('category_id');
-            } else {
-                $query->withCategorySlug($filters['category']);
-            }
-        }
-
-        if (!empty($filters['tag'])) {
-            $query->withTagSlug($filters['tag']);
-        }
-
-        if (!empty($filters['user'])) {
-            $query->withUsername($filters['user']);
-        }
-
-        if (!empty($filters['year'])) {
-            $query->whereYear('published_at', $filters['year']);
-        }
-
-        if (!empty($filters['month'])) {
-            $query->whereMonth('published_at', $filters['month']);
-        }
-
-        if (!empty($filters['search'])) {
-            $query->search($filters['search']);
-        }
-
-        return $query->paginate(9)->withQueryString();
-    }
-
-    /**
-     * Get popular articles sorted by total views.
-     */
-    private function getPopularPosts(int $limit = null)
-    {
-        return Article::has('articleViews')
-            ->withCount(['articleViews as total_views'])
-            ->with(['user', 'category'])
-            ->published()
-            ->orderByDesc('total_views')
-            ->when($limit, fn($q) => $q->take($limit)->get(), fn($q) => $q->paginate(9)->withQueryString());
-    }
-
-    /**
-     * Get random articles. If a category slug is given, only articles
-     * within that category will be returned. If a limit is given, only
-     * that many articles will be returned.
-     *
-     * @param int|null $limit Maximum number of articles to return.
-     * @param string|null $categorySlug Category slug to restrict to.
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    private function getRandomArticles(int $limit = null, string $categorySlug = null)
-    {
-        return Article::with(['user', 'category'])
-            ->published()
-            ->when($categorySlug, fn($q) => $q->withCategorySlug($categorySlug))
-            ->inRandomOrder()
-            ->when($limit, fn($q) => $q->take($limit)->get());
-    }
-
-    /**
-     * Get up to 5 articles: featured ones ordered by latest,
-     * and if not enough, fill the rest with random non-featured articles.
-     *
-     * @param \Illuminate\Support\Collection $articles
-     * @return \Illuminate\Support\Collection
-     */
-    private function getFeaturedArticles($articles)
-    {
-        $featured = $articles
-            ->filter(fn($article) => $article->is_featured)
-            ->sortByDesc('published_at')
-            ->take(5);
-        if ($featured->count() < 5) {
-            $remainingCount = 5 - $featured->count();
-            $nonFeatured = $articles
-                ->reject(fn($article) => $article->is_featured)->shuffle()
-                ->take($remainingCount);
-            $featured = $featured->concat($nonFeatured);
-        }
-        return $featured;
-    }
-
-    /**
-     * Modify an array of articles to add excerpt and cover image.
-     *
-     * If an article does not have an excerpt, it will be generated from the content.
-     * If an article does not have a cover image, a placeholder image will be used.
-     * If an article does not have a category, it will be set to "Uncategorized".
-     *
-     * @param \Illuminate\Support\Collection $articles
-     * @return \Illuminate\Support\Collection
-     */
-    private function articlesMappingArray($articles)
-    {
-        return $articles->map(function ($article) {
-            if (empty($article->excerpt)) {
-                $article->excerpt = strip_tags($article->content);
-            }
-            $article->excerpt = Str::limit($article->excerpt, 200);
-            if (!empty($article->cover)) {
-                $article->cover = asset("storage/drive/" . $article->user->username . "/img/" . $article->cover);
-            } else {
-                $article->cover = asset("assets/img/image-placeholder.png");
-            }
-            if (empty($article->category_id)) {
-                $article->category_id = "Uncategorized";
-            }
-            return $article;
-        });
+        $this->articleService = $articleService;
     }
 
     /**
@@ -162,10 +39,10 @@ class ArticleController extends Controller
     {
         $data = ['title' => $request->query('search') ? 'Search results for "' . request()->get('search') . '"' : 'Blog'];
         $search = $request->query('search');
-        $articles = $this->fetchArticles(['search' => $search]);
-        $this->articlesMappingArray($articles);
-        $featured = $this->getFeaturedArticles($articles);
-        $randomPosts = $this->getRandomArticles(4);
+        $articles = $this->articleService->fetchArticles(['search' => $search]);
+        $this->articleService->articlesMappingArray($articles);
+        $featured = $this->articleService->getFeaturedArticles($articles);
+        $randomPosts = $this->articleService->getRandomArticles(4);
 
         return view('pages.front.posts.posts', compact('data', 'articles', 'featured', 'randomPosts'));
     }
@@ -245,8 +122,8 @@ class ArticleController extends Controller
         $ipAddress = $request->header('CF-Connecting-IP') ?? $request->header('X-Forwarded-For');
         $this->saveVisitor($article->id, $ipAddress);
 
-        $article = $this->articlesMappingArray(collect([$article]))->first();
-        $popularPosts = $this->getPopularPosts(4);
+        $article = $this->articleService->articlesMappingArray(collect([$article]))->first();
+        $popularPosts = $this->articleService->getPopularPosts(4);
         $categories = Category::inRandomOrder()->limit(5)->get();
         $tags = Tag::inRandomOrder()->limit(10)->get();
 
@@ -269,9 +146,9 @@ class ArticleController extends Controller
             'og_title' => 'Popular Post',
             'og_description' => 'Popular Post of zakialawi.my.id website',
         ];
-        $articles = $this->getPopularPosts();
-        $this->articlesMappingArray($articles);
-        $randomPosts = $this->getRandomArticles(4);
+        $articles = $this->articleService->getPopularPosts();
+        $this->articleService->articlesMappingArray($articles);
+        $randomPosts = $this->articleService->getRandomArticles(4);
 
         return view('pages.front.posts.popular', compact('data', 'articles', 'randomPosts'));
     }
@@ -288,9 +165,9 @@ class ArticleController extends Controller
     public function articlesByTag(string $slug)
     {
         $data = ['title' => 'Posts in tag of ' . request()->segment(3) . ' | zakialawi'];
-        $articles = $this->fetchArticles(['tag' => $slug]);
-        $this->articlesMappingArray($articles);
-        $randomPosts = $this->getRandomArticles(4);
+        $articles = $this->articleService->fetchArticles(['tag' => $slug]);
+        $this->articleService->articlesMappingArray($articles);
+        $randomPosts = $this->articleService->getRandomArticles(4);
 
         return view('pages.front.posts.posts', compact('data', 'articles', 'randomPosts'));
     }
@@ -307,10 +184,10 @@ class ArticleController extends Controller
     public function articlesByCategory(string $slug)
     {
         $data = ['title' => "Posts in category of " . request()->segment(3) . " | zakialawi"];
-        $articles = $this->fetchArticles(['category' => $slug]);
-        $this->articlesMappingArray($articles);
-        $featured = $this->getFeaturedArticles($articles);
-        $randomPosts = $this->getRandomArticles(4);
+        $articles = $this->articleService->fetchArticles(['category' => $slug]);
+        $this->articleService->articlesMappingArray($articles);
+        $featured = $this->articleService->getFeaturedArticles($articles);
+        $randomPosts = $this->articleService->getRandomArticles(4);
 
         return view('pages.front.posts.posts', compact('data', 'articles', 'featured', 'randomPosts'));
     }
@@ -327,10 +204,10 @@ class ArticleController extends Controller
     public function articlesByUser(string $username)
     {
         $data = ['title' => 'Posts by ' . $username];
-        $articles = $this->fetchArticles(['user' => $username]);
-        $this->articlesMappingArray($articles);
-        $featured = $this->getFeaturedArticles($articles);
-        $randomPosts = $this->getRandomArticles(4);
+        $articles = $this->articleService->fetchArticles(['user' => $username]);
+        $this->articleService->articlesMappingArray($articles);
+        $featured = $this->articleService->getFeaturedArticles($articles);
+        $randomPosts = $this->articleService->getRandomArticles(4);
 
         return view('pages.front.posts.posts', compact('data', 'articles', 'featured', 'randomPosts'));
     }
@@ -350,9 +227,9 @@ class ArticleController extends Controller
         (strlen($year) != 4) ? abort(404) : $year;
 
         $data = ['title' => 'Posts in ' . $year];
-        $articles = $this->fetchArticles(['year' => $year]);
-        $this->articlesMappingArray($articles);
-        $randomPosts = $this->getRandomArticles(4);
+        $articles = $this->articleService->fetchArticles(['year' => $year]);
+        $this->articleService->articlesMappingArray($articles);
+        $randomPosts = $this->articleService->getRandomArticles(4);
 
         return view('pages.front.posts.archive', compact('data', 'articles', 'randomPosts'));
     }
@@ -375,9 +252,9 @@ class ArticleController extends Controller
         ($month > 12 || $month < 1) ? abort(404) : $month;
 
         $data = ['title' => 'Posts in ' . date('F', strtotime($year . '-' . $month . '-01')) . ' ' . $year];
-        $articles = $this->fetchArticles(['month' => $month, 'year' => $year]);
-        $this->articlesMappingArray($articles);
-        $randomPosts = $this->getRandomArticles(4);
+        $articles = $this->articleService->fetchArticles(['month' => $month, 'year' => $year]);
+        $this->articleService->articlesMappingArray($articles);
+        $randomPosts = $this->articleService->getRandomArticles(4);
 
         return view('pages.front.posts.archive', compact('data', 'articles', 'randomPosts'));
     }

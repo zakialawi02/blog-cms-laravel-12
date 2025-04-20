@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ArticleController;
@@ -12,20 +13,28 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\WebSettingController;
 use App\Http\Controllers\ArticleViewController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::get('/docs', function () {
     return view('pages.docs');
 })->name('docs');
 
 Route::prefix('dashboard')->name('admin.')->group(function () {
     Route::middleware(['auth', 'verified', 'role:superadmin'])->group(function () {
-        Route::resource('users', UserController::class)->except('create', 'edit');
+        Route::prefix('settings')->name('settings.')->group(function () {
+            Route::get('/web', [WebSettingController::class, 'index'])->name('web.index');
+            Route::put('/web', [WebSettingController::class, 'update'])->name('web.update');
+            Route::get('/menus', [MenuController::class, 'index'])->name('menu.index');
+            Route::post('/menus/create', [MenuController::class, 'createMenu'])->name('menu.create');
+            Route::delete('/menu/{menu}', [MenuController::class, 'destroy'])->name('menu.delete');
+            Route::get('/menus/list', [MenuController::class, 'getMenus'])->name('menu.list');
+            Route::get('/menus/{menu}/items', [MenuController::class, 'getMenuItems'])->name('menu.items');
+            Route::post('/menus/store-item', [MenuController::class, 'storeMenuItem'])->name('menu.storeItem');
+            Route::post('/menus/update-structure', [MenuController::class, 'updateMenuStructure'])->name('menu.updateStructure');
+            Route::delete('/menu/items/{item}', [MenuController::class, 'deleteItem'])->name('menu.deleteItem');
+        });
 
-        Route::get('/settings/web', [WebSettingController::class, 'index'])->name('settings.web.index');
-        Route::put('/settings/web', [WebSettingController::class, 'update'])->name('settings.web.update');
+        Route::resource('users', UserController::class)->except('create', 'edit');
 
         Route::get('/system-back-info', [DashboardController::class, 'info'])->name('info');
 
@@ -90,6 +99,7 @@ Route::get('/admin', function () {
     return redirect('/dashboard');
 });
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/blog', [ArticleController::class, 'index'])->name('article.index');
 Route::get('/blog/popular', [ArticleController::class, 'popularPost'])->name('article.popular');
 Route::get('/blog/tags/{slug}', [ArticleController::class, 'articlesByTag'])->name('article.tag');

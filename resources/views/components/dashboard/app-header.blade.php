@@ -42,6 +42,11 @@
                         Notifications
                     </div>
                     <div class="divide-y divide-gray-100 dark:divide-gray-700">
+                        <div class="text-dark dark:text-light h-16 px-4 py-3 text-center">
+                            <p>No notifications</p>
+                        </div>
+                    </div>
+                    {{-- <div class="divide-y divide-gray-100 dark:divide-gray-700">
                         <a class="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700" href="#">
                             <div class="shrink-0">
                                 <img class="h-11 w-11 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Jese image">
@@ -113,15 +118,15 @@
                                 <div class="text-xs text-blue-600 dark:text-blue-500">3 hours ago</div>
                             </div>
                         </a>
-                    </div>
-                    <a class="dark:bg-back-dark-base-200 block rounded-b-lg bg-gray-50 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" href="#">
+                    </div> --}}
+                    {{-- <a class="dark:bg-back-dark-base-200 block rounded-b-lg bg-gray-50 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" href="#">
                         <div class="inline-flex items-center">
                             <svg class="me-2 h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
                                 <path d="M10 0C4.612 0 0 5.336 0 7c0 1.742 3.546 7 10 7 6.454 0 10-5.258 10-7 0-1.664-4.612-7-10-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
                             </svg>
                             View all
                         </div>
-                    </a>
+                    </a> --}}
                 </div>
                 <!-- End Dropdown -->
 

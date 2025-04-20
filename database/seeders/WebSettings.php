@@ -15,9 +15,9 @@ class WebSettings extends Seeder
     {
         WebSetting::create([
             'web_name' => "My Blog",
-            'tagline' => "My Blog Tagline",
-            'description' => "My Blog",
-            'keywords' => "My Blog, Laravel",
+            'tagline' => "My Blog Tagline Here",
+            'description' => "My Blog Description Here for SEO",
+            'keywords' => "My Blog, keywords, Laravel, blog, zakialawi, zakialawi.my.id, zakialawi.com",
             'app_logo' => "app_logo.png",
             'favicon' => "favicon.png",
             'email' => "hallo@zakialawi.my.id",

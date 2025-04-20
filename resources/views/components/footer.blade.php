@@ -29,30 +29,22 @@
                     <div class="flex flex-col gap-5">
                         <h5 class="text-dark dark:text-dark-light text-2xl font-bold">About</h5>
                         <div class="text-dark dark:text-dark-light space-y-1">
-                            <div>
-                                <a class="hover:text-primary dark:hover:text-dark-primary text-lg transition-all duration-300" href="#">Menu 1</a>
-                            </div>
-                            <div>
-                                <a class="hover:text-primary dark:hover:text-dark-primary text-lg transition-all duration-300" href="#">Menu 1</a>
-                            </div>
-                            <div>
-                                <a class="hover:text-primary dark:hover:text-dark-primary text-lg transition-all duration-300" href="#">Menu 1</a>
-                            </div>
+                            @foreach ($data['menu']['footer-a']['items'] ?? [] as $menu)
+                                <div>
+                                    <a class="hover:text-primary dark:hover:text-dark-primary text-lg transition-all duration-300" href={{ $menu['link'] }}>{{ $menu['label'] }}</a>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-5">
                         <h5 class="text-dark dark:text-dark-light text-2xl font-bold">Blog</h5>
                         <div class="text-dark dark:text-dark-light space-y-1">
-                            <div>
-                                <a class="hover:text-primary dark:hover:text-dark-primary text-lg transition-all duration-300" href="#">Blog 1</a>
-                            </div>
-                            <div>
-                                <a class="hover:text-primary dark:hover:text-dark-primary text-lg transition-all duration-300" href="#">Blog 1</a>
-                            </div>
-                            <div>
-                                <a class="hover:text-primary dark:hover:text-dark-primary text-lg transition-all duration-300" href="#">Blog 1</a>
-                            </div>
+                            @foreach ($data['menu']['footer-b']['items'] ?? [] as $menu)
+                                <div>
+                                    <a class="hover:text-primary dark:hover:text-dark-primary text-lg transition-all duration-300" href={{ $menu['link'] }}>{{ $menu['label'] }}</a>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
