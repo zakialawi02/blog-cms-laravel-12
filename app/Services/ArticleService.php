@@ -93,14 +93,14 @@ class ArticleService
      * @param \Illuminate\Support\Collection $articles
      * @return \Illuminate\Support\Collection
      */
-    public function getFeaturedArticles($articles)
+    public function getFeaturedArticles($articles, int $total = 5)
     {
         $featured = $articles
             ->filter(fn($article) => $article->is_featured)
             ->sortByDesc('published_at')
             ->take(5);
-        if ($featured->count() < 5) {
-            $remainingCount = 5 - $featured->count();
+        if ($featured->count() < $total) {
+            $remainingCount = $total - $featured->count();
             $nonFeatured = $articles
                 ->reject(fn($article) => $article->is_featured)->shuffle()
                 ->take($remainingCount);
@@ -127,7 +127,11 @@ class ArticleService
             }
             $article->excerpt = Str::limit($article->excerpt, 200);
             if (!empty($article->cover)) {
-                $article->cover = asset("storage/drive/" . $article->user->username . "/img/" . $article->cover);
+                if (filter_var($article->cover, FILTER_VALIDATE_URL)) {
+                    $article->cover = $article->cover;
+                } else {
+                    $article->cover = asset("storage/drive/" . $article->user->username . "/img/" . $article->cover);
+                }
             } else {
                 $article->cover = asset("assets/img/image-placeholder.png");
             }

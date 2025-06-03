@@ -27,6 +27,7 @@
                         <x-dashboard.nav-dropdown icon="ri-article-line" text="Articles Posts" :items="[['route' => 'admin.posts.index', 'text' => 'Posts'], ['route' => 'admin.posts.create', 'text' => 'Create Post']]" />
                     @endif
                     @if (Auth::user()->role == 'superadmin')
+                        <x-dashboard.nav-dropdown icon="ri-pages-line" text="Pages" :items="[['route' => 'admin.pages.index', 'text' => 'Pages'], ['route' => 'admin.pages.create', 'text' => 'Add Pages'], ['route' => 'admin.pages.layout.index', 'text' => 'Layout']]" />
                         <x-dashboard.nav-dropdown icon="ri-folder-reduce-line" text="Category" :items="[['route' => 'admin.categories.index', 'text' => 'Categories'], ['route' => 'admin.categories.create', 'text' => 'Add Category']]" />
                     @endif
                     @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')

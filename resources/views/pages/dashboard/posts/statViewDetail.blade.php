@@ -21,7 +21,12 @@
                             <tr>
                                 <td>{{ __('Url') }}</td>
                                 <td width:3px>:</td>
-                                <td><a class="text-back-primary dark:text-back-dark-primary hover:text-back-secondary dark:hover:text-back-secondary hover:underline" href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}" target="_blank">{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}</a></td>
+                                <td>
+                                    <a class="text-back-primary dark:text-back-dark-primary hover:text-back-secondary dark:hover:text-back-secondary hover:underline" href="{{ $article->published_at && $article->slug ? route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) : '#' }}" target="_blank">
+                                        {{ $article->published_at && $article->slug ? route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) : '#' }}
+                                    </a>
+                                </td>
+
                             </tr>
                             <tr>
                                 <td>{{ __('Author') }}</td>
@@ -36,12 +41,12 @@
                             <tr>
                                 <td>{{ __('Published at') }}</td>
                                 <td width:3px>:</td>
-                                <td>{{ $article?->published_at->diffForHumans() ?? '-' }}</td>
+                                <td>{{ $article?->published_at ? $article?->published_at->diffForHumans() : '-' }}</td>
                             </tr>
                             <tr>
                                 <td>{{ __('Created at') }}</td>
                                 <td width:3px>:</td>
-                                <td>{{ $article?->created_at->diffForHumans() ?? '-' }}</td>
+                                <td>{{ $article?->created_at ? $article?->created_at->diffForHumans() : '-' }}</td>
                             </tr>
                             <tr>
                                 <td>{{ __('Visitors') }}</td>

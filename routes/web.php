@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ArticleController;
@@ -13,7 +15,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\WebSettingController;
 use App\Http\Controllers\ArticleViewController;
-use App\Http\Controllers\HomeController;
 
 Route::get('/docs', function () {
     return view('pages.docs');
@@ -44,6 +45,11 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::get('/categories/{category:slug}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::put('/categories/{category:slug}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{category:slug}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+        // Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
+        // Route::get('/pages/create', [PageController::class, 'create'])->name('pages.create');
+        Route::get('/pages/layout', [PageController::class, 'layout'])->name('pages.layout.index');
+        Route::put('/pages/layout', [PageController::class, 'layoutUpdate'])->name('pages.layout.update');
     });
 
     Route::middleware(['auth', 'verified', 'role:superadmin,admin'])->group(function () {
@@ -62,6 +68,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
         Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
         Route::get('/posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit');
+        Route::get('/posts/{post:slug}/preview', [PostController::class, 'preview'])->name('posts.preview');
         Route::put('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
         Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
         Route::delete('/posts/{post:slug}/permanent', [PostController::class, 'permanentlyDelete'])->name('posts.destroy-permanent');
@@ -101,7 +108,9 @@ Route::get('/admin', function () {
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/blog', [ArticleController::class, 'index'])->name('article.index');
+Route::get('/blog/recent-posts', fn() => redirect()->route('article.index'));
 Route::get('/blog/popular', [ArticleController::class, 'popularPost'])->name('article.popular');
+Route::get('/blog/popular-post', fn() => redirect()->route('article.popular'));
 Route::get('/blog/tags/{slug}', [ArticleController::class, 'articlesByTag'])->name('article.tag');
 Route::get('/blog/categories/{slug}', [ArticleController::class, 'articlesByCategory'])->name('article.category');
 Route::get('/blog/users/{username}', [ArticleController::class, 'articlesByUser'])->name('article.user');

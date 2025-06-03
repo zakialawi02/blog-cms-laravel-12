@@ -6,10 +6,15 @@
         <h2>
             {{ __('Welcome') }}, {{ Auth::user()->name }}
         </h2>
-        <x-dashboard.primary-button id="refreshDashboard" type="button" :size="'small'">
-            <i class="ri-refresh-line"></i>
-            Refresh
-        </x-dashboard.primary-button>
+
+        <div class="">
+            <!-- Ambil waktu awal dari server -->
+            <span class="text-sm" id="server-time" data-time="{{ \Carbon\Carbon::now()->format('Y-m-d H:i:s') }}"></span>
+            <x-dashboard.primary-button id="refreshDashboard" type="button" :size="'small'">
+                <i class="ri-refresh-line"></i>
+                Refresh
+            </x-dashboard.primary-button>
+        </div>
     </section>
     <section class="mb-2 p-1 md:px-4">
         <div class="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-3 lg:grid-cols-4">
@@ -387,6 +392,28 @@
                     });
                 }
             });
+        </script>
+        <script>
+            const timeElement = document.getElementById('server-time');
+            let currentTime = new Date(timeElement.dataset.time);
+
+            const hariIndo = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            function updateClock() {
+                currentTime.setSeconds(currentTime.getSeconds() + 1);
+                const hari = hariIndo[currentTime.getDay()];
+                const tanggal = currentTime.toLocaleDateString('en-US', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                const jam = currentTime.toLocaleTimeString('en-US');
+
+                timeElement.innerText = `${hari}, ${tanggal} ${jam}`;
+            }
+
+            updateClock(); // initial
+            setInterval(updateClock, 1000);
         </script>
     @endpush
 </x-app-layout>

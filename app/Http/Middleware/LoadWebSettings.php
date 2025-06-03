@@ -21,7 +21,7 @@ class LoadWebSettings
         } else {
             // Ambil data WebSetting dari cache, kalau tidak ada baru query
             $webSetting = Cache::remember('web_setting', now()->addDays(30), function () {
-                return WebSetting::first();
+                return WebSetting::getAllSettings();
             });
         }
 

@@ -2,10 +2,11 @@
 
 namespace App\Actions;
 
+use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class UploadCoverImage
 {
@@ -17,24 +18,26 @@ class UploadCoverImage
 
         $filename = time() . '_' . Str::random(20) . '.' . $file->getClientOriginalExtension();
         $relativePath = 'media/img/' . $filename;
-        $destinationPath = public_path('media/img');
 
         // Hapus file lama jika ada
         if ($oldImageUrl) {
             $oldFilename = basename($oldImageUrl);
-            $oldFilePath = public_path('media/img/' . $oldFilename);
-            if (file_exists($oldFilePath)) {
-                unlink($oldFilePath);
+            $oldFilePath = 'media/img/' . $oldFilename;
+
+            if (Storage::disk('public')->exists($oldFilePath)) {
+                Storage::disk('public')->delete($oldFilePath);
             } else {
                 Log::warning("File cover lama tidak ditemukan: " . $oldFilePath);
             }
         }
 
-        $copied = copy($file->getRealPath(), $destinationPath . '/' . $filename);
-        if (!$copied) {
+        // Simpan file baru
+        $stored = Storage::disk('public')->putFileAs('media/img', $file, $filename);
+        if (!$stored) {
             throw new Exception('Failed to upload cover image.');
         }
 
-        return asset($relativePath);
+        // Return URL publik ke file-nya
+        return Storage::url($relativePath);
     }
 }

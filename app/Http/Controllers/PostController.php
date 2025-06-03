@@ -74,9 +74,15 @@ class PostController extends Controller
                         return '<button type="button" class="btn bg-back-primary dark:bg-back-back-dark-primary restorePost" data-slug="' . $data->slug . '"><span class="ri-refresh-line" title="Restore"></span></button>
                         <button type="button" class="btn bg-back-error permanentlyDeletePost" data-slug="' . $data->slug . '" title="Permanently Delete"><span class="ri-delete-bin-line"></span></button>';
                     } else {
-                        return '<a href="' . route('article.show', ['year' => $data->published_at->format('Y'), 'slug' => $data->slug]) . '" class="btn bg-back-info viewPost" target="_blank"><span class="ri-eye-line" title="View"></span></a>
+                        $buttons = '';
+                        if ($data->status !== 'draft') {
+                            $buttons .= '<a href="' . route('article.show', ['year' => $data->published_at->format('Y'), 'slug' => $data->slug]) . '" class="btn bg-back-info viewPost" target="_blank"><span class="ri-eye-line" title="View"></span></a>';
+                        }
+                        $buttons .= '<a href="' . route('admin.posts.preview', $data->slug) . '" class="btn bg-back-dark ml-1 previewPost" data-slug="' . $data->slug . '" title="Preview"><span class="ri-mac-line"></span></a>
                         <a href="' . route('admin.posts.edit', $data->slug) . '" class="btn bg-back-secondary editPost" data-slug="' . $data->slug . '" title="Edit"><span class="ri-edit-box-line"></span></a>
                         <button type="button" class="btn bg-back-error deletePost" data-slug="' . $data->slug . '" title="Delete"><span class="ri-delete-bin-line"></span></button>';
+
+                        return $buttons;
                     }
                 })
                 ->addColumn('user', function ($data) {
@@ -143,6 +149,23 @@ class PostController extends Controller
             : [Auth::user()];
 
         return view('pages.dashboard.posts.create', compact('data', 'categories', 'tags', 'users'));
+    }
+
+    /**
+     * Show the preview page of a post.
+     *
+     * @param string $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function preview($slug)
+    {
+        $data = [
+            'title' => 'Preview Post',
+        ];
+
+        $article = Article::where('slug', $slug)->first();
+
+        return view('pages.dashboard.posts.preview', compact('data', 'article'));
     }
 
     /**

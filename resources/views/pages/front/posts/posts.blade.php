@@ -78,42 +78,7 @@
 
         <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
             @forelse ($articles as $article)
-                <article>
-                    <img class="h-64 w-full rounded-lg object-cover object-center lg:h-80" src="{{ asset($article->cover) }}" alt="{{ $article->title }}" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
-
-                    <div class="mt-2">
-                        <span class="text-primary dark:text-dark-primary uppercase">
-                            {{ $article->category->category ?? $article->category_id }}
-                        </span>
-
-                        <h2 class="text-dark dark:text-dark-light hover:text-muted dark:hover:text-dark-muted mt-1 text-xl font-semibold hover:underline">
-                            <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
-                                {{ $article->title }}
-                            </a>
-                        </h2>
-
-                        <p class="text-muted dark:text-dark-muted mt-2 line-clamp-3">
-                            {{ $article->excerpt }}
-                        </p>
-
-                        <div class="mt-4 flex items-center justify-between">
-                            <div>
-                                <a class="text-accent dark:text-dark-accent hover:text-info dark:hover:text-dark-info text-lg font-medium" href="{{ route('article.user', $article->user->username) }}">
-                                    {{ $article?->user?->username }}
-                                </a>
-
-                                <p class="text-muted dark:text-dark-muted text-sm">
-                                    {{ $article->published_at->format('F j, Y') }}
-                                </p>
-                            </div>
-
-                            <a class="text-primary dark:text-dark-primary hover:text-accent dark:hover:text-dark-accent inline-block underline" href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
-                                Read more
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
+                <x-card-post-desc :article="$article" />
             @empty
                 <p class="my-2">No Article Posts Available</p>
             @endforelse
@@ -131,7 +96,7 @@
                     <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->cover }}" alt="Post Cover" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
                     <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
                         <div class="mb-2 flex space-x-2">
-                            <span class="text-accent dark:text-dark-accent bg-light dark:bg-dark-light rounded-full px-2 py-1 text-xs font-semibold">{{ $post->category->category }}</span>
+                            <span class="text-accent dark:text-dark-accent bg-light dark:bg-dark-light rounded-full px-2 py-1 text-xs font-semibold">{{ $post->category->category ?? 'Uncategorized' }}</span>
                         </div>
                         <h3 class="text-light hover:text-accent dark:hover:text-dark-accent all line-clamp-3 text-lg font-semibold transition duration-300">
                             <a href={{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}>{{ $post->title }}</a>

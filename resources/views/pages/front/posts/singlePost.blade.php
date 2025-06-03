@@ -5,7 +5,7 @@
 
 <x-app-front-layout>
     <div class="container mt-6">
-        <x-breadcrumb :showSegment="5" :items="[['text' => 'Home', 'link' => '/'], ['text' => 'Blog', 'link' => route('article.index')], ['text' => request()->segment(2), 'link' => route('article.year', ['year' => request()->segment(2)])], ['text' => $article->category->category, 'link' => route('article.category', ['slug' => $article->category->slug])], ['link' => route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug])], ['text' => $article->title]]" />
+        <x-breadcrumb :showSegment="5" :items="[['text' => 'Home', 'link' => '/'], ['text' => 'Blog', 'link' => route('article.index')], ['text' => request()->segment(2), 'link' => route('article.year', ['year' => request()->segment(2)])], ['text' => $article->category->category ?? 'Uncategorized', 'link' => route('article.category', ['slug' => $article->category->slug ?? 'uncategorized'])], ['link' => route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug])], ['text' => $article->title]]" />
 
         <div class="text-dark dark:text-dark-light flex flex-auto flex-grow flex-col flex-wrap gap-4 md:flex-row" id="main">
             <div class="w-full md:w-[60%] md:flex-grow" id="post">
@@ -155,7 +155,6 @@
     @endpush
 
     @push('javascript')
-        <script src="{{ asset('assets/js/prism.js') }}"></script>
         <script>
             const query = new URLSearchParams(window.location.search);
             const source = query.get('source');

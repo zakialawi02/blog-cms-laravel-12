@@ -11,24 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('web_settings', function (Blueprint $table) {
+        Schema::create('web_settings', function (Blueprint $table) { // Ganti nama tabel jika lebih umum
             $table->id();
-            $table->string('web_name')->nullable()->index();
-            $table->string('web_name_variant')->nullable()->default('3');
-            $table->string('tagline')->nullable()->index();
-            $table->string('description')->nullable()->index();
-            $table->string('keywords')->nullable()->index();
-            $table->string('app_logo')->nullable()->index();
-            $table->string('favicon')->nullable()->index();
-            $table->string('email')->nullable();
-            $table->string('link_fb')->nullable();
-            $table->string('link_ig')->nullable();
-            $table->string('link_tiktok')->nullable();
-            $table->string('link_youtube')->nullable();
-            $table->string('link_twitter')->nullable();
-            $table->string('link_linkedin')->nullable();
-            $table->string('link_github')->nullable();
-            $table->boolean('can_join_contributor')->default(0);
+            $table->string('key', 191)->unique(); // Nama unik untuk setting
+            $table->text('value')->nullable();     // Nilai setting
+            $table->string('type', 50)->default('string'); // Tipe data: string, text, integer, boolean, json, array, dll.
             $table->timestamp('created_at')->useCurrent()->nullable();
             $table->timestamp('updated_at')->useCurrentOnUpdate()->nullable();
         });

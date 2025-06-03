@@ -4,16 +4,17 @@ namespace App\Actions;
 
 use App\Models\Article;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DeletePostPermanently
 {
     public function execute(Article $post): bool
-    {        // Hapus file cover jika ada
+    {
         if ($post->cover) {
-            $coverPath = public_path('media/img/' . basename($post->cover));
+            $coverPath = 'media/img/' . basename($post->cover);
 
-            if (file_exists($coverPath)) {
-                unlink($coverPath);
+            if (Storage::disk('public')->exists($coverPath)) {
+                Storage::disk('public')->delete($coverPath);
             } else {
                 Log::warning("Gagal hapus file cover: tidak ditemukan di path {$coverPath}");
             }

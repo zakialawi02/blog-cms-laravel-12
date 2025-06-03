@@ -72,7 +72,7 @@ class ArticleViewController extends Controller
     {
         if (request()->ajax()) {
             if (request()->has('type') && request()->get('type') == "popular") {
-                $articles = Article::has('articleViews')->withCount(['articleViews as total_views']);
+                $articles = Article::withTrashed()->has('articleViews')->withCount(['articleViews as total_views']);
 
                 if (Auth::user()->role !== "superadmin") {
                     $articles->where('user_id', auth()->id());
@@ -84,6 +84,9 @@ class ArticleViewController extends Controller
                     ->editColumn('published_at', function ($data) {
                         return $data->published_at ? $data->published_at->format("d M Y") : '-';
                     })
+                    ->addColumn('status', function ($data) {
+                        return $data->deleted_at ? 'Trashed' : $data->status;
+                    })
                     ->addColumn('action', function ($article) {
                         return '<a href="' . route('admin.posts.statsdetail', $article->slug) . '"  class="btn bg-back-primary editUser" title="View"><i class="ri-search-eye-line"></i></a>';
                     })
@@ -93,8 +96,9 @@ class ArticleViewController extends Controller
             }
 
             if (request()->has('type') && request()->get('type') == "recent") {
-                $articles = ArticleView::with('article')
-                    ->orderBy('viewed_at', 'desc');
+                $articles = ArticleView::with(['article' => function ($query) {
+                    $query->withTrashed(); // include soft-deleted articles juga
+                }])->orderBy('viewed_at', 'desc');
 
                 if (Auth::user()->role !== "superadmin") {
                     $articles->whereHas('article', function ($q) {
@@ -106,6 +110,9 @@ class ArticleViewController extends Controller
                 return Datatables::of($articles)
                     ->editColumn('viewed_at', function ($data) {
                         return $data->viewed_at ? $data->viewed_at->format("d M Y H:i") : 'unknown';
+                    })
+                    ->addColumn('status', function ($data) {
+                        return $data->deleted_at ? 'Trashed' : $data->status;
                     })
                     ->addColumn('title', function ($data) {
                         return [
@@ -175,6 +182,7 @@ class ArticleViewController extends Controller
         });
         $total_views = $views->sum('views');
         $article['total_views'] = $total_views;
+        $article['status'] = $article->deleted_at ? 'Trashed' : $article->status;
 
         $data = [
             'title' => 'Post Statistics Detail',
