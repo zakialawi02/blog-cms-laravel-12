@@ -5,13 +5,13 @@ namespace App\View\Components;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
-class AppFrontLayout extends Component
+class AppFrontPagesLayout extends Component
 {
     /**
      * Get the view / contents that represent the component.
      */
     public function render(): View
     {
-        return view('layouts.app-front');
+        return view('layouts.app-front-pages');
     }
 }

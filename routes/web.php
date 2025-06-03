@@ -39,6 +39,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
 
         Route::get('/system-back-info', [DashboardController::class, 'info'])->name('info');
 
+        // Categories
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
@@ -46,8 +47,15 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::put('/categories/{category:slug}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{category:slug}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
-        // Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
-        // Route::get('/pages/create', [PageController::class, 'create'])->name('pages.create');
+        // Pages builder
+        Route::patch('/pages/{id}/store-project', [PageController::class, 'storeProject'])->name('pages.storeproject');
+        Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
+        Route::post('/pages', [PageController::class, 'store'])->name('pages.store');
+        Route::get('/pages/create', [PageController::class, 'create'])->name('pages.create');
+        Route::get('/pages/{page:id}/edit', [PageController::class, 'edit'])->name('pages.edit');
+        Route::get('/pages/{page:id}/builder', [PageController::class, 'builder'])->name('pages.builder');
+        Route::put('/pages/{page:id}', [PageController::class, 'update'])->name('pages.update');
+        Route::delete('/pages/{page:id}', [PageController::class, 'destroy'])->name('pages.destroy');
         Route::get('/pages/layout', [PageController::class, 'layout'])->name('pages.layout.index');
         Route::put('/pages/layout', [PageController::class, 'layoutUpdate'])->name('pages.layout.update');
     });
@@ -76,6 +84,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
 
         Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 
+        // Statistics
         Route::get('/posts/stats/6months', [ArticleViewController::class, 'getViewsLast6Months'])->name('posts.statslast6months');
         Route::get('/stats/posts', [ArticleViewController::class, 'getArticleStats'])->name('posts.statsview');
         Route::get('/stats/posts/locations', [ArticleViewController::class, 'statsByLocation'])->name('posts.statslocation');
@@ -91,6 +100,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::get('/my-comments', [CommentController::class, 'mycomments'])->name('mycomments.index');
         Route::delete('/comments/{comment:id}', [CommentController::class, 'destroy'])->name('comment.destroy');
 
+        // Profile
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::patch('/photo-profile', [ProfileController::class, 'updatePhoto'])->name('profile.photo-update');
@@ -106,6 +116,7 @@ Route::get('/admin', function () {
     return redirect('/dashboard');
 });
 
+// Blog Post
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/blog', [ArticleController::class, 'index'])->name('article.index');
 Route::get('/blog/recent-posts', fn() => redirect()->route('article.index'));
@@ -120,12 +131,9 @@ Route::get('/blog/{year}/{slug}', [ArticleController::class, 'show'])->name('art
 
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 
-Route::get('privacy-policy', function () {
-    return view('pages.front.privacyPolicy');
-})->name('privacyPolicy');
-Route::get('terms-and-conditions', function () {
-    return view('pages.front.termCondition');
-})->name('termsAndConditions');
+Route::get('/dashboard/pages/{id}/load-project', [PageController::class, 'loadProject'])->name('pages.loadproject');
+
+Route::get('/p/{page:slug}', [PageController::class, 'show'])->name('page.show');
 
 
 require __DIR__ . '/auth.php';

@@ -72,16 +72,18 @@
             <div class="container">
                 <div class="flex flex-wrap items-center justify-center gap-6 sm:justify-between">
                     <p class="text-muted dark:text-dark-muted text-base font-semibold">
-                        Copyright &copy;
+                        Copyright &copy; 2024 -
                         <script>
-                            document.write(new Date().getFullYear())
-                        </script>. All rights reserved.
+                            document.write(new Date().getFullYear());
+                        </script>
+                        . All rights reserved.
                     </p>
 
+
                     <div>
-                        <a class="hover:text-primary dark:hover:text-dark-primary text-muted dark:text-dark-muted text-base font-semibold" href="{{ route('termsAndConditions') }}">Terms Conditions</a>
+                        <a class="hover:text-primary dark:hover:text-dark-primary text-muted dark:text-dark-muted text-base font-semibold" href="/p/terms">Terms Conditions</a>
                         <span class="text-muted dark:text-dark-muted text-base font-semibold"> &amp;</span>
-                        <a class="hover:text-primary dark:hover:text-dark-primary text-muted dark:text-dark-muted text-base font-semibold" href="{{ route('privacyPolicy') }}">Privacy Policy</a>
+                        <a class="hover:text-primary dark:hover:text-dark-primary text-muted dark:text-dark-muted text-base font-semibold" href="/p/privacy">Privacy Policy</a>
                     </div>
                 </div>
             </div>

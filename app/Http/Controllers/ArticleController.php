@@ -128,7 +128,7 @@ class ArticleController extends Controller
         $this->saveVisitor($article->id, $ipAddress);
 
         $article = $this->articleService->articlesMappingArray(collect([$article]))->first();
-        $popularPosts = $this->articleService->getPopularPosts(4);
+        $popularPosts = $this->articleService->articlesMappingArray($this->articleService->getPopularPosts(4));
         $categories = Category::inRandomOrder()->limit(5)->get();
         $tags = Tag::inRandomOrder()->limit(10)->get();
 

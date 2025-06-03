@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(TagSeeder::class);
         // $this->call(ArticleSeeder::class);
         // ArticleView::factory(500)->create();
+        $this->call(PagesSeeder::class);
 
         $this->call(MenuSeeder::class);
     }
