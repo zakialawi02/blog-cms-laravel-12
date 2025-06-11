@@ -131,52 +131,13 @@
 
         <div class="text-dark dark:text-dark-light mt-2 pt-4">
             @if ($sectionsContent['home_sidebar_1']['config']['is_visible'] == '1')
-                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="popular-posts">
-                    <div class="text-center text-xl font-bold">
-                        <h3>Popular Posts</h3>
-                    </div>
-
-                    <div class="mx-auto p-2">
-                        @forelse ($sectionsContent['home_sidebar_1']['data'] as $popular)
-                            <article>
-                                <div class="flex items-center gap-2 p-1">
-                                    <a class="mr-2 block shrink-0" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">
-                                        <img class="size-14 rounded-3xl object-cover" src="{{ $popular->cover }}" alt="post image" />
-                                    </a>
-
-                                    <div>
-                                        <h3 class="line-clamp-2 font-medium sm:text-lg">
-                                            <a class="hover:text-primary dark:hover:text-dark-primary block" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">{{ $popular->title }}</a>
-                                        </h3>
-
-                                        <div class="mt-2 sm:flex sm:items-center sm:gap-2">
-                                            <p class="hidden sm:block sm:text-xs">Posted by <a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                        @empty
-                            <p class="font-regular my-2 text-center">No popular posts</p>
-                        @endforelse
-                    </div>
-                </div>
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_1']" />
             @endif
             @if ($sectionsContent['home_sidebar_2']['config']['is_visible'] == '1')
-                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="categories">
-                    <div class="text-center text-xl font-bold">
-                        <h3>Tags</h3>
-                    </div>
-                    <div class="mx-auto p-2">
-                        <ul class="flex flex-wrap">
-                            @forelse ($sectionsContent['home_sidebar_2']['data'] as $tag)
-                                <a class="border-secondary dark:border-dark-secondary hover:border-primary hover:text-primary dark:hover:text-dark-primary dark:hover:border-dark-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
-                            @empty
-                                <p class="font-regular my-2 text-center">No Tag Available</p>
-                            @endforelse
-                        </ul>
-                    </div>
-                </div>
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_2']" />
+            @endif
+            @if ($sectionsContent['home_sidebar_3']['config']['is_visible'] == '1')
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_3']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_3']" />
             @endif
         </div>
     </div>

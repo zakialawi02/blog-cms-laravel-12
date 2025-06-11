@@ -21,6 +21,7 @@ class PageController extends Controller
         'home_section_3',
         'home_sidebar_1',
         'home_sidebar_2',
+        'home_sidebar_3',
         'home_bottom_section_1'
     ];
 
@@ -174,39 +175,58 @@ class PageController extends Controller
 
     public function layoutUpdate(Request $request)
     {
+        // dd($request->all());
         Cache::forget('web_setting');
         $validationRules = [];
         $availableItemKeys = array_keys($this->getContentItemKeyOptions()); // Ambil keys untuk validasi
+        $allConfigs = $request->input('sections_config', []);
 
-        foreach ($this->sectionKeys as $key) {
+        foreach ($allConfigs as $key => $config) {
+            // Hanya validasi keys yang memang ada di daftar sectionKeys server-side
+            if (!in_array($key, $this->sectionKeys)) {
+                continue;
+            }
+
             $validationRules["sections_config.{$key}.label"] = 'nullable|string|max:255';
             $validationRules["sections_config.{$key}.is_visible"] = 'nullable|boolean';
-            // Perbarui aturan validasi untuk 'items'
             $validationRules["sections_config.{$key}.items"] = ['nullable', Rule::in($availableItemKeys)];
-            // Aturan untuk 'total' tetap, akan dikontrol oleh @if di component
-            $validationRules["sections_config.{$key}.total"] = 'nullable|integer|min:0';
+
+            // Aturan validasi dinamis untuk 'total'
+            // Cek nilai 'items' yang dikirim dari form
+            if (isset($config['items']) && $config['items'] === 'js-script') {
+                // Jika 'items' adalah 'js-script', 'total' berisi kode, maka validasi sebagai string
+                $validationRules["sections_config.{$key}.total"] = 'nullable|string';
+            } else {
+                // Jika tidak, 'total' berisi jumlah, maka validasi sebagai integer
+                $validationRules["sections_config.{$key}.total"] = 'nullable|integer|min:0';
+            }
         }
 
         $validatedData = $request->validate($validationRules, [
             'sections_config.*.total.integer' => 'The number of items must be a number.',
             'sections_config.*.total.min' => 'The number of items must be at least 0.',
-            'sections_config.*.items.in' => 'The selected content item key is invalid.', // Pesan error untuk Rule::in
+            'sections_config.*.items.in' => 'The selected content item key is invalid.',
         ]);
 
         $submittedConfigs = $validatedData['sections_config'] ?? [];
-        // dd($submittedConfigs);
+
         DB::beginTransaction();
         try {
             foreach ($this->sectionKeys as $key) {
                 if (isset($submittedConfigs[$key])) {
                     $config = $submittedConfigs[$key];
+                    $totalValue = $config['total'] ?? null;
+                    if (isset($config['items']) && $config['items'] !== 'js-script') {
+                        $totalValue = (int)($totalValue ?? ($this->getDefaultDataForKey($key)['total'] ?? 0));
+                    }
                     $valueArray = [
                         'label' => $config['label'] ?? '',
-                        'is_visible' => $config['is_visible'] ?? false,
-                        'total' => (int)($config['total'] ?? ($this->getDefaultDataForKey($key)['total'] ?? 0)), // Ambil default jika tidak diset
+                        'is_visible' => (bool)($config['is_visible'] ?? false),
+                        'total' => $totalValue,
                         'items' => $config['items'] ?? '',
                     ];
-                    WebSetting::setSetting($key, $valueArray, 'json');
+                    $jsonValue = json_encode($valueArray);
+                    WebSetting::setSetting($key, $jsonValue, 'json');
                 }
             }
             DB::commit();
@@ -232,10 +252,10 @@ class PageController extends Controller
             'home_feature_section' => ['label' => 'Recent Posts', 'is_visible' => true, 'total' => 6, 'items' => 'recent-posts'],
             'home_section_1' => ['label' => 'Recent Posts', 'is_visible' => true, 'total' => 6, 'items' => 'recent-posts'],
             'home_section_2' => ['label' => 'Technology', 'is_visible' => true, 'total' => 6, 'items' => 'technology-category'],
-            // ... (defaults lainnya)
             'home_section_3' => ['label' => '', 'is_visible' => false, 'total' => 3, 'items' => ''],
             'home_sidebar_1' => ['label' => 'Popular Posts', 'is_visible' => true, 'total' => 4, 'items' => 'popular-posts'],
             'home_sidebar_2' => ['label' => 'Tags', 'is_visible' => true, 'total' => 10, 'items' => 'tags'],
+            ['home_sidebar_3' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => '']],
             'home_bottom_section_1' => ['label' => 'You Missed', 'is_visible' => true, 'total' => 4, 'items' => 'random-posts'],
         ];
         return $defaults[$key] ?? ['label' => 'Default Label', 'is_visible' => false, 'total' => 0, 'items' => ''];
@@ -255,7 +275,9 @@ class PageController extends Controller
             'recent-posts' => 'Recent Posts',
             'popular-posts' => 'Popular Posts',
             'random-posts' => 'Random Posts',
+            'js-script' => 'JS Script',
             'all-tags-widget' => 'Tags Cloud Widget',
+            'all-categories-widget' => 'Category List Widget',
             // You can decide whether 'tags' as a general widget is still relevant
             // or whether users will always choose specific tags.
             // 'all-tags-widget' => 'Tags Cloud Widget (All Tags)',

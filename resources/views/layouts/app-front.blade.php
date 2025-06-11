@@ -36,6 +36,24 @@
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        @if (filled($data['web_setting']['google_analytics'] ?? false))
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{ $data['web_setting']['google_analytics'] }}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+                gtag('config', '{{ $data['web_setting']['google_analytics'] }}');
+            </script>
+        @endif
+
+        @if (filled($data['web_setting']['google_adsense'] ?? false))
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $data['web_setting']['google_adsense'] }}" crossorigin="anonymous"></script>
+        @endif
+
     </head>
 
     <body class="bg-back-base-200 dark:bg-dark-base-300 font-sans antialiased">

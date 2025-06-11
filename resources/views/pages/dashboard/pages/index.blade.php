@@ -45,7 +45,7 @@
                                     <a class="btn bg-back-secondary zk-edit-data" href="{{ route('admin.pages.edit', $page->id) }}"><i class="ri-settings-4-line"></i></a>
                                     {{-- Conditional check to hide delete button for specific slugs --}}
                                     @if (!in_array($page->slug, ['terms', 'privacy', 'contact']))
-                                        <form class="zk-delete-data inline" action="{{ route('admin.pages.destroy', $page->slug) }}" method="POST">
+                                        <form class="zk-delete-data inline" action="{{ route('admin.pages.destroy', $page->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn bg-back-error zk-delete-data" type="submit"><i class="ri-delete-bin-6-line"></i></button>

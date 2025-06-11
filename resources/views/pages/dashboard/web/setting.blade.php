@@ -175,7 +175,17 @@
                             <div class="peer-checked:bg-back-primary peer-focus:ring-back-primary/80 dark:peer-checked:bg-back-dark-primary dark:peer-focus:ring-back-primary peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700"></div>
                             <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
                         </label>
+                    </div>
 
+                    <div class="mb-3">
+                        <x-dashboard.input-label for="google_adsense" value="{{ __('Google Adsense') }}"></x-dashboard.input-label>
+                        <x-dashboard.text-input name="google_adsense" type="text" value="{{ old('google_adsense', $data['web_setting']['google_adsense'] ?? '') }}" placeholder="Adsense Publisher ID eg: ca-pub-123456789"></x-dashboard.text-input>
+                        <x-dashboard.input-error class="mt-2" :messages="$errors->get('google_adsense')" />
+                    </div>
+                    <div class="mb-3">
+                        <x-dashboard.input-label for="google_analytics" value="{{ __('Google Analytics') }}"></x-dashboard.input-label>
+                        <x-dashboard.text-input name="google_analytics" type="text" value="{{ old('google_analytics', $data['web_setting']['google_analytics'] ?? '') }}" placeholder="Google Analytics ID eg: UA-123456789-1"></x-dashboard.text-input>
+                        <x-dashboard.input-error class="mt-2" :messages="$errors->get('google_analytics')" />
                     </div>
                 </div>
             </form>

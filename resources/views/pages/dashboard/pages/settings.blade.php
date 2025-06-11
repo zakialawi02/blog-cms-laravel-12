@@ -159,6 +159,26 @@
                             <x-home-section-layout-setting :sectionKey="'home_sidebar_2'" :sectionData="$layouts['home_sidebar_2']" :itemKeyOptions="$itemKeyOptions" />
                         </div>
                     </x-card>
+
+                    {{-- Sidebar 3 --}}
+                    <x-card class="mb-3">
+                        <div class="mb-2 flex items-center justify-between rounded-md bg-slate-200 p-2 dark:bg-slate-700">
+                            <div>
+                                <p class="font-semibold">Sidebar 3</p>
+                                <p class="text-xs">
+                                    Label: {{ $layouts['home_sidebar_3']['label'] }} |
+                                    Items: {{ $layouts['home_sidebar_3']['items'] }} |
+                                    Status: {{ $layouts['home_sidebar_3']['is_visible'] ? 'Visible' : 'Hidden' }}
+                                </p>
+                            </div>
+                            <div class="hover:text-info cursor-pointer" onclick="toggleEditForm('home_sidebar_3_form', this)">
+                                <i class="ri-pencil-line"></i> <span class="edit-text text-sm">Edit</span>
+                            </div>
+                        </div>
+                        <div class="hidden border-t border-slate-300 p-4 dark:border-slate-600" id="home_sidebar_3_form">
+                            <x-home-section-layout-setting :sectionKey="'home_sidebar_3'" :sectionData="$layouts['home_sidebar_3']" :itemKeyOptions="$itemKeyOptions" />
+                        </div>
+                    </x-card>
                 </div>
             </div>
 
@@ -195,7 +215,7 @@
                 if (formElement) {
                     if (formElement.classList.contains('hidden')) {
                         formElement.classList.remove('hidden');
-                        if (editTextElement) editTextElement.textContent = 'Cancel'; // Translated
+                        if (editTextElement) editTextElement.textContent = 'Cancel';
                     } else {
                         formElement.classList.add('hidden');
                         if (editTextElement) editTextElement.textContent = 'Edit';

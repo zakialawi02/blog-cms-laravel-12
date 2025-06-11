@@ -162,6 +162,10 @@
     .bg-gradient-cover {
         @apply bg-gradient-to-b from-[#ffffff38]  to-[#162f55];
     }
+
+    .canvas-background-theme {
+        @apply bg-base-200 dark:bg-dark-base-200;
+    }
 }
 @custom-variant hover (&:hover);
 

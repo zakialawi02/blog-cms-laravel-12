@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use App\Models\Category;
 use App\Models\WebSetting;
 use Illuminate\Http\Request;
 use App\Services\ArticleService;
@@ -32,6 +33,7 @@ class HomeController extends Controller
             'home_section_3',
             'home_sidebar_1',
             'home_sidebar_2',
+            'home_sidebar_3',
             'home_bottom_section_1',
         ];
 
@@ -61,7 +63,6 @@ class HomeController extends Controller
                 ];
             }
         }
-
         return view('pages.front.indexHome', compact('data', 'sectionsContent'));
     }
 
@@ -113,6 +114,11 @@ class HomeController extends Controller
             case 'all-tags-widget':
                 // This does not return articles, but a collection of tags.
                 return Tag::inRandomOrder()->limit(10)->get(); // Adjust this query
+                break;
+            case 'all-categories-widget':
+                // This does not return articles, but a collection of categories.
+                return Category::inRandomOrder()->limit($total ?? 5)->get(); // Adjust this query
+                break;
             default:
                 Log::warning("Unknown itemsKey type in fetchLayoutSectionData: {$itemsKey}");
                 return collect();

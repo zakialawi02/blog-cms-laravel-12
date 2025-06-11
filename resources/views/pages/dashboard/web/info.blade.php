@@ -9,8 +9,19 @@
                 <table class="display table" id="myTable">
                     @foreach ($data as $key => $value)
                         <tr>
+                            {{-- Jika error terjadi di sini, artinya $key adalah sebuah array --}}
                             <th>{{ strtoupper($key) }}</th>
-                            <td>{{ $value }}</td>
+
+                            {{-- Bagian ini seharusnya sudah aman dari solusi sebelumnya --}}
+                            <td>
+                                @if (is_array($value))
+                                    {{-- json_encode aman untuk semua jenis array, termasuk multi-dimensi --}}
+                                    {{-- Penggunaan <pre> agar format JSON lebih mudah dibaca --}}
+                                    <pre style="margin: 0; background: transparent; padding: 0; border: none;"><code>{{ json_encode($value, JSON_PRETTY_PRINT) }}</code></pre>
+                                @else
+                                    {{ $value }}
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </table>

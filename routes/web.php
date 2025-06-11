@@ -57,7 +57,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::put('/pages/{page:id}', [PageController::class, 'update'])->name('pages.update');
         Route::delete('/pages/{page:id}', [PageController::class, 'destroy'])->name('pages.destroy');
         Route::get('/pages/layout', [PageController::class, 'layout'])->name('pages.layout.index');
-        Route::put('/pages/layout', [PageController::class, 'layoutUpdate'])->name('pages.layout.update');
+        Route::put('/pages/layout/update', [PageController::class, 'layoutUpdate'])->name('pages.layout.update');
     });
 
     Route::middleware(['auth', 'verified', 'role:superadmin,admin'])->group(function () {
