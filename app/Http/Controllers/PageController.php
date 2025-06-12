@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LayoutSection;
 use App\Models\Tag;
 use App\Models\Page;
 use App\Models\Category;
@@ -14,24 +15,6 @@ use Illuminate\Support\Facades\Cache;
 
 class PageController extends Controller
 {
-    protected $sectionKeys = [
-        'home_feature_section',
-        'ads_featured',
-        'home_section_1',
-        'home_section_2',
-        'home_section_3',
-        'home_section_4',
-        'home_section_5',
-        'home_sidebar_1',
-        'home_sidebar_2',
-        'home_sidebar_3',
-        'home_sidebar_4',
-        'ads_sidebar_1',
-        'ads_sidebar_2',
-        'ads_bottom_1',
-        'home_bottom_section_1',
-        'ads_bottom_2'
-    ];
 
     /**
      * Display a listing of the resource.
@@ -169,7 +152,7 @@ class PageController extends Controller
 
         $layouts = [];
 
-        foreach ($this->sectionKeys as $key) {
+        foreach (LayoutSection::values() as $key) {
             // WebSetting::getSetting($key) will return a PHP array if the type is ‘json’
             // or null if not found.
             $settingValue = WebSetting::getSetting($key);
@@ -190,7 +173,7 @@ class PageController extends Controller
         $allConfigs = $request->input('sections_config', []);
 
         foreach ($allConfigs as $key => $config) {
-            if (!in_array($key, $this->sectionKeys)) {
+            if (!in_array($key, LayoutSection::values())) {
                 continue;
             }
 
@@ -247,7 +230,7 @@ class PageController extends Controller
 
         DB::beginTransaction();
         try {
-            foreach ($this->sectionKeys as $key) {
+            foreach (LayoutSection::values() as $key) {
                 if (isset($submittedConfigs[$key])) {
                     $config = $submittedConfigs[$key];
                     $totalValue = $config['total'] ?? null;

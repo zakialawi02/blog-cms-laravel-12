@@ -63,7 +63,7 @@
 
                 <div class="border-dark dark:border-dark-muted my-2 border-b-2 border-opacity-40 py-1"></div>
 
-                @if ($sectionsContent['home_section_5']['config']['is_visible'] == '1')
+                @if ($sectionsContent['home_section_5']['config']['is_visible'] == '1' ?? false)
                     <x-home-section-layout :sectionKey="$sectionsContent['home_section_5']['itemsKey']" :sectionData="$sectionsContent['home_section_5']" />
                 @endif
 
@@ -88,28 +88,28 @@
                     <x-comment-section :showCommentsSection="false" />
                 </section>
 
-                @if ($sectionsContent['ads_bottom_1']['config']['is_visible'] == '1')
+                @if ($sectionsContent['ads_bottom_1']['config']['is_visible'] == '1' ?? false)
                     <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_1']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_1']" />
                 @endif
             </div>
 
             <div class="text-dark dark:text-dark-light mt-10 w-full md:mt-8 md:w-[30%]" id="sidebar">
-                @if ($sectionsContent['home_sidebar_1']['config']['is_visible'] == '1')
+                @if ($sectionsContent['home_sidebar_1']['config']['is_visible'] == '1' ?? false)
                     <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_1']" />
                 @endif
-                @if ($sectionsContent['ads_sidebar_1']['config']['is_visible'] == '1')
+                @if ($sectionsContent['ads_sidebar_1']['config']['is_visible'] == '1' ?? false)
                     <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_1']" />
                 @endif
-                @if ($sectionsContent['home_sidebar_2']['config']['is_visible'] == '1')
+                @if ($sectionsContent['home_sidebar_2']['config']['is_visible'] == '1' ?? false)
                     <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_2']" />
                 @endif
-                @if ($sectionsContent['home_sidebar_3']['config']['is_visible'] == '1')
+                @if ($sectionsContent['home_sidebar_3']['config']['is_visible'] == '1' ?? false)
                     <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_3']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_3']" />
                 @endif
-                @if ($sectionsContent['home_sidebar_4']['config']['is_visible'] == '1')
+                @if ($sectionsContent['home_sidebar_4']['config']['is_visible'] == '1' ?? false)
                     <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_4']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_4']" />
                 @endif
-                @if ($sectionsContent['ads_sidebar_2']['config']['is_visible'] == '1')
+                @if ($sectionsContent['ads_sidebar_2']['config']['is_visible'] == '1' ?? false)
                     <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_2']" />
                 @endif
             </div>

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Tag;
 use App\Models\Category;
 use App\Models\WebSetting;
+use App\Enums\LayoutSection;
 use App\Services\ArticleService;
 use Illuminate\Support\Facades\Log;
 
@@ -33,26 +34,8 @@ class SectionContentService
     {
         $allSettings = WebSetting::getAllSettings();
         $sectionsContent = [];
-        $pageSectionKeys = [
-            'home_feature_section',
-            'ads_featured',
-            'home_section_1',
-            'home_section_2',
-            'home_section_3',
-            'home_section_4',
-            'home_section_5',
-            'home_sidebar_1',
-            'home_sidebar_2',
-            'home_sidebar_3',
-            'home_sidebar_4',
-            'ads_sidebar_1',
-            'ads_sidebar_2',
-            'ads_bottom_1',
-            'home_bottom_section_1',
-            'ads_bottom_2'
-        ];
 
-        foreach ($pageSectionKeys as $sectionKey) {
+        foreach (LayoutSection::values() as $sectionKey) {
             $config = $allSettings[$sectionKey] ?? null;
 
             // Process if the basic configuration for this section exists

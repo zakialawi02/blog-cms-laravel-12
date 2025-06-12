@@ -33,13 +33,21 @@ class WebSettings extends Seeder
             ['key' => 'google_adsense', 'value' => '', 'type' => 'string'],
             ['key' => 'google_analytics', 'value' => '', 'type' => 'string'],
             ['key' => 'home_feature_section', 'value' => '{"label":"Featured Posts","is_visible":"1","total":6,"items":"random-posts"}', 'type' => 'json'],
+            ['key' => 'ads_featured', 'value' => '{"label":"","is_visible":"0","total":"","items":""}', 'type' => 'json'],
             ['key' => 'home_section_1', 'value' => '{"label":"Recent Posts","is_visible":"1","total":6,"items":"recent-posts"}', 'type' => 'json'],
             ['key' => 'home_section_2', 'value' => '{"label":"Default label","is_visible":"0","total":6,"items":""}', 'type' => 'json'],
             ['key' => 'home_section_3', 'value' => '{"label":"Default label","is_visible":"0","total":3,"items":""}', 'type' => 'json'],
+            ['key' => 'home_section_4', 'value' => '{"label":"Default label","is_visible":"0","total":3,"items":""}', 'type' => 'json'],
+            ['key' => 'home_section_5', 'value' => '{"label":"Default label","is_visible":"0","total":3,"items":""}', 'type' => 'json'],
             ['key' => 'home_sidebar_1', 'value' => '{"label":"Popular Posts","is_visible":"1","total":4,"items":"popular-posts"}', 'type' => 'json'],
             ['key' => 'home_sidebar_2', 'value' => '{"label":"Tags","is_visible":"1","total":10,"items":"all-tags-widget"}', 'type' => 'json'],
             ['key' => 'home_sidebar_3', 'value' => '{"label":"Default label","is_visible":"0","total":5,"items":""}', 'type' => 'json'],
+            ['key' => 'home_sidebar_4', 'value' => '{"label":"Default label","is_visible":"0","total":5,"items":""}', 'type' => 'json'],
+            ['key' => 'ads_sidebar_1', 'value' => '{"label":"","is_visible":"0","total":"","items":""}', 'type' => 'json'],
+            ['key' => 'ads_sidebar_2', 'value' => '{"label":"","is_visible":"0","total":"","items":""}', 'type' => 'json'],
+            ['key' => 'ads_bottom_1', 'value' => '{"label":"","is_visible":"0","total":"","items":""}', 'type' => 'json'],
             ['key' => 'home_bottom_section_1', 'value' => '{"label":"You Missed","is_visible":"1","total":4,"items":"random-posts"}', 'type' => 'json'],
+            ['key' => 'ads_bottom_2', 'value' => '{"label":"","is_visible":"0","total":"","items":""}', 'type' => 'json'],
         ];
 
         // Loop dan buat entri setting
