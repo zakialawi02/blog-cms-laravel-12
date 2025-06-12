@@ -43,14 +43,14 @@ $totalValue = old("sections_config.{$sectionKey}.total", $sectionData['total'] ?
         <div class="form-group">
             {{-- The label text will change dynamically --}}
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="{{ $sectionKey }}_total_label" for="{{ $isJsScript ? $sectionKey . '_total_textarea' : $sectionKey . '_total_input' }}">
-                {{ $isJsScript ? 'JavaScript Code' : 'Number of Items to Display' }}
+                {{ $isJsScript ? 'Code (html/javascript)' : 'Number of Items to Display' }}
             </label>
 
             {{-- Input for Number of Items (hidden if js-script is selected) --}}
             <input class="@if ($isJsScript) hidden @endif mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_total_input" name="sections_config[{{ $sectionKey }}][total]" type="number" value="{{ $totalValue ?? 0 }}" min="0" @if ($isJsScript) disabled @endif>
 
             {{-- Textarea for JS Code (hidden unless js-script is selected) --}}
-            <textarea class="@if (!$isJsScript) hidden @endif mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_total_textarea" name="sections_config[{{ $sectionKey }}][total]" rows="6" placeholder="Enter your JavaScript code here..." @if (!$isJsScript) disabled @endif>{{ $totalValue ?? '' }}</textarea>
+            <textarea class="@if (!$isJsScript) hidden @endif mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_total_textarea" name="sections_config[{{ $sectionKey }}][total]" rows="6" placeholder="Enter your Code (html/javascript) here..." @if (!$isJsScript) disabled @endif>{{ $totalValue ?? '' }}</textarea>
             @error("sections_config.{$sectionKey}.total")
                 <span class="text-xs text-red-500">{{ $message }}</span>
             @enderror
@@ -63,9 +63,9 @@ $totalValue = old("sections_config.{$sectionKey}.total", $sectionData['total'] ?
         @endphp
         <div class="form-group">
             <input name="sections_config[{{ $sectionKey }}][items]" type="hidden" value="js-script">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="{{ $sectionKey }}_total_label" for="{{ $sectionKey . '_total_textarea' }}">JavaScript Code</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="{{ $sectionKey }}_total_label" for="{{ $sectionKey . '_total_textarea' }}">Code (html/javascript)</label>
             {{-- Textarea for JS Code (hidden unless js-script is selected) --}}
-            <textarea class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_total_textarea" name="sections_config[{{ $sectionKey }}][total]" rows="6" placeholder="Enter your JavaScript code here...">{{ $totalValue ?? '' }}</textarea>
+            <textarea class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_total_textarea" name="sections_config[{{ $sectionKey }}][total]" rows="6" placeholder="Enter your Code (html/javascript) here...">{{ $totalValue ?? '' }}</textarea>
             @error("sections_config.{$sectionKey}.total")
                 <span class="text-xs text-red-500">{{ $message }}</span>
             @enderror
@@ -100,7 +100,7 @@ $totalValue = old("sections_config.{$sectionKey}.total", $sectionData['total'] ?
             const toggleInputs = (selectedValue) => {
                 if (selectedValue === 'js-script') {
                     // Change to JS Code Textarea
-                    label.textContent = 'JavaScript Code';
+                    label.textContent = 'Code (html/javascript)';
                     label.htmlFor = `${sectionKey}_total_textarea`; // Update label's target
                     numberInput.classList.add('hidden');
                     numberInput.disabled = true; // Disabled inputs are not submitted with the form

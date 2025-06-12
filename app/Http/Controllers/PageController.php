@@ -189,24 +189,46 @@ class PageController extends Controller
                     'nullable',
                     'string',
                     function ($attribute, $value, $fail) {
-                        // Cek apakah ada <script> buka & tutup
-                        if (!preg_match('/<script\b[^>]*>(.*?)<\/script>/is', $value)) {
+                        // --- Keamanan 1: Blokir atribut event handler berbahaya (on-event attributes) ---
+                        if (preg_match('/\s+on\w+\s*=/i', $value)) {
+                            return $fail('Event handler attributes (like onclick, onerror) are not allowed.');
+                        }
+
+                        // --- Keamanan 2: Blokir protokol 'javascript:' pada link ---
+                        if (preg_match('/(href|src)\s*=\s*["\']\s*javascript:/i', $value)) {
+                            return $fail('The "javascript:" protocol is not allowed in attributes.');
+                        }
+
+                        // --- Kebutuhan Baru: Cek apakah jumlah tag <script> dan </script> seimbang ---
+                        // Menggunakan strtolower untuk memastikan pengecekan tidak case-sensitive (cth: <SCRIPT>)
+                        $openTagsCount = substr_count(strtolower($value), '<script');
+                        $closeTagsCount = substr_count(strtolower($value), '</script>');
+
+                        if ($openTagsCount !== $closeTagsCount) {
                             return $fail('The JavaScript code must contain valid <script> tags.');
                         }
 
-                        // Cek kode berbahaya (contoh sederhana, bisa ditambah)
-                        $dangerousPatterns = [
-                            '/document\.write\s*\(/i',
-                            '/eval\s*\(/i',
-                            '/innerHTML\s*=/i',
-                            '/outerHTML\s*=/i',
-                            '/localStorage\s*\./i',
-                            '/sessionStorage\s*\./i',
-                        ];
+                        // --- Keamanan 3: Cek konten di dalam tag <script> jika ada ---
+                        if ($openTagsCount > 0) {
+                            // Gunakan preg_match_all untuk menangkap konten dari SEMUA tag script
+                            preg_match_all('/<script\b[^>]*>(.*?)<\/script>/is', $value, $matches);
 
-                        foreach ($dangerousPatterns as $pattern) {
-                            if (preg_match($pattern, $value)) {
-                                return $fail('The JavaScript code contains potentially unsafe operations.');
+                            // Gabungkan semua konten script yang ditemukan untuk diperiksa sekaligus
+                            $allScriptContent = implode(' ', $matches[1]);
+
+                            $dangerousPatterns = [
+                                '/document\.write\s*\(/i',
+                                '/eval\s*\(/i',
+                                '/innerHTML\s*=/i',
+                                '/outerHTML\s*=/i',
+                                '/localStorage\s*\./i',
+                                '/sessionStorage\s*\./i',
+                            ];
+
+                            foreach ($dangerousPatterns as $pattern) {
+                                if (preg_match($pattern, $allScriptContent)) {
+                                    return $fail('The JavaScript code contains potentially unsafe operations.');
+                                }
                             }
                         }
                     }
