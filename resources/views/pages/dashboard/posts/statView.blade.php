@@ -209,7 +209,7 @@
                     }
                 },
                 order: [
-                    [0, 'asc']
+                    [1, 'asc']
                 ],
                 columns: [{
                         data: 'viewed_at',

@@ -4,7 +4,7 @@
 
 <x-app-front-layout>
     <!-- Sticky/Featured/Popular Blog Post -->
-    @if ($sectionsContent['home_feature_section']['config']['is_visible'] == '1')
+    @if ($sectionsContent['home_feature_section']['config']['is_visible'] == '1' ?? false)
         @unless ((request()->has('search') && request()->get('search') != '') || (request()->has('page') && request()->get('page') != 1))
             <section class="pb-0 pt-4">
                 <div class="mx-auto px-3 2xl:container sm:px-4 xl:px-2">
@@ -68,121 +68,55 @@
     <div class="container grid grid-cols-1 gap-2 md:gap-4 lg:grid-cols-4">
         <div class="lg:col-span-3">
             <!-- SECTION 1 -->
-            <!-- Recent Blog Post -->
-            @if ($sectionsContent['home_section_1']['config']['is_visible'] == '1')
-                <section class="text-dark dark:text-dark-light container mb-6 px-2">
-                    <div class="mb-3 flex w-full items-center gap-4 align-middle">
-                        <h3 class="whitespace-nowrap text-3xl font-semibold">{{ $sectionsContent['home_section_1']['config']['label'] }}</h3>
-                        <div class="to-secondary dark:to-dark-secondary h-[4px] flex-grow bg-gradient-to-r from-transparent"></div>
-                        <x-dashboard.primary-button class="px-1! py-0.5!" href="/blog/{{ str_replace(':', '/', $sectionsContent['home_section_1']['itemsKey']) }}">More »</x-dashboard.primary-button>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        @forelse ($sectionsContent['home_section_1']['data'] as $article)
-                            <x-card-post-simple :article="$article" />
-                        @empty
-                            <p class="my-2">No Posts Available</p>
-                        @endforelse
-                    </div>
-                    {{-- <div class="my-8 mt-20">
-                    {{ $articles->links() }}
-                    </div> --}}
-                </section>
+            @if ($sectionsContent['home_section_1']['config']['is_visible'] == '1' ?? false)
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_1']['itemsKey']" :sectionData="$sectionsContent['home_section_1']" />
             @endif
 
             <!-- SECTION 2 -->
-            @if ($sectionsContent['home_section_2']['config']['is_visible'] == '1')
-                <section class="text-dark dark:text-dark-light container px-2">
-                    <div class="mb-3 flex w-full items-center gap-4 align-middle">
-                        <h3 class="whitespace-nowrap text-3xl font-semibold">{{ $sectionsContent['home_section_2']['config']['label'] }}</h3>
-                        <div class="to-secondary dark:to-dark-secondary h-[4px] flex-grow bg-gradient-to-r from-transparent"></div>
-                        <x-dashboard.primary-button class="px-1! py-0.5!" href="/blog/{{ str_replace(':', '/', $sectionsContent['home_section_2']['itemsKey']) }}">More »</x-dashboard.primary-button>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        @forelse ($sectionsContent['home_section_2']['data'] as $article)
-                            <x-card-post-simple :article="$article" />
-                        @empty
-                            <p class="my-2">No Posts Available</p>
-                        @endforelse
-                    </div>
-                </section>
+            @if ($sectionsContent['home_section_2']['config']['is_visible'] == '1' ?? false)
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_2']['itemsKey']" :sectionData="$sectionsContent['home_section_2']" />
             @endif
 
             <!-- SECTION 3 -->
-            @if ($sectionsContent['home_section_3']['config']['is_visible'] == '1')
-                <section class="text-dark dark:text-dark-light container px-2">
-                    <div class="mb-3 flex w-full items-center gap-4 align-middle">
-                        <h3 class="whitespace-nowrap text-3xl font-semibold">{{ $sectionsContent['home_section_3']['config']['label'] }}</h3>
-                        <div class="to-secondary dark:to-dark-secondary h-[4px] flex-grow bg-gradient-to-r from-transparent"></div>
-                        <x-dashboard.primary-button class="px-1! py-0.5!" href="/blog/{{ str_replace(':', '/', $sectionsContent['home_section_3']['itemsKey']) }}">More »</x-dashboard.primary-button>
-                    </div>
+            @if ($sectionsContent['home_section_3']['config']['is_visible'] == '1' ?? false)
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_3']['itemsKey']" :sectionData="$sectionsContent['home_section_3']" />
+            @endif
 
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        @forelse ($sectionsContent['home_section_3']['data'] as $article)
-                            <x-card-post-simple :article="$article" />
-                        @empty
-                            <p class="my-2">No Posts Available</p>
-                        @endforelse
-                    </div>
-                </section>
+            <!-- SECTION 4 -->
+            @if ($sectionsContent['home_section_4']['config']['is_visible'] == '1' ?? false)
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_4']['itemsKey']" :sectionData="$sectionsContent['home_section_4']" />
+            @endif
+
+            <!-- SECTION 5 -->
+            @if ($sectionsContent['home_section_5']['config']['is_visible'] == '1' ?? false)
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_5']['itemsKey']" :sectionData="$sectionsContent['home_section_5']" />
             @endif
         </div>
 
-        <div class="text-dark dark:text-dark-light mt-2 pt-4">
-            @if ($sectionsContent['home_sidebar_1']['config']['is_visible'] == '1')
-                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="popular-posts">
-                    <div class="text-center text-xl font-bold">
-                        <h3>Popular Posts</h3>
-                    </div>
-
-                    <div class="mx-auto p-2">
-                        @forelse ($sectionsContent['home_sidebar_1']['data'] as $popular)
-                            <article>
-                                <div class="flex items-center gap-2 p-1">
-                                    <a class="mr-2 block shrink-0" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">
-                                        <img class="size-14 rounded-3xl object-cover" src="{{ $popular->cover }}" alt="post image" />
-                                    </a>
-
-                                    <div>
-                                        <h3 class="line-clamp-2 font-medium sm:text-lg">
-                                            <a class="hover:text-primary dark:hover:text-dark-primary block" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">{{ $popular->title }}</a>
-                                        </h3>
-
-                                        <div class="mt-2 sm:flex sm:items-center sm:gap-2">
-                                            <p class="hidden sm:block sm:text-xs">Posted by <a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                        @empty
-                            <p class="font-regular my-2 text-center">No popular posts</p>
-                        @endforelse
-                    </div>
-                </div>
+        <div class="text-dark dark:text-dark-light mt-2 pt-4" id="sidebar">
+            @if ($sectionsContent['home_sidebar_1']['config']['is_visible'] == '1' ?? false)
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_1']" />
             @endif
-            @if ($sectionsContent['home_sidebar_2']['config']['is_visible'] == '1')
-                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="categories">
-                    <div class="text-center text-xl font-bold">
-                        <h3>Tags</h3>
-                    </div>
-                    <div class="mx-auto p-2">
-                        <ul class="flex flex-wrap">
-                            @forelse ($sectionsContent['home_sidebar_2']['data'] as $tag)
-                                <a class="border-secondary dark:border-dark-secondary hover:border-primary hover:text-primary dark:hover:text-dark-primary dark:hover:border-dark-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
-                            @empty
-                                <p class="font-regular my-2 text-center">No Tag Available</p>
-                            @endforelse
-                        </ul>
-                    </div>
-                </div>
+            @if ($sectionsContent['ads_sidebar_1']['config']['is_visible'] == '1' ?? false)
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_1']" />
+            @endif
+            @if ($sectionsContent['home_sidebar_2']['config']['is_visible'] == '1' ?? false)
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_2']" />
+            @endif
+            @if ($sectionsContent['home_sidebar_3']['config']['is_visible'] == '1' ?? false)
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_3']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_3']" />
+            @endif
+            @if ($sectionsContent['home_sidebar_4']['config']['is_visible'] == '1' ?? false)
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_4']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_4']" />
+            @endif
+            @if ($sectionsContent['ads_sidebar_2']['config']['is_visible'] == '1' ?? false)
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_2']" />
             @endif
         </div>
     </div>
 
     <!-- You Missed/Random Posts Section -->
-    @if ($sectionsContent['home_bottom_section_1']['config']['is_visible'] == '1')
+    @if ($sectionsContent['home_bottom_section_1']['config']['is_visible'] == '1' ?? false)
         <section class="fluid container px-6 py-5 md:px-4">
             <h2 class="text-dark dark:text-dark-light mb-5 text-2xl font-bold">{{ $sectionsContent['home_bottom_section_1']['config']['label'] }}</h2>
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
@@ -206,5 +140,44 @@
     @endif
 
     @push('javascript')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Definisikan palet warna PASTEL yang akan digunakan
+                const bgColors = [
+                    'bg-sky-200',
+                    'bg-emerald-200',
+                    'bg-amber-200',
+                    'bg-rose-200',
+                    'bg-indigo-200',
+                    'bg-teal-200',
+                    'bg-violet-300',
+                    'bg-lime-300',
+                    'bg-fuchsia-200',
+                    'bg-cyan-200',
+                    'bg-slate-300'
+                ];
+
+                // Ambil semua elemen card yang ingin diwarnai
+                const cards = document.querySelectorAll('.random-bg-card');
+
+                // Fungsi untuk mengacak urutan array
+                function shuffle(array) {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                    return array;
+                }
+
+                // Acak palet warna kita
+                const shuffledColors = shuffle(bgColors);
+
+                // Terapkan warna yang sudah diacak ke setiap card
+                cards.forEach((card, index) => {
+                    const colorIndex = index % shuffledColors.length;
+                    card.classList.add(shuffledColors[colorIndex]);
+                });
+            });
+        </script>
     @endpush
 </x-app-front-layout>

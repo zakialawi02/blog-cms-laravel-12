@@ -8,17 +8,17 @@
             </div>
             <div class="flex flex-row items-center justify-between gap-4">
                 <div class="flex gap-2 text-base">
-                    <a class="hover:text-primary dark:hover:text-primary" href="{{ $data['web_setting']['link_fb'] }}" target="_blank" rel="noopener noreferrer"><i class="ri-facebook-circle-fill"></i></a>
-                    <a class="hover:text-primary dark:hover:text-primary" href="{{ $data['web_setting']['link_ig'] }}" target="_blank" rel="noopener noreferrer"><i class="ri-instagram-fill"></i></a>
-                    <a class="hover:text-primary dark:hover:text-primary" href="{{ $data['web_setting']['link_twitter'] }}" target="_blank" rel="noopener noreferrer"><i class="ri-twitter-x-fill"></i></a>
+                    <a class="hover:text-primary dark:hover:text-primary" href="{{ $data['web_setting']['link_fb'] ?? '#' }}" target="_blank" rel="noopener noreferrer"><i class="ri-facebook-circle-fill"></i><span class="sr-only">Follow me on Facebook</span></a>
+                    <a class="hover:text-primary dark:hover:text-primary" href="{{ $data['web_setting']['link_ig'] ?? '#' }}" target="_blank" rel="noopener noreferrer"><i class="ri-instagram-fill"></i><span class="sr-only">Follow me on Instagram</span></a>
+                    <a class="hover:text-primary dark:hover:text-primary" href="{{ $data['web_setting']['link_twitter'] ?? '#' }}" target="_blank" rel="noopener noreferrer"><i class="ri-twitter-x-fill"></i><span class="sr-only">Follow me on Twitter</span></a>
 
                     <!-- Dark/Light Mode Toggle -->
                     <button class="relative mx-1 h-6 w-10 rounded-full bg-gray-300 transition-colors duration-300 focus:outline-none dark:bg-gray-600" id="theme-toggle">
                         <span class="absolute left-1 top-1 h-4 w-4 transform rounded-full bg-white transition-transform duration-300 dark:translate-x-4 dark:bg-gray-200"></span>
                         <!-- Sun icon -->
-                        <i class="ri-sun-fill absolute left-1 top-0.5 text-sm text-yellow-400 dark:hidden"></i>
+                        <i class="ri-sun-fill absolute left-1 top-0.5 text-sm text-yellow-400 dark:hidden"><span class="sr-only">Light mode</span></i>
                         <!-- Moon icon -->
-                        <i class="ri-moon-fill text-dark absolute right-1 top-0.5 hidden text-sm dark:block"></i>
+                        <i class="ri-moon-fill text-dark absolute right-1 top-0.5 hidden text-sm dark:block"><span class="sr-only">Dark mode</span></i>
                     </button>
                 </div>
                 <div class="flex gap-2">

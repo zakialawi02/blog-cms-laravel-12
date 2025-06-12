@@ -63,6 +63,10 @@
 
                 <div class="border-dark dark:border-dark-muted my-2 border-b-2 border-opacity-40 py-1"></div>
 
+                @if ($sectionsContent['home_section_5']['config']['is_visible'] == '1' ?? false)
+                    <x-home-section-layout :sectionKey="$sectionsContent['home_section_5']['itemsKey']" :sectionData="$sectionsContent['home_section_5']" />
+                @endif
+
                 <section id="comments">
                     <div class="mb-3">
                         <h3 class="text-3xl font-bold">Comments</h3>
@@ -83,67 +87,31 @@
 
                     <x-comment-section :showCommentsSection="false" />
                 </section>
+
+                @if ($sectionsContent['ads_bottom_1']['config']['is_visible'] == '1' ?? false)
+                    <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_1']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_1']" />
+                @endif
             </div>
 
             <div class="text-dark dark:text-dark-light mt-10 w-full md:mt-8 md:w-[30%]" id="sidebar">
-                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="popular-posts">
-                    <div class="text-center text-xl font-bold">
-                        <h3>Popular Posts</h3>
-                    </div>
-
-                    <div class="mx-auto p-2">
-                        @forelse ($popularPosts as $popular)
-                            <article>
-                                <div class="flex items-center gap-2 p-1">
-                                    <a class="mr-2 block shrink-0" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">
-                                        <img class="size-14 rounded-3xl object-cover" src="{{ $popular->cover }}" alt="post image" />
-                                    </a>
-
-                                    <div>
-                                        <h3 class="line-clamp-2 font-medium sm:text-lg">
-                                            <a class="hover:text-primary dark:hover:text-dark-primary block" href="{{ route('article.show', ['year' => $popular->published_at->format('Y'), 'slug' => $popular->slug]) }}">{{ $popular->title }}</a>
-                                        </h3>
-
-                                        <div class="mt-2 sm:flex sm:items-center sm:gap-2">
-                                            <p class="hidden sm:block sm:text-xs">Posted by <a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                        @empty
-                            <p class="font-regular my-2 text-center">No popular posts</p>
-                        @endforelse
-                    </div>
-                </div>
-                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="categories">
-                    <div class="text-center text-xl font-bold">
-                        <h3>Categories</h3>
-                    </div>
-                    <div class="mx-auto p-2">
-                        <ul class="flex flex-col gap-2 p-2">
-                            @forelse ($categories as $category)
-                                <li><a class="hover:text-primary dark:hover:text-dark-primary font-bold" href="{{ route('article.category', $category->slug) }}"><i class="ri-skip-right-line text-info dark:text-dark-info mr-2 text-xl"></i>{{ $category->category }}</a></li>
-                            @empty
-                                <p class="font-regular my-2 text-center">No Category Available</p>
-                            @endforelse
-                        </ul>
-                    </div>
-                </div>
-                <div class="border-neutral dark:border-dark-neutral mb-3 rounded-lg border-2 p-2" id="categories">
-                    <div class="text-center text-xl font-bold">
-                        <h3>Tags</h3>
-                    </div>
-                    <div class="mx-auto p-2">
-                        <ul class="flex flex-wrap">
-                            @forelse ($tags as $tag)
-                                <a class="border-secondary dark:border-dark-secondary hover:border-primary hover:text-primary dark:hover:text-dark-primary dark:hover:border-dark-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
-                            @empty
-                                <p class="font-regular my-2 text-center">No Tag Available</p>
-                            @endforelse
-                        </ul>
-                    </div>
-                </div>
+                @if ($sectionsContent['home_sidebar_1']['config']['is_visible'] == '1' ?? false)
+                    <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_1']" />
+                @endif
+                @if ($sectionsContent['ads_sidebar_1']['config']['is_visible'] == '1' ?? false)
+                    <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_1']" />
+                @endif
+                @if ($sectionsContent['home_sidebar_2']['config']['is_visible'] == '1' ?? false)
+                    <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_2']" />
+                @endif
+                @if ($sectionsContent['home_sidebar_3']['config']['is_visible'] == '1' ?? false)
+                    <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_3']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_3']" />
+                @endif
+                @if ($sectionsContent['home_sidebar_4']['config']['is_visible'] == '1' ?? false)
+                    <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_4']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_4']" />
+                @endif
+                @if ($sectionsContent['ads_sidebar_2']['config']['is_visible'] == '1' ?? false)
+                    <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_2']" />
+                @endif
             </div>
         </div>
     </div>

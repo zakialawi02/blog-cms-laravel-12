@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LayoutSection;
 use App\Models\Tag;
+use App\Models\Page;
 use App\Models\Category;
 use App\Models\WebSetting;
 use Illuminate\Http\Request;
@@ -13,15 +15,134 @@ use Illuminate\Support\Facades\Cache;
 
 class PageController extends Controller
 {
-    protected $sectionKeys = [
-        'home_feature_section',
-        'home_section_1',
-        'home_section_2',
-        'home_section_3',
-        'home_sidebar_1',
-        'home_sidebar_2',
-        'home_bottom_section_1'
-    ];
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $data = [
+            'title' => 'All Pages',
+        ];
+
+        $pages = Page::orderBy(request("sort_field", 'created_at'), request("sort_direction", "desc"))->paginate(10)->withQueryString();
+
+        return view('pages.dashboard.pages.index', compact('data', 'pages'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $data = [
+            'title' => 'Create Page',
+        ];
+
+        return view('pages.dashboard.pages.create', compact('data'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|min:4',
+            'description' => 'required|min:5',
+            'slug' => 'required|unique:pages,slug',
+        ]);
+
+        // $jsonFilePath = asset('storage/grapesjs/template-default.json');
+        $jsonContent = file_get_contents(storage_path('app/public/grapesjs/template-default.json'));
+
+        $requestData = $request->all();
+        // dd($requestData);
+        $requestData['isFullWidth'] = $request->template_id ?? 1;
+        $requestData['content'] = $jsonContent;
+
+        $page = Page::create($requestData);
+
+        return redirect()->route('admin.pages.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Page $page)
+    {
+        return view('pages.dashboard.pages.show', compact('page'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function builder(Page $page)
+    {
+        return view('pages.dashboard.pages.builder', compact('page'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Page $page)
+    {
+        $data = [
+            'title' => 'Edit Page',
+        ];
+
+        return view('pages.dashboard.pages.edit', compact('data', 'page'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Page $page)
+    {
+        $request->validate([
+            'title' => 'required|min:4',
+            'description' => 'required|min:5',
+            'slug' => 'required|unique:pages,slug,' . $page->id,
+            'template_id' => 'required',
+        ]);
+
+        $request['isFullWidth'] = $request->template_id ?? 1;
+        $page->update($request->all());
+
+        return redirect()->route('admin.pages.index')->with('success', 'Page updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Page $page)
+    {
+        $page->delete();
+
+        return redirect()->route('admin.pages.index')->with('success', 'Page deleted successfully');
+    }
+
+    public function loadProject($id)
+    {
+        $page = Page::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => json_decode($page->content),
+            'message' => 'Success load page content'
+        ]);
+    }
+
+    public function storeProject(Request $request, $id)
+    {
+        $page = Page::findOrFail($id);
+        $page->update(['content' => json_encode($request->input('data'))]);
+
+        return response()->json([
+            'success' => true,
+            'data' => null,
+            'message' => 'Project stored successfully'
+        ]);
+    }
 
     public function layout()
     {
@@ -31,7 +152,7 @@ class PageController extends Controller
 
         $layouts = [];
 
-        foreach ($this->sectionKeys as $key) {
+        foreach (LayoutSection::values() as $key) {
             // WebSetting::getSetting($key) will return a PHP array if the type is ‘json’
             // or null if not found.
             $settingValue = WebSetting::getSetting($key);
@@ -45,39 +166,107 @@ class PageController extends Controller
 
     public function layoutUpdate(Request $request)
     {
+        // dd($request->all());
         Cache::forget('web_setting');
         $validationRules = [];
         $availableItemKeys = array_keys($this->getContentItemKeyOptions()); // Ambil keys untuk validasi
+        $allConfigs = $request->input('sections_config', []);
 
-        foreach ($this->sectionKeys as $key) {
+        foreach ($allConfigs as $key => $config) {
+            if (!in_array($key, LayoutSection::values())) {
+                continue;
+            }
+
             $validationRules["sections_config.{$key}.label"] = 'nullable|string|max:255';
             $validationRules["sections_config.{$key}.is_visible"] = 'nullable|boolean';
-            // Perbarui aturan validasi untuk 'items'
             $validationRules["sections_config.{$key}.items"] = ['nullable', Rule::in($availableItemKeys)];
-            // Aturan untuk 'total' tetap, akan dikontrol oleh @if di component
-            $validationRules["sections_config.{$key}.total"] = 'nullable|integer|min:0';
+
+            // Aturan validasi dinamis untuk 'total'
+            // Cek nilai 'items' yang dikirim dari form
+            if (isset($config['items']) && $config['items'] === 'js-script') {
+                // Custom rule pakai closure
+                $validationRules["sections_config.{$key}.total"] = [
+                    'nullable',
+                    'string',
+                    function ($attribute, $value, $fail) {
+                        // --- Keamanan 1: Blokir atribut event handler berbahaya (on-event attributes) ---
+                        if (preg_match('/\s+on\w+\s*=/i', $value)) {
+                            return $fail('Event handler attributes (like onclick, onerror) are not allowed.');
+                        }
+
+                        // --- Keamanan 2: Blokir protokol 'javascript:' pada link ---
+                        if (preg_match('/(href|src)\s*=\s*["\']\s*javascript:/i', $value)) {
+                            return $fail('The "javascript:" protocol is not allowed in attributes.');
+                        }
+
+                        // --- Kebutuhan Baru: Cek apakah jumlah tag <script> dan </script> seimbang ---
+                        // Menggunakan strtolower untuk memastikan pengecekan tidak case-sensitive (cth: <SCRIPT>)
+                        $openTagsCount = substr_count(strtolower($value), '<script');
+                        $closeTagsCount = substr_count(strtolower($value), '</script>');
+
+                        if ($openTagsCount !== $closeTagsCount) {
+                            return $fail('The JavaScript code must contain valid <script> tags.');
+                        }
+
+                        // --- Keamanan 3: Cek konten di dalam tag <script> jika ada ---
+                        if ($openTagsCount > 0) {
+                            // Gunakan preg_match_all untuk menangkap konten dari SEMUA tag script
+                            preg_match_all('/<script\b[^>]*>(.*?)<\/script>/is', $value, $matches);
+
+                            // Gabungkan semua konten script yang ditemukan untuk diperiksa sekaligus
+                            $allScriptContent = implode(' ', $matches[1]);
+
+                            $dangerousPatterns = [
+                                '/document\.write\s*\(/i',
+                                '/eval\s*\(/i',
+                                '/innerHTML\s*=/i',
+                                '/outerHTML\s*=/i',
+                                '/localStorage\s*\./i',
+                                '/sessionStorage\s*\./i',
+                            ];
+
+                            foreach ($dangerousPatterns as $pattern) {
+                                if (preg_match($pattern, $allScriptContent)) {
+                                    return $fail('The JavaScript code contains potentially unsafe operations.');
+                                }
+                            }
+                        }
+                    }
+                ];
+            } else {
+                $validationRules["sections_config.{$key}.total"] = [
+                    'nullable',
+                    'integer',
+                    'min:0',
+                ];
+            }
         }
 
         $validatedData = $request->validate($validationRules, [
             'sections_config.*.total.integer' => 'The number of items must be a number.',
             'sections_config.*.total.min' => 'The number of items must be at least 0.',
-            'sections_config.*.items.in' => 'The selected content item key is invalid.', // Pesan error untuk Rule::in
+            'sections_config.*.items.in' => 'The selected content item key is invalid.',
         ]);
 
         $submittedConfigs = $validatedData['sections_config'] ?? [];
-        // dd($submittedConfigs);
+
         DB::beginTransaction();
         try {
-            foreach ($this->sectionKeys as $key) {
+            foreach (LayoutSection::values() as $key) {
                 if (isset($submittedConfigs[$key])) {
                     $config = $submittedConfigs[$key];
+                    $totalValue = $config['total'] ?? null;
+                    if (isset($config['items']) && $config['items'] !== 'js-script') {
+                        $totalValue = (int)($totalValue ?? ($this->getDefaultDataForKey($key)['total'] ?? 0));
+                    }
                     $valueArray = [
                         'label' => $config['label'] ?? '',
-                        'is_visible' => $config['is_visible'] ?? false,
-                        'total' => (int)($config['total'] ?? ($this->getDefaultDataForKey($key)['total'] ?? 0)), // Ambil default jika tidak diset
+                        'is_visible' => (bool)($config['is_visible'] ?? false),
+                        'total' => $totalValue,
                         'items' => $config['items'] ?? '',
                     ];
-                    WebSetting::setSetting($key, $valueArray, 'json');
+                    $jsonValue = json_encode($valueArray);
+                    WebSetting::setSetting($key, $jsonValue, 'json');
                 }
             }
             DB::commit();
@@ -101,13 +290,21 @@ class PageController extends Controller
     {
         $defaults = [
             'home_feature_section' => ['label' => 'Recent Posts', 'is_visible' => true, 'total' => 6, 'items' => 'recent-posts'],
+            'ads_featured' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
             'home_section_1' => ['label' => 'Recent Posts', 'is_visible' => true, 'total' => 6, 'items' => 'recent-posts'],
             'home_section_2' => ['label' => 'Technology', 'is_visible' => true, 'total' => 6, 'items' => 'technology-category'],
-            // ... (defaults lainnya)
             'home_section_3' => ['label' => '', 'is_visible' => false, 'total' => 3, 'items' => ''],
+            'home_section_4' => ['label' => '', 'is_visible' => false, 'total' => 3, 'items' => ''],
+            'home_section_5' => ['label' => '', 'is_visible' => false, 'total' => 3, 'items' => ''],
             'home_sidebar_1' => ['label' => 'Popular Posts', 'is_visible' => true, 'total' => 4, 'items' => 'popular-posts'],
             'home_sidebar_2' => ['label' => 'Tags', 'is_visible' => true, 'total' => 10, 'items' => 'tags'],
+            ['home_sidebar_3' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => '']],
+            ['home_sidebar_4' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => '']],
+            'ads_sidebar_1' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
+            'ads_sidebar_2' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
+            'ads_bottom_1' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
             'home_bottom_section_1' => ['label' => 'You Missed', 'is_visible' => true, 'total' => 4, 'items' => 'random-posts'],
+            'ads_bottom_2' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
         ];
         return $defaults[$key] ?? ['label' => 'Default Label', 'is_visible' => false, 'total' => 0, 'items' => ''];
     }
@@ -126,7 +323,9 @@ class PageController extends Controller
             'recent-posts' => 'Recent Posts',
             'popular-posts' => 'Popular Posts',
             'random-posts' => 'Random Posts',
+            'js-script' => 'JS Script',
             'all-tags-widget' => 'Tags Cloud Widget',
+            'all-categories-widget' => 'Category List Widget',
             // You can decide whether 'tags' as a general widget is still relevant
             // or whether users will always choose specific tags.
             // 'all-tags-widget' => 'Tags Cloud Widget (All Tags)',

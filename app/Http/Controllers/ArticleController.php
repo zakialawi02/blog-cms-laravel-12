@@ -7,22 +7,23 @@ use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Category;
 use ipinfo\ipinfo\IPinfo;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Services\ArticleService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Resources\ArticleResource;
+use App\Services\SectionContentService;
 
 class ArticleController extends Controller
 {
     protected $articleService;
+    protected $sectionContentService;
 
-    public function __construct(ArticleService $articleService)
+    public function __construct(ArticleService $articleService, SectionContentService $sectionContentService)
     {
         $this->articleService = $articleService;
+        $this->sectionContentService = $sectionContentService;
     }
 
     /**
@@ -128,11 +129,9 @@ class ArticleController extends Controller
         $this->saveVisitor($article->id, $ipAddress);
 
         $article = $this->articleService->articlesMappingArray(collect([$article]))->first();
-        $popularPosts = $this->articleService->getPopularPosts(4);
-        $categories = Category::inRandomOrder()->limit(5)->get();
-        $tags = Tag::inRandomOrder()->limit(10)->get();
+        $sectionsContent = $this->sectionContentService->fetchSectionData();
 
-        return view('pages.front.posts.singlePost', compact('article',  'categories', 'popularPosts', 'tags'));
+        return view('pages.front.posts.singlePost', compact('article', 'sectionsContent'));
     }
 
     /**

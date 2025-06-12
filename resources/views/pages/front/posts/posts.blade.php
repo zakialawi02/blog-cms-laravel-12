@@ -93,7 +93,7 @@
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
             @foreach ($randomPosts->take(4) as $post)
                 <div class="group relative overflow-hidden rounded-lg">
-                    <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->cover }}" alt="Post Cover" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
+                    <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src="{{ asset('storage/media/img/' . $post->cover) }}" alt="Post Cover" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
                     <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
                         <div class="mb-2 flex space-x-2">
                             <span class="text-accent dark:text-dark-accent bg-light dark:bg-dark-light rounded-full px-2 py-1 text-xs font-semibold">{{ $post->category->category ?? 'Uncategorized' }}</span>

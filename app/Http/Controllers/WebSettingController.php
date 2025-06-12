@@ -59,6 +59,8 @@ class WebSettingController extends Controller
                 'link_twitter' => 'nullable|url',
                 'link_linkedin' => 'nullable|url',
                 'link_github' => 'nullable|url',
+                'google_analytics' => 'nullable|string|min:8|max:50',
+                'google_adsense' => 'nullable|string|min:8|max:50',
             ],
             [
                 'favicon.dimensions' => 'The favicon should be 512x512 pixels or less.',
@@ -73,6 +75,7 @@ class WebSettingController extends Controller
             // Define keys for standard string settings that directly map from request
             $stringSettings = [
                 'web_name',
+                'tagline',
                 'description',
                 'keywords',
                 'email',
@@ -82,7 +85,9 @@ class WebSettingController extends Controller
                 'link_youtube',
                 'link_twitter',
                 'link_linkedin',
-                'link_github'
+                'link_github',
+                'google_analytics',
+                'google_adsense',
             ];
 
             foreach ($stringSettings as $key) {
