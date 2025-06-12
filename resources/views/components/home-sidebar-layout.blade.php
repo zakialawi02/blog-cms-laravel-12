@@ -59,7 +59,9 @@
             <div class="mx-auto p-2">
                 <ul class="flex flex-wrap">
                     @forelse ($sectionData['data'] as $tag)
-                        <a class="border-secondary dark:border-dark-secondary hover:border-primary hover:text-primary dark:hover:text-dark-primary dark:hover:border-dark-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300" href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
+                        <li class="border-secondary dark:border-dark-secondary hover:border-primary hover:text-primary dark:hover:text-dark-primary dark:hover:border-dark-primary mb-2 mr-1 rounded-2xl border-[1px] px-[0.40rem] py-[0.15rem] transition-all duration-300">
+                            <a href="{{ route('article.tag', $tag->slug) }}"># {{ $tag->tag_name }}</a>
+                        </li>
                     @empty
                         <p class="font-regular my-2 text-center">No Data</p>
                     @endforelse
@@ -69,7 +71,7 @@
     @break
 
     @case('js-script')
-        <div class="mb-1" id="{{ $sectionData['itemsKey'] }}-sidebar">
+        <div class="mb-1 max-w-[300px]" id="{{ $sectionData['itemsKey'] }}-sidebar">
             {!! $sectionData['config']['total'] !!}
         </div>
     @break

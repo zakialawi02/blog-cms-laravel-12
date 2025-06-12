@@ -75,6 +75,7 @@ class WebSettingController extends Controller
             // Define keys for standard string settings that directly map from request
             $stringSettings = [
                 'web_name',
+                'tagline',
                 'description',
                 'keywords',
                 'email',

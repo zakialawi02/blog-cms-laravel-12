@@ -1,4 +1,4 @@
-@props(['sectionKey', 'sectionData', 'setTotalToView' => true, 'itemKeyOptions' => []]) {{-- Tambahkan itemKeyOptions ke props --}}
+@props(['sectionKey', 'sectionData', 'setTotalToView' => true, 'itemKeyOptions' => [], 'is_ads' => false]) {{-- Tambahkan itemKeyOptions ke props --}}
 
 <div class="space-y-3">
     <div class="form-group">
@@ -9,27 +9,29 @@
         @enderror
     </div>
 
-    <div class="form-group">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="{{ $sectionKey }}_items">Content Items Key</label>
-        {{-- Mengganti input teks dengan select dropdown --}}
-        <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_items" name="sections_config[{{ $sectionKey }}][items]">
-            @if (empty($itemKeyOptions))
-                <option value="">-- No options available --</option>
-            @else
-                @foreach ($itemKeyOptions as $value => $label)
-                    <option value="{{ $value }}" {{ old("sections_config.{$sectionKey}.items", $sectionData['items'] ?? '') == $value ? 'selected' : '' }}>
-                        {{ $label }}
-                    </option>
-                @endforeach
-            @endif
-        </select>
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Select the type of content to display for this section.</p>
-        @error("sections_config.{$sectionKey}.items")
-            <span class="text-xs text-red-500">{{ $message }}</span>
-        @enderror
-    </div>
+    @if (!$is_ads)
+        <div class="form-group">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="{{ $sectionKey }}_items">Content Items Key</label>
+            {{-- Mengganti input teks dengan select dropdown --}}
+            <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_items" name="sections_config[{{ $sectionKey }}][items]">
+                @if (empty($itemKeyOptions))
+                    <option value="">-- No options available --</option>
+                @else
+                    @foreach ($itemKeyOptions as $value => $label)
+                        <option value="{{ $value }}" {{ old("sections_config.{$sectionKey}.items", $sectionData['items'] ?? '') == $value ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                @endif
+            </select>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Select the type of content to display for this section.</p>
+            @error("sections_config.{$sectionKey}.items")
+                <span class="text-xs text-red-500">{{ $message }}</span>
+            @enderror
+        </div>
+    @endif
 
-    @if ($setTotalToView)
+    @if ($setTotalToView && !$is_ads)
         @php
             // Determine the current item type, prioritizing old form input over saved data.
             // This ensures that if validation fails, the form shows the user's last selection.
@@ -49,7 +51,21 @@ $totalValue = old("sections_config.{$sectionKey}.total", $sectionData['total'] ?
 
             {{-- Textarea for JS Code (hidden unless js-script is selected) --}}
             <textarea class="@if (!$isJsScript) hidden @endif mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_total_textarea" name="sections_config[{{ $sectionKey }}][total]" rows="6" placeholder="Enter your JavaScript code here..." @if (!$isJsScript) disabled @endif>{{ $totalValue ?? '' }}</textarea>
+            @error("sections_config.{$sectionKey}.total")
+                <span class="text-xs text-red-500">{{ $message }}</span>
+            @enderror
+        </div>
+    @endif
 
+    @if ($is_ads)
+        @php
+            $totalValue = old("sections_config.{$sectionKey}.total", $sectionData['total'] ?? null);
+        @endphp
+        <div class="form-group">
+            <input name="sections_config[{{ $sectionKey }}][items]" type="hidden" value="js-script">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="{{ $sectionKey }}_total_label" for="{{ $sectionKey . '_total_textarea' }}">JavaScript Code</label>
+            {{-- Textarea for JS Code (hidden unless js-script is selected) --}}
+            <textarea class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white" id="{{ $sectionKey }}_total_textarea" name="sections_config[{{ $sectionKey }}][total]" rows="6" placeholder="Enter your JavaScript code here...">{{ $totalValue ?? '' }}</textarea>
             @error("sections_config.{$sectionKey}.total")
                 <span class="text-xs text-red-500">{{ $message }}</span>
             @enderror

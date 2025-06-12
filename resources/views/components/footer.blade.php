@@ -11,17 +11,21 @@
 
                         <h3 class="text-dark dark:text-dark-light mt-5 text-xl font-bold">Follow Us:</h3>
                         <div class="text-dark dark:text-dark-light mt-4 flex gap-3 font-normal">
-                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="#" target="_blank">
+                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_fb'] ?? '#' }}" target="_blank">
                                 <i class="ri-facebook-fill"></i>
+                                <span class="sr-only">Follow me on Facebook</span>
                             </a>
-                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="https://twitter.com/zakialawi_" target="_blank">
+                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_twitter'] ?? '#' }}" target="_blank">
                                 <i class="ri-twitter-x-fill"></i>
+                                <span class="sr-only">Follow me on Twitter</span>
                             </a>
-                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="https://www.linkedin.com/in/ahmad-zaki-alawi/" target="_blank">
+                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_linkedin'] ?? '#' }}" target="_blank">
                                 <i class="ri-linkedin-box-fill"></i>
+                                <span class="sr-only">Follow me on LinkedIn</span>
                             </a>
-                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="https://www.instagram.com/zakialawi_/" target="_blank">
+                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_ig'] ?? '#' }}" target="_blank">
                                 <i class="ri-instagram-fill"></i>
+                                <span class="sr-only">Follow me on Instagram</span>
                             </a>
                         </div>
                     </div>
@@ -50,9 +54,10 @@
 
                     <div class="md:col-span-2">
                         <div class="flex flex-col">
-                            <h5 class="text-dark dark:text-dark-light mb-3 text-2xl font-bold">Contact Us</h5>
-                            <p class="text-muted dark:text-dark-muted mt-2 text-base font-medium">hallo@zakialawi.my.id</p>
-                            <form class="ms-auto mt-6 w-full max-w-lg">
+                            <h5 class="text-dark dark:text-dark-light mb-2 text-2xl font-bold">Contact Us</h5>
+                            <p class="text-muted dark:text-dark-muted mt-1 text-base font-medium">hallo@zakialawi.my.id</p>
+                            <h5 class="text-dark dark:text-dark-light text-2xl font-bold">Newsletter</h5>
+                            <form class="ms-auto mt-4 w-full max-w-lg">
                                 <div class="dark:bg-dark-base-200 relative flex items-center overflow-hidden rounded-md bg-white px-1 shadow">
                                     <input class="dark:text-dark-light w-full border-0 bg-white px-3 py-3.5 text-base text-black outline-none ring-0 focus:ring-0 dark:bg-transparent" name="email" type="email" placeholder="Your Email Address">
                                     <button class="bg-secondary dark:bg-dark-primary hover:bg-primary dark:hover:bg-dark-secondary rounded px-3 py-1 font-semibold text-white transition-all duration-500" id="send-email-button" type="button">

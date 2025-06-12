@@ -68,76 +68,49 @@
     <div class="container grid grid-cols-1 gap-2 md:gap-4 lg:grid-cols-4">
         <div class="lg:col-span-3">
             <!-- SECTION 1 -->
-            <!-- Recent Blog Post -->
             @if ($sectionsContent['home_section_1']['config']['is_visible'] == '1')
-                <section class="text-dark dark:text-dark-light container mb-6 px-2">
-                    <div class="mb-3 flex w-full items-center gap-4 align-middle">
-                        <h3 class="whitespace-nowrap text-3xl font-semibold">{{ $sectionsContent['home_section_1']['config']['label'] }}</h3>
-                        <div class="to-secondary dark:to-dark-secondary h-[4px] flex-grow bg-gradient-to-r from-transparent"></div>
-                        <x-dashboard.primary-button class="px-1! py-0.5!" href="/blog/{{ str_replace(':', '/', $sectionsContent['home_section_1']['itemsKey']) }}">More »</x-dashboard.primary-button>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        @forelse ($sectionsContent['home_section_1']['data'] as $article)
-                            <x-card-post-simple :article="$article" />
-                        @empty
-                            <p class="my-2">No Posts Available</p>
-                        @endforelse
-                    </div>
-                    {{-- <div class="my-8 mt-20">
-                    {{ $articles->links() }}
-                    </div> --}}
-                </section>
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_1']['itemsKey']" :sectionData="$sectionsContent['home_section_1']" />
             @endif
 
             <!-- SECTION 2 -->
             @if ($sectionsContent['home_section_2']['config']['is_visible'] == '1')
-                <section class="text-dark dark:text-dark-light container px-2">
-                    <div class="mb-3 flex w-full items-center gap-4 align-middle">
-                        <h3 class="whitespace-nowrap text-3xl font-semibold">{{ $sectionsContent['home_section_2']['config']['label'] }}</h3>
-                        <div class="to-secondary dark:to-dark-secondary h-[4px] flex-grow bg-gradient-to-r from-transparent"></div>
-                        <x-dashboard.primary-button class="px-1! py-0.5!" href="/blog/{{ str_replace(':', '/', $sectionsContent['home_section_2']['itemsKey']) }}">More »</x-dashboard.primary-button>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        @forelse ($sectionsContent['home_section_2']['data'] as $article)
-                            <x-card-post-simple :article="$article" />
-                        @empty
-                            <p class="my-2">No Posts Available</p>
-                        @endforelse
-                    </div>
-                </section>
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_2']['itemsKey']" :sectionData="$sectionsContent['home_section_2']" />
             @endif
 
             <!-- SECTION 3 -->
             @if ($sectionsContent['home_section_3']['config']['is_visible'] == '1')
-                <section class="text-dark dark:text-dark-light container px-2">
-                    <div class="mb-3 flex w-full items-center gap-4 align-middle">
-                        <h3 class="whitespace-nowrap text-3xl font-semibold">{{ $sectionsContent['home_section_3']['config']['label'] }}</h3>
-                        <div class="to-secondary dark:to-dark-secondary h-[4px] flex-grow bg-gradient-to-r from-transparent"></div>
-                        <x-dashboard.primary-button class="px-1! py-0.5!" href="/blog/{{ str_replace(':', '/', $sectionsContent['home_section_3']['itemsKey']) }}">More »</x-dashboard.primary-button>
-                    </div>
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_3']['itemsKey']" :sectionData="$sectionsContent['home_section_3']" />
+            @endif
 
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        @forelse ($sectionsContent['home_section_3']['data'] as $article)
-                            <x-card-post-simple :article="$article" />
-                        @empty
-                            <p class="my-2">No Posts Available</p>
-                        @endforelse
-                    </div>
-                </section>
+            <!-- SECTION 4 -->
+            @if ($sectionsContent['home_section_4']['config']['is_visible'] == '1')
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_4']['itemsKey']" :sectionData="$sectionsContent['home_section_4']" />
+            @endif
+
+            <!-- SECTION 5 -->
+            @if ($sectionsContent['home_section_5']['config']['is_visible'] == '1')
+                <x-home-section-layout :sectionKey="$sectionsContent['home_section_5']['itemsKey']" :sectionData="$sectionsContent['home_section_5']" />
             @endif
         </div>
 
-        <div class="text-dark dark:text-dark-light mt-2 pt-4">
+        <div class="text-dark dark:text-dark-light mt-2 pt-4" id="sidebar">
             @if ($sectionsContent['home_sidebar_1']['config']['is_visible'] == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_1']" />
+            @endif
+            @if ($sectionsContent['ads_sidebar_1']['config']['is_visible'] == '1')
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_1']" />
             @endif
             @if ($sectionsContent['home_sidebar_2']['config']['is_visible'] == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_2']" />
             @endif
             @if ($sectionsContent['home_sidebar_3']['config']['is_visible'] == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_3']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_3']" />
+            @endif
+            @if ($sectionsContent['home_sidebar_4']['config']['is_visible'] == '1')
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_4']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_4']" />
+            @endif
+            @if ($sectionsContent['ads_sidebar_2']['config']['is_visible'] == '1')
+                <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_2']" />
             @endif
         </div>
     </div>
@@ -167,5 +140,44 @@
     @endif
 
     @push('javascript')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Definisikan palet warna PASTEL yang akan digunakan
+                const bgColors = [
+                    'bg-sky-200',
+                    'bg-emerald-200',
+                    'bg-amber-200',
+                    'bg-rose-200',
+                    'bg-indigo-200',
+                    'bg-teal-200',
+                    'bg-violet-300',
+                    'bg-lime-300',
+                    'bg-fuchsia-200',
+                    'bg-cyan-200',
+                    'bg-slate-300'
+                ];
+
+                // Ambil semua elemen card yang ingin diwarnai
+                const cards = document.querySelectorAll('.random-bg-card');
+
+                // Fungsi untuk mengacak urutan array
+                function shuffle(array) {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                    return array;
+                }
+
+                // Acak palet warna kita
+                const shuffledColors = shuffle(bgColors);
+
+                // Terapkan warna yang sudah diacak ke setiap card
+                cards.forEach((card, index) => {
+                    const colorIndex = index % shuffledColors.length;
+                    card.classList.add(shuffledColors[colorIndex]);
+                });
+            });
+        </script>
     @endpush
 </x-app-front-layout>

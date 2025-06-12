@@ -16,13 +16,21 @@ class PageController extends Controller
 {
     protected $sectionKeys = [
         'home_feature_section',
+        'ads_featured',
         'home_section_1',
         'home_section_2',
         'home_section_3',
+        'home_section_4',
+        'home_section_5',
         'home_sidebar_1',
         'home_sidebar_2',
         'home_sidebar_3',
-        'home_bottom_section_1'
+        'home_sidebar_4',
+        'ads_sidebar_1',
+        'ads_sidebar_2',
+        'ads_bottom_1',
+        'home_bottom_section_1',
+        'ads_bottom_2'
     ];
 
     /**
@@ -182,7 +190,6 @@ class PageController extends Controller
         $allConfigs = $request->input('sections_config', []);
 
         foreach ($allConfigs as $key => $config) {
-            // Hanya validasi keys yang memang ada di daftar sectionKeys server-side
             if (!in_array($key, $this->sectionKeys)) {
                 continue;
             }
@@ -194,11 +201,39 @@ class PageController extends Controller
             // Aturan validasi dinamis untuk 'total'
             // Cek nilai 'items' yang dikirim dari form
             if (isset($config['items']) && $config['items'] === 'js-script') {
-                // Jika 'items' adalah 'js-script', 'total' berisi kode, maka validasi sebagai string
-                $validationRules["sections_config.{$key}.total"] = 'nullable|string';
+                // Custom rule pakai closure
+                $validationRules["sections_config.{$key}.total"] = [
+                    'nullable',
+                    'string',
+                    function ($attribute, $value, $fail) {
+                        // Cek apakah ada <script> buka & tutup
+                        if (!preg_match('/<script\b[^>]*>(.*?)<\/script>/is', $value)) {
+                            return $fail('The JavaScript code must contain valid <script> tags.');
+                        }
+
+                        // Cek kode berbahaya (contoh sederhana, bisa ditambah)
+                        $dangerousPatterns = [
+                            '/document\.write\s*\(/i',
+                            '/eval\s*\(/i',
+                            '/innerHTML\s*=/i',
+                            '/outerHTML\s*=/i',
+                            '/localStorage\s*\./i',
+                            '/sessionStorage\s*\./i',
+                        ];
+
+                        foreach ($dangerousPatterns as $pattern) {
+                            if (preg_match($pattern, $value)) {
+                                return $fail('The JavaScript code contains potentially unsafe operations.');
+                            }
+                        }
+                    }
+                ];
             } else {
-                // Jika tidak, 'total' berisi jumlah, maka validasi sebagai integer
-                $validationRules["sections_config.{$key}.total"] = 'nullable|integer|min:0';
+                $validationRules["sections_config.{$key}.total"] = [
+                    'nullable',
+                    'integer',
+                    'min:0',
+                ];
             }
         }
 
@@ -250,13 +285,21 @@ class PageController extends Controller
     {
         $defaults = [
             'home_feature_section' => ['label' => 'Recent Posts', 'is_visible' => true, 'total' => 6, 'items' => 'recent-posts'],
+            'ads_featured' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
             'home_section_1' => ['label' => 'Recent Posts', 'is_visible' => true, 'total' => 6, 'items' => 'recent-posts'],
             'home_section_2' => ['label' => 'Technology', 'is_visible' => true, 'total' => 6, 'items' => 'technology-category'],
             'home_section_3' => ['label' => '', 'is_visible' => false, 'total' => 3, 'items' => ''],
+            'home_section_4' => ['label' => '', 'is_visible' => false, 'total' => 3, 'items' => ''],
+            'home_section_5' => ['label' => '', 'is_visible' => false, 'total' => 3, 'items' => ''],
             'home_sidebar_1' => ['label' => 'Popular Posts', 'is_visible' => true, 'total' => 4, 'items' => 'popular-posts'],
             'home_sidebar_2' => ['label' => 'Tags', 'is_visible' => true, 'total' => 10, 'items' => 'tags'],
             ['home_sidebar_3' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => '']],
+            ['home_sidebar_4' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => '']],
+            'ads_sidebar_1' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
+            'ads_sidebar_2' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
+            'ads_bottom_1' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
             'home_bottom_section_1' => ['label' => 'You Missed', 'is_visible' => true, 'total' => 4, 'items' => 'random-posts'],
+            'ads_bottom_2' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
         ];
         return $defaults[$key] ?? ['label' => 'Default Label', 'is_visible' => false, 'total' => 0, 'items' => ''];
     }
