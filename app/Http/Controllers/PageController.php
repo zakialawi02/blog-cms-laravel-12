@@ -117,6 +117,11 @@ class PageController extends Controller
      */
     public function destroy(Page $page)
     {
+        // Check the model's custom attribute
+        if (!$page->is_deletable) {
+            return back()->with('error', 'This page is protected and cannot be deleted.');
+        }
+
         $page->delete();
 
         return redirect()->route('admin.pages.index')->with('success', 'Page deleted successfully');
@@ -298,8 +303,8 @@ class PageController extends Controller
             'home_section_5' => ['label' => '', 'is_visible' => false, 'total' => 3, 'items' => ''],
             'home_sidebar_1' => ['label' => 'Popular Posts', 'is_visible' => true, 'total' => 4, 'items' => 'popular-posts'],
             'home_sidebar_2' => ['label' => 'Tags', 'is_visible' => true, 'total' => 10, 'items' => 'tags'],
-            ['home_sidebar_3' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => '']],
-            ['home_sidebar_4' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => '']],
+            'home_sidebar_3' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => ''],
+            'home_sidebar_4' => ['label' => '', 'is_visible' => false, 'total' => 0, 'items' => ''],
             'ads_sidebar_1' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
             'ads_sidebar_2' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],
             'ads_bottom_1' => ['label' => '', 'is_visible' => false, 'total' => '', 'items' => ''],

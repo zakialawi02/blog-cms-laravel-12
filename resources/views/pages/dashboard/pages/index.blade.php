@@ -43,14 +43,11 @@
                                 <td>
                                     <a class="btn bg-back-neutral zk-build-page" href="{{ route('admin.pages.builder', $page->id) }}"><i class="ri-pencil-ruler-2-line"></i></a>
                                     <a class="btn bg-back-secondary zk-edit-data" href="{{ route('admin.pages.edit', $page->id) }}"><i class="ri-settings-4-line"></i></a>
-                                    {{-- Conditional check to hide delete button for specific slugs --}}
-                                    @if (!in_array($page->slug, ['terms', 'privacy', 'contact']))
-                                        <form class="zk-delete-data inline" action="{{ route('admin.pages.destroy', $page->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn bg-back-error zk-delete-data" type="submit"><i class="ri-delete-bin-6-line"></i></button>
-                                        </form>
-                                    @endif
+                                    <form class="zk-delete-data inline" action="{{ route('admin.pages.destroy', $page->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn bg-back-error zk-delete-data" type="submit"><i class="ri-delete-bin-6-line"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
