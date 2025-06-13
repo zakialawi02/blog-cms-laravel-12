@@ -2,8 +2,9 @@
     <div class="relative flex h-full max-h-full flex-col">
         <div class="align-center flex items-center px-5 py-1.5">
             <!-- Logo -->
-            <a class="focus:outline-hidden inline-block flex-none rounded-xl py-1 text-xl font-semibold focus:opacity-80" href="#" aria-label="Preline">
-                <x-application-logo class="h-auto max-w-28" />
+            <a class="focus:outline-hidden inline-flex flex-none items-end rounded-xl py-1 text-xl font-semibold focus:opacity-80" href="/dashboard" aria-label="Preline">
+                <x-application-logo class="h-auto max-h-10 max-w-28" />
+                <h1 class="text-base font-semibold">Dashboard</h1>
             </a>
             <!-- End Logo -->
 

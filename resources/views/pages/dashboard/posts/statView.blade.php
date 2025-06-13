@@ -138,6 +138,8 @@
                 searching: false,
                 processing: true,
                 serverSide: true,
+                responsive: true,
+                scrollX: true,
                 ajax: {
                     url: "{{ url()->current() }}?type=popular",
                     beforeSend: function() {
@@ -189,6 +191,8 @@
                 searching: false,
                 processing: true,
                 serverSide: true,
+                responsive: true,
+                scrollX: true,
                 ajax: {
                     url: "{{ url()->current() }}?type=recent",
                     beforeSend: function() {

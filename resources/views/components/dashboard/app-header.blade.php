@@ -1,9 +1,9 @@
-<header class="z-36 lg:ps-65 dark:bg-back-dark-base-100 flex w-full flex-wrap border-b border-gray-200 bg-white py-2.5 text-sm md:flex-nowrap md:justify-start dark:border-slate-700">
+<header class="z-36 lg:ps-65 dark:bg-back-dark-base-100 flex w-full flex-wrap border-b border-gray-200 bg-white py-2 text-sm md:flex-nowrap md:justify-start dark:border-slate-700">
     <nav class="mx-auto flex w-full basis-full items-center px-4 sm:px-6">
         <div class="me-5 lg:me-0 lg:hidden">
             <!-- Logo -->
-            <a class="focus:outline-hidden inline-block flex-none rounded-md p-1 text-xl font-semibold focus:opacity-80" href="#" aria-label="Preline">
-                <x-application-logo class="h-auto max-w-28" />
+            <a class="focus:outline-hidden inline-block flex-none rounded-md p-1 text-xl font-semibold focus:opacity-80" href="/dashboard" aria-label="Preline">
+                <x-application-logo class="h-auto max-h-10 max-w-28" />
             </a>
             <!-- End Logo -->
 

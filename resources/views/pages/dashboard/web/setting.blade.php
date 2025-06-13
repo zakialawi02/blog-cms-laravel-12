@@ -26,7 +26,7 @@
                         <span class="text-sm text-gray-500">Logo size must be less than 700 Kb and png format</span>
                         <div class="mt-2 flex items-center gap-x-3">
                             <div class="space-y-4">
-                                <x-application-logo id="app_logo_preview" />
+                                <x-application-logo class="max-h-20" id="app_logo_preview" />
                             </div>
                             <div class="mt-4 flex text-sm text-gray-600">
                                 <x-dashboard.input-label class="block cursor-pointer text-lg font-semibold" for="app_logo">

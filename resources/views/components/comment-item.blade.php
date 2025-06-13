@@ -1,7 +1,11 @@
 <article class="max-w-full p-2 text-base md:px-5 md:py-3" id="zkcomment_0212{{ $comment->id }}">
     <div class="mb-2 flex items-center justify-between">
         <div class="flex items-center">
-            <p class="mr-3 inline-flex items-center text-sm font-semibold text-gray-900 dark:text-white"><img class="mr-2 h-6 w-6 rounded-full" src={{ $comment->user->profile_photo_path }} alt="{{ $comment->user->name }}">{{ $comment->user->name }}</p>
+            <p class="mr-3 inline-flex items-center text-sm font-semibold text-gray-900 dark:text-white"><img class="mr-2 h-6 w-6 rounded-full" src="{{ $comment->user->profile_photo_path }}" alt="{{ $comment->user->name }}">{{ $comment->user->name }}
+                @if ($comment->user->role == 'superadmin' || $comment->user->role == 'admin')
+                    <span class="bg-primary dark:bg-dark-primary ml-1 rounded-full px-2 py-0.5 text-xs font-normal text-white">Admin</span>
+                @endif
+            </p>
             <p class="text-sm text-gray-600 dark:text-gray-400"><time title="{{ $comment->created_at->format('F j, Y') }}" pubdate datetime="{{ $comment->created_at->format('Y-m-d') }}">{{ $comment->created_at->format('F j, Y') }}</time></p>
         </div>
     </div>

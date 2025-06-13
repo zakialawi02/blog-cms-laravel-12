@@ -26,21 +26,21 @@
         <div class="max-w-[20rem] font-bold uppercase" id="logo-nav">
             @if ($data['web_setting']['web_name_variant'] == '1')
                 <a class="inline-flex max-w-80 items-center text-xl" href="/">
-                    <x-application-logo class="h-auto max-w-14" />
+                    <x-application-logo class="h-auto max-h-12 max-w-14" />
                     <span class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</span>
                 </a>
             @elseif ($data['web_setting']['web_name_variant'] == '2')
                 <a class="inline-flex max-w-80 items-center" href="/">
-                    <x-application-logo class="h-auto max-w-14" />
+                    <x-application-logo class="h-auto max-h-12 max-w-14" />
                 </a>
             @elseif ($data['web_setting']['web_name_variant'] == '3')
                 <a class="block max-w-80 items-center text-xs font-medium capitalize" href="/">
-                    <x-application-logo class="mb-0 h-auto max-w-14" />
+                    <x-application-logo class="mb-0 h-auto max-h-12 max-w-14" />
                     <span class="px-2" id="web_name">{{ $data['web_setting']['tagline'] ?? config('app.name') }}</span>
                 </a>
             @else
                 <a class="inline-flex max-w-80 items-center text-xl" href="/">
-                    <x-application-logo class="h-auto max-w-14" />
+                    <x-application-logo class="h-auto max-h-12 max-w-14" />
                     <span class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</span>
                 </a>
             @endif
