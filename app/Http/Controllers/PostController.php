@@ -184,13 +184,34 @@ class PostController extends Controller
     {
         $request->validate([
             'prompt' => 'required|string',
-            'type' => 'required|in:text,image',
+            'type' => 'required|in:text',
         ]);
 
         $prompt = $request->input('prompt');
         $type = $request->input('type');
 
         $response = $this->aiService->generateArticle($prompt);
+
+        return $response;
+    }
+
+    /**
+     * Generate an image using the AI service. ** ERROR **
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function generateImage(Request $request)
+    {
+        $request->validate([
+            'prompt' => 'required|string',
+            'type' => 'required|in:image',
+        ]);
+
+        $prompt = $request->input('prompt');
+        $type = $request->input('type');
+
+        $response = $this->aiService->generateImage($prompt);
 
         return $response;
     }

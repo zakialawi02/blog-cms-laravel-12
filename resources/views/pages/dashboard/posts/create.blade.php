@@ -63,7 +63,7 @@
 
                                 <div class="mb-3">
                                     <x-dashboard.input-label for="excerpt" :value="__('Excerpt/Summary/Intro')" />
-                                    <x-dashboard.textarea-input id="excerpt" name="excerpt" rows="4" placeholder="Write your excerpt here...">{{ old('excerpt') }}</x-dashboard.textarea-input>
+                                    <x-dashboard.textarea-input id="excerpt" name="excerpt" rows="4" maxlength="200" placeholder="Write your excerpt here...">{{ old('excerpt') }}</x-dashboard.textarea-input>
                                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('excerpt')" />
                                 </div>
 
@@ -141,13 +141,13 @@
                         <div class="mb-3">
                             <x-dashboard.input-label for="meta_desc" :value="__('Meta Description')" />
                             <span class="text-back-muted text-sm dark:text-gray-400">Use summary for custom description SEO</span>
-                            <x-dashboard.textarea-input id="meta_desc" name="meta_desc" rows="4" placeholder="Write your meta description here...">
+                            <x-dashboard.textarea-input id="meta_desc" name="meta_desc" maxlength="200" rows="4" placeholder="Write your meta description here...">
                                 {{ old('meta_desc') }}
                             </x-dashboard.textarea-input>
                             <x-dashboard.input-error class="mt-2" :messages="$errors->get('meta_desc')" />
                         </div>
                         <div class="mb-3">
-                            <x-dashboard.input-label for="meta_keywords" :value="__('Meta Description')" />
+                            <x-dashboard.input-label for="meta_keywords" :value="__('Meta Keywords')" />
                             <span class="text-back-muted text-sm dark:text-gray-400">Use comma to separate.</span>
                             <x-dashboard.textarea-input id="meta_keywords" name="meta_keywords" rows="4" placeholder="Enter meta keywords. Eg: keyword1, keyword2, keyword abc, keyword xyz">
                                 {{ old('meta_keywords') }}
@@ -278,10 +278,9 @@
                     }
                 });
                 tagify.on("add", function(e) {
-                    console.log("Tag ditambahkan:", e.detail.data);
+                    // console.log("Tag ditambahkan:", e.detail.data);
                 });
                 tagify.addTags();
-
 
                 const dropzone = $("#dropzone");
                 const fileInput = $("#dropzone-file");

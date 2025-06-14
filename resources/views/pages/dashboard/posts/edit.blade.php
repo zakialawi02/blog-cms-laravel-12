@@ -147,7 +147,7 @@
                         <x-dashboard.input-error class="mt-2" :messages="$errors->get('meta_desc')" />
                     </div>
                     <div class="mb-3">
-                        <x-dashboard.input-label for="meta_keywords" :value="__('Meta Description')" />
+                        <x-dashboard.input-label for="meta_keywords" :value="__('Meta Keywords')" />
                         <span class="text-back-muted text-sm dark:text-gray-400">Use comma to separate.</span>
                         <x-dashboard.textarea-input id="meta_keywords" name="meta_keywords" rows="4" placeholder="Enter meta keywords. Eg: keyword1, keyword2, keyword abc, keyword xyz">{{ old('meta_keywords', $post->meta_keywords) }}</x-dashboard.textarea-input>
                         <x-dashboard.input-error class="mt-2" :messages="$errors->get('meta_keywords')" />

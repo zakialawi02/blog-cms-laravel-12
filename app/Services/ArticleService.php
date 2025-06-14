@@ -125,7 +125,7 @@ class ArticleService
             if (empty($article->excerpt)) {
                 $article->excerpt = strip_tags($article->content);
             }
-            $article->excerpt = Str::limit($article->excerpt, 200);
+            $article->excerpt = Str::limit($article->excerpt, 160);
             if (!empty($article->cover)) {
                 if (filter_var($article->cover, FILTER_VALIDATE_URL)) {
                     $article->cover = $article->cover;
