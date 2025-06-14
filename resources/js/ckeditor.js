@@ -457,7 +457,7 @@ const rawContent = document.querySelector("#editor-content").innerHTML;
 ClassicEditor.create(document.querySelector("#post-content"), editorConfig)
     .then((editor) => {
         console.log("Editor is ready to use! ✅");
-
+        window.editorInstance = editor;
         editor.setData(rawContent);
 
         const wordCount = editor.plugins.get("WordCount");

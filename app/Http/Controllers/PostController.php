@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
+use App\Services\AiService;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,11 +18,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ArticleRequest;
 use App\Actions\DeletePostPermanently;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class PostController extends Controller
 {
+    protected $aiService;
+
+    public function __construct(AiService $aiService)
+    {
+        $this->aiService = $aiService;
+    }
 
     /**
      * Display a listing of the resource.
@@ -166,6 +172,48 @@ class PostController extends Controller
         $article = Article::where('slug', $slug)->first();
 
         return view('pages.dashboard.posts.preview', compact('data', 'article'));
+    }
+
+    /**
+     * Generate an article using the AI service.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function generateArticle(Request $request)
+    {
+        $request->validate([
+            'prompt' => 'required|string',
+            'type' => 'required|in:text',
+        ]);
+
+        $prompt = $request->input('prompt');
+        $type = $request->input('type');
+
+        $response = $this->aiService->generateArticle($prompt);
+
+        return $response;
+    }
+
+    /**
+     * Generate an image using the AI service. ** ERROR **
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function generateImage(Request $request)
+    {
+        $request->validate([
+            'prompt' => 'required|string',
+            'type' => 'required|in:image',
+        ]);
+
+        $prompt = $request->input('prompt');
+        $type = $request->input('type');
+
+        $response = $this->aiService->generateImage($prompt);
+
+        return $response;
     }
 
     /**

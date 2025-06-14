@@ -40,7 +40,7 @@ class ArticleRequest extends FormRequest
             'published_at' => 'nullable|date',
             'user_id' => 'required|exists:users,id',
             'content' => 'nullable',
-            'excerpt' => 'nullable|max:300',
+            'excerpt' => 'nullable|max:200',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ];
     }
