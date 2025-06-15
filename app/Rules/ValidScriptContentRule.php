@@ -43,17 +43,21 @@ class ValidScriptContentRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        // Ensure the content contains at least one HTML tag.
         if (strpos($value, '<') === false) {
             $fail("The {$attribute} field must contain at least one HTML tag.");
             return;
         }
 
-        // Find all HTML tags in the content.
+        // Strip comments (HTML, Blade, JS) before analysis
+        $value = preg_replace('/<!--.*?-->/s', '', $value);           // HTML comments
+        $value = preg_replace('/{{--.*?--}}/s', '', $value);          // Blade comments
+        $value = preg_replace('/\/\/.*(?=[\n\r])/s', '', $value);     // JS single-line
+        $value = preg_replace('/\/\*.*?\*\//s', '', $value);          // JS multi-line
+
+        // Check HTML tags
         preg_match_all('/<\s*\/?\s*([a-z0-9]+)[^>]*>/i', $value, $matches);
         $foundTags = array_map('strtolower', $matches[1]);
 
-        // Detect any invalid (not allowed) tags.
         $invalidTags = array_diff($foundTags, $this->allowedTags);
 
         if (!empty($invalidTags)) {
@@ -62,19 +66,19 @@ class ValidScriptContentRule implements ValidationRule
             return;
         }
 
-        // Disallow inline event handler attributes like onclick, onerror, etc.
+        // Disallow event handlers
         if (preg_match('/\s+on\w+\s*=/i', $value)) {
             $fail("Event handler attributes (like onclick, onerror) are not allowed in {$attribute}.");
             return;
         }
 
-        // Disallow the "javascript:" protocol in href and src attributes.
+        // Disallow javascript: in href/src
         if (preg_match('/(href|src)\s*=\s*["\']\s*javascript:/i', $value)) {
             $fail("The \"javascript:\" protocol is not allowed in {$attribute}.");
             return;
         }
 
-        // Ensure balanced <script> tags.
+        // Validate script tag balance
         $openTagsCount  = substr_count(strtolower($value), '<script');
         $closeTagsCount = substr_count(strtolower($value), '</script>');
 
@@ -83,12 +87,11 @@ class ValidScriptContentRule implements ValidationRule
             return;
         }
 
-        // If <script> tags exist, validate their inner content for dangerous patterns.
+        // Check inside <script> for dangerous content
         if ($openTagsCount > 0) {
             preg_match_all('/<script\b[^>]*>(.*?)<\/script>/is', $value, $scriptMatches);
             $allScriptContent = implode(' ', $scriptMatches[1]);
 
-            // List of dangerous JavaScript patterns.
             $dangerousPatterns = [
                 '/document\.write\s*\(/i',
                 '/eval\s*\(/i',

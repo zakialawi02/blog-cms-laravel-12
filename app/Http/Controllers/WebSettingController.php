@@ -63,12 +63,14 @@ class WebSettingController extends Controller
                 'google_adsense' => 'nullable|string|min:8|max:50',
                 'before_close_head' => ['nullable', 'string', new ValidScriptContentRule([
                     'script',
+                    'noscript',
                     'style',
                     'meta',
                     'link',
                 ]),],
                 'before_close_body' => ['nullable', 'string',  new ValidScriptContentRule([
                     'script',
+                    'noscript',
                     'style',
                     'meta',
                     'link',

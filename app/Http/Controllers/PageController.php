@@ -196,6 +196,7 @@ class PageController extends Controller
                     'string',
                     new ValidScriptContentRule([
                         'script',
+                        'noscript',
                         'style',
                         'meta',
                         'link',
