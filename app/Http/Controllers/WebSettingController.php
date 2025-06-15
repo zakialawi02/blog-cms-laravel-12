@@ -6,7 +6,7 @@ use App\Models\WebSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
+use App\Rules\ValidScriptContentRule;
 use Illuminate\Support\Facades\Storage;
 
 class WebSettingController extends Controller
@@ -61,6 +61,31 @@ class WebSettingController extends Controller
                 'link_github' => 'nullable|url',
                 'google_analytics' => 'nullable|string|min:8|max:50',
                 'google_adsense' => 'nullable|string|min:8|max:50',
+                'before_close_head' => ['nullable', 'string', new ValidScriptContentRule([
+                    'script',
+                    'style',
+                    'meta',
+                    'link',
+                ]),],
+                'before_close_body' => ['nullable', 'string',  new ValidScriptContentRule([
+                    'script',
+                    'style',
+                    'meta',
+                    'link',
+                    'div',
+                    'a',
+                    'img',
+                    'iframe',
+                    'ul',
+                    'ol',
+                    'li',
+                    'p',
+                    'span',
+                    'strong',
+                    'em',
+                    'br',
+                    'hr'
+                ]),],
             ],
             [
                 'favicon.dimensions' => 'The favicon should be 512x512 pixels or less.',
@@ -88,6 +113,8 @@ class WebSettingController extends Controller
                 'link_github',
                 'google_analytics',
                 'google_adsense',
+                'before_close_head',
+                'before_close_body',
             ];
 
             foreach ($stringSettings as $key) {

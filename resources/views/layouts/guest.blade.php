@@ -36,6 +36,10 @@
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        @if (filled($data['web_setting']['before_close_head'] ?? false))
+            {!! $data['web_setting']['before_close_head'] !!}
+        @endif
     </head>
 
     <body class="font-sans antialiased">
@@ -60,6 +64,10 @@
         <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
         @stack('javascript')
         {{ $javascript ?? '' }}
+
+        @if (filled($data['web_setting']['before_close_body'] ?? false))
+            {!! $data['web_setting']['before_close_body'] !!}
+        @endif
     </body>
 
 </html>

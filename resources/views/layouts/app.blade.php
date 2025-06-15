@@ -37,6 +37,10 @@
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app-dashboard.js', 'resources/js/app.js'])
+
+        @if (filled($data['web_setting']['before_close_head'] ?? false))
+            {!! $data['web_setting']['before_close_head'] !!}
+        @endif
     </head>
 
     <body class="font-sans antialiased">
@@ -129,6 +133,10 @@
                     });
                 }
             });
+
+            @if (filled($data['web_setting']['before_close_body'] ?? false))
+                {!! $data['web_setting']['before_close_body'] !!}
+            @endif
         </script>
     </body>
 

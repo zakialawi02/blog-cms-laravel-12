@@ -18,7 +18,7 @@
         <meta name="description" content="@yield('meta_description', $data['web_setting']['description'] ?? '')">
         <meta name="author" content="@yield('meta_author', 'Zaki Alawi')">
         <meta name="keywords" content="@yield('meta_keywords', $data['web_setting']['keywords'] ?? 'Zaki Alawi, Blog')">
-        <meta property="og:title" content="@yield('og_title', $data['web_setting']['web_name'] ?? config('app.name')) | {{ $data['web_setting']['web_name'] ?? config('app.name') }}" />
+        <meta property="og:title" content="@yield('og_title', $data['web_setting']['web_name'] ?? config('app.name'))" />
         <meta property="og:type" content="@yield('og_type', 'website')" />
         <meta property="og:url" content="@yield('og_url', url()->current())" />
         <meta property="og:description" content="@yield('og_description', $data['web_setting']['description'] ?? config('app.name'))" />
@@ -55,6 +55,10 @@
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $data['web_setting']['google_adsense'] }}" crossorigin="anonymous"></script>
         @endif
 
+        @if (filled($data['web_setting']['before_close_head'] ?? false))
+            {!! $data['web_setting']['before_close_head'] !!}
+        @endif
+
     </head>
 
     <body class="bg-back-base-200 dark:bg-dark-base-300 font-sans antialiased">
@@ -72,6 +76,10 @@
         <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
         @stack('javascript')
         {{ $javascript ?? '' }}
+
+        @if (filled($data['web_setting']['before_close_body'] ?? false))
+            {!! $data['web_setting']['before_close_body'] !!}
+        @endif
     </body>
 
 </html>

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\LayoutSection;
 use App\Models\Tag;
 use App\Models\Page;
 use App\Models\Category;
 use App\Models\WebSetting;
+use App\Enums\LayoutSection;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Rules\ValidScriptContentRule;
 use Illuminate\Support\Facades\Cache;
 
 class PageController extends Controller
@@ -193,50 +194,25 @@ class PageController extends Controller
                 $validationRules["sections_config.{$key}.total"] = [
                     'nullable',
                     'string',
-                    function ($attribute, $value, $fail) {
-                        // --- Keamanan 1: Blokir atribut event handler berbahaya (on-event attributes) ---
-                        if (preg_match('/\s+on\w+\s*=/i', $value)) {
-                            return $fail('Event handler attributes (like onclick, onerror) are not allowed.');
-                        }
-
-                        // --- Keamanan 2: Blokir protokol 'javascript:' pada link ---
-                        if (preg_match('/(href|src)\s*=\s*["\']\s*javascript:/i', $value)) {
-                            return $fail('The "javascript:" protocol is not allowed in attributes.');
-                        }
-
-                        // --- Kebutuhan Baru: Cek apakah jumlah tag <script> dan </script> seimbang ---
-                        // Menggunakan strtolower untuk memastikan pengecekan tidak case-sensitive (cth: <SCRIPT>)
-                        $openTagsCount = substr_count(strtolower($value), '<script');
-                        $closeTagsCount = substr_count(strtolower($value), '</script>');
-
-                        if ($openTagsCount !== $closeTagsCount) {
-                            return $fail('The JavaScript code must contain valid <script> tags.');
-                        }
-
-                        // --- Keamanan 3: Cek konten di dalam tag <script> jika ada ---
-                        if ($openTagsCount > 0) {
-                            // Gunakan preg_match_all untuk menangkap konten dari SEMUA tag script
-                            preg_match_all('/<script\b[^>]*>(.*?)<\/script>/is', $value, $matches);
-
-                            // Gabungkan semua konten script yang ditemukan untuk diperiksa sekaligus
-                            $allScriptContent = implode(' ', $matches[1]);
-
-                            $dangerousPatterns = [
-                                '/document\.write\s*\(/i',
-                                '/eval\s*\(/i',
-                                '/innerHTML\s*=/i',
-                                '/outerHTML\s*=/i',
-                                '/localStorage\s*\./i',
-                                '/sessionStorage\s*\./i',
-                            ];
-
-                            foreach ($dangerousPatterns as $pattern) {
-                                if (preg_match($pattern, $allScriptContent)) {
-                                    return $fail('The JavaScript code contains potentially unsafe operations.');
-                                }
-                            }
-                        }
-                    }
+                    new ValidScriptContentRule([
+                        'script',
+                        'style',
+                        'meta',
+                        'link',
+                        'div',
+                        'a',
+                        'img',
+                        'iframe',
+                        'ul',
+                        'ol',
+                        'li',
+                        'p',
+                        'span',
+                        'strong',
+                        'em',
+                        'br',
+                        'hr'
+                    ])
                 ];
             } else {
                 $validationRules["sections_config.{$key}.total"] = [

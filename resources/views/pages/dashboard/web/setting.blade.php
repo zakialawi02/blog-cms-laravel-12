@@ -20,6 +20,12 @@
                     </div>
                 </div>
 
+                @session('errors')
+                    <div class="mb-3">
+                        <span class="text-light bg-error/80 border-error/80 rounded-md border p-2">Error: {{ session('errors')->first() ?? '' }}</span>
+                    </div>
+                @endsession
+
                 <div class="mb-3">
                     <x-dashboard.input-label class="block text-lg font-semibold" for="app_logo" value="{{ __('App Logo') }}" />
                     <span class="text-sm text-gray-500">Logo size must be less than 700 Kb and png format</span>
@@ -103,67 +109,67 @@
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="tagline" value="{{ __('Tagline') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="tagline" type="text" value="{{ old('tagline', $data['web_setting']['tagline']) }}" placeholder="tagline/slogan"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="tagline" type="text" value="{{ old('tagline', $data['web_setting']['tagline'] ?? '') }}" placeholder="tagline/slogan"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('tagline')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="description" value="{{ __('Description') }}"></x-dashboard.input-label>
-                    <x-dashboard.textarea-input name="description" rows="3" placeholder="write your description of website">{{ old('description', $data['web_setting']['description']) }}</x-dashboard.textarea-input>
+                    <x-dashboard.textarea-input name="description" rows="3" placeholder="write your description of website">{{ old('description', $data['web_setting']['description'] ?? '') }}</x-dashboard.textarea-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('description')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="keywords" value="{{ __('Keywords') }}"></x-dashboard.input-label>
-                    <x-dashboard.textarea-input name="keywords" rows="3" placeholder="keyword1, keyword2, keyword3,">{{ old('keywords', $data['web_setting']['keywords']) }}</x-dashboard.textarea-input>
+                    <x-dashboard.textarea-input name="keywords" rows="3" placeholder="keyword1, keyword2, keyword3,">{{ old('keywords', $data['web_setting']['keywords'] ?? '') }}</x-dashboard.textarea-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('keywords')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="email" value="{{ __('Email') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="email" type="email" value="{{ old('email', $data['web_setting']['email']) }}" placeholder="mail@example.com"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="email" type="email" value="{{ old('email', $data['web_setting']['email'] ?? '') }}" placeholder="mail@example.com"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('email')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="link_fb" value="{{ __('Facebook Url') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="link_fb" type="url" value="{{ old('link_fb', $data['web_setting']['link_fb']) }}" placeholder="https://www.facebook.com/username"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="link_fb" type="url" value="{{ old('link_fb', $data['web_setting']['link_fb'] ?? '') }}" placeholder="https://www.facebook.com/username"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('link_fb')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="link_ig" value="{{ __('Instagram Url') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="link_ig" type="url" value="{{ old('link_ig', $data['web_setting']['link_ig']) }}" placeholder="https://www.instagram.com/username"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="link_ig" type="url" value="{{ old('link_ig', $data['web_setting']['link_ig'] ?? '') }}" placeholder="https://www.instagram.com/username"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('link_ig')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="link_tiktok" value="{{ __('Tiktok Url') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="link_tiktok" type="url" value="{{ old('link_tiktok', $data['web_setting']['link_tiktok']) }}" placeholder="https://www.tiktok.com/@username"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="link_tiktok" type="url" value="{{ old('link_tiktok', $data['web_setting']['link_tiktok'] ?? '') }}" placeholder="https://www.tiktok.com/@username"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('link_tiktok')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="link_youtube" value="{{ __('Youtube Url') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="link_youtube" type="url" value="{{ old('link_youtube', $data['web_setting']['link_youtube']) }}" placeholder="https://www.youtube.com/channel/username"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="link_youtube" type="url" value="{{ old('link_youtube', $data['web_setting']['link_youtube'] ?? '') }}" placeholder="https://www.youtube.com/channel/username"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('link_youtube')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="link_twitter" value="{{ __('Twitter Url / X') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="link_twitter" type="url" value="{{ old('link_twitter', $data['web_setting']['link_twitter']) }}" placeholder="https://twitter.com/username"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="link_twitter" type="url" value="{{ old('link_twitter', $data['web_setting']['link_twitter'] ?? '') }}" placeholder="https://twitter.com/username"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('link_twitter')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="link_linkedin" value="{{ __('Linkedin Url') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="link_linkedin" type="url" value="{{ old('link_linkedin', $data['web_setting']['link_linkedin']) }}" placeholder="https://www.linkedin.com/in/username"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="link_linkedin" type="url" value="{{ old('link_linkedin', $data['web_setting']['link_linkedin'] ?? '') }}" placeholder="https://www.linkedin.com/in/username"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('link_linkedin')" />
                 </div>
 
                 <div class="mb-3">
                     <x-dashboard.input-label for="link_github" value="{{ __('Github Url') }}"></x-dashboard.input-label>
-                    <x-dashboard.text-input name="link_github" type="url" value="{{ old('link_github', $data['web_setting']['link_github']) }}" placeholder="https://github.com/username"></x-dashboard.text-input>
+                    <x-dashboard.text-input name="link_github" type="url" value="{{ old('link_github', $data['web_setting']['link_github'] ?? '') }}" placeholder="https://github.com/username"></x-dashboard.text-input>
                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('link_github')" />
                 </div>
 
@@ -176,6 +182,22 @@
                     </label>
                 </div>
 
+                <div class="mb-3">
+                    <x-dashboard.input-label for="before_close_head" value="{{ __('Script Before close head') }}"></x-dashboard.input-label>
+                    <span class="text-sm text-gray-500">Add custom scripts or tags here. Script will be added before/above &lt;/head&gt; The code you enter will be executed on all pages.</span><br>
+                    <span class="text-sm text-gray-500">Use this field to add tracking or verification codes. Examples: Google Analytics, Facebook Pixel, verification meta tags from Google Search Console or etc.</span><br>
+                    <span class="text-warning text-sm">Warning: Be cautious when adding scripts, as they can break the application.</span>
+                    <x-dashboard.textarea-input name="before_close_head" type="text" value="{{ old('before_close_head', $data['web_setting']['before_close_head'] ?? '') }}" rows="5" placeholder="Script will be added before/above </head>. Use this field to add tracking or verification codes. Write your code here or Paste your script or meta tag code here...">{{ old('before_close_head', $data['web_setting']['before_close_head'] ?? '') }}</x-dashboard.textarea-input>
+                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('before_close_head')" />
+                </div>
+                <div class="mb-3">
+                    <x-dashboard.input-label for="before_close_body" value="{{ __('Script Before close body') }}"></x-dashboard.input-label>
+                    <span class="text-sm text-gray-500">Add custom scripts or tags here. Script will be added before/above &lt;/body&gt; The code you enter will be executed on all pages.</span><br>
+                    <span class="text-sm text-gray-500">Use this field to add tracking or verification codes. Examples: Google Analytics, Facebook Pixel, verification meta tags from Google Search Console or etc.</span><br>
+                    <span class="text-warning text-sm">Warning: Be cautious when adding scripts, as they can break the application.</span>
+                    <x-dashboard.textarea-input name="before_close_body" type="text" value="{{ old('before_close_body', $data['web_setting']['before_close_body'] ?? '') }}" rows="5" placeholder="Script will be added before/above </body>. Use this field to add tracking or verification codes. Write your code here or Paste your script or meta tag code here...">{{ old('before_close_body', $data['web_setting']['before_close_body'] ?? '') }}</x-dashboard.textarea-input>
+                    <x-dashboard.input-error class="mt-2" :messages="$errors->get('before_close_body')" />
+                </div>
                 <div class="mb-3">
                     <x-dashboard.input-label for="google_adsense" value="{{ __('Google Adsense') }}"></x-dashboard.input-label>
                     <x-dashboard.text-input name="google_adsense" type="text" value="{{ old('google_adsense', $data['web_setting']['google_adsense'] ?? '') }}" placeholder="Adsense Publisher ID eg: ca-pub-123456789"></x-dashboard.text-input>
