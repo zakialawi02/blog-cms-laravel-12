@@ -25,6 +25,7 @@
         <meta property="og:image" content="@yield('og_image', asset('assets/app_logo/' . ($data['web_setting']['favicon'] ?? 'favicon.png')))" />
 
         <meta name="robots" content="@yield('meta_robots', 'index,follow')">
+        <link href="{{ url()->current() }}" rel="canonical">
 
         <link type="image/png" href="{{ asset('assets/app_logo/' . ($data['web_setting']['favicon'] ?? 'favicon.png')) }}" rel="icon">
 
