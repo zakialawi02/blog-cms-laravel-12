@@ -11,15 +11,15 @@
 
                         <h5 class="text-dark dark:text-dark-light mt-5 text-xl font-bold">Follow Us:</h5>
                         <div class="text-dark dark:text-dark-light mt-4 flex gap-3 font-normal">
-                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_fb'] ?? '#' }}" target="_blank">
+                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_fb'] ?? '#' }}" target="_blank" rel="noopener noreferrer">
                                 <i class="ri-facebook-fill"></i>
                                 <span class="sr-only">Follow me on Facebook</span>
                             </a>
-                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_twitter'] ?? '#' }}" target="_blank">
+                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_twitter'] ?? '#' }}" target="_blank" rel="noopener noreferrer">
                                 <i class="ri-twitter-x-fill"></i>
                                 <span class="sr-only">Follow me on Twitter</span>
                             </a>
-                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_linkedin'] ?? '#' }}" target="_blank">
+                            <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_linkedin'] ?? '#' }}" target="_blank" rel="noopener noreferrer">
                                 <i class="ri-linkedin-box-fill"></i>
                                 <span class="sr-only">Follow me on LinkedIn</span>
                             </a>

@@ -49,7 +49,10 @@
         </div>
         <div class="flex items-center gap-3">
             <div class="text-xl font-medium md:hidden" id="hamburger">
-                <button id="ham-btn"><i class="ri-menu-line"></i></button>
+                <button id="ham-btn">
+                    <i class="ri-menu-line"></i>
+                    <span class="sr-only">Menu</span>
+                </button>
             </div>
             <div class="hover:text-accent dark:hover:text-accent search-btn text-xl font-medium md:hidden">
                 <button>
