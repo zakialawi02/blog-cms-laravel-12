@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AiController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
@@ -137,6 +136,9 @@ Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsle
 Route::get('/dashboard/pages/{id}/load-project', [PageController::class, 'loadProject'])->name('pages.loadproject');
 
 Route::get('/p/{page:slug}', [PageController::class, 'show'])->name('page.show');
+
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 
 
 require __DIR__ . '/auth.php';

@@ -47,6 +47,7 @@
                                 <tr>
                                     <th scope="col">{{ __('Date Time') }}</th>
                                     <th scope="col">{{ __('Article') }}</th>
+                                    <th scope="col">{{ __('OS') }}</th>
                                     <th scope="col">{{ __('Ip') }}</th>
                                     <th scope="col">{{ __('Location') }}</th>
                                 </tr>
@@ -227,6 +228,10 @@
                             url = url.replace(':slug', data.slug);
                             return `<a href="${url}" class="text-back-secondary hover:underline hover:text-back-secondary/70 dark:text-back-light dark:hover:text-back-light/70">${data.title}</a>`;
                         }
+                    },
+                    {
+                        data: 'operating_system',
+                        name: 'operating_system'
                     },
                     {
                         data: 'ip_address',

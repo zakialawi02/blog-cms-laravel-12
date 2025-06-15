@@ -9,6 +9,12 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    @if (session('error'))
+        <div class="text-error text-sm font-medium" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
     @if (env('GOOGLE_CLIENT_ID') && env('GOOGLE_CLIENT_SECRET') ?? false)
         <button class="shadow-2xs focus:outline-hidden dark:border-back-neutral-700 dark:bg-back-neutral-900 dark:hover:bg-back-neutral-800 dark:focus:bg-back-neutral-800 inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:bg-gray-50 disabled:pointer-events-none disabled:opacity-50" type="button">
             <svg class="h-auto w-4" width="46" height="47" viewBox="0 0 46 47" fill="none">
@@ -27,6 +33,8 @@
 
     <form class="space-y-3 md:space-y-4" method="POST" action="{{ route('register') }}">
         @csrf
+
+        <input class="d-none" name="_code" type="hidden" value="" tabindex="-1" autocomplete="off">
 
         <!-- Name -->
         <div>

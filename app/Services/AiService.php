@@ -19,7 +19,7 @@ class AiService
         $this->apiKey = env('GEMINI_API_KEY');
 
         if (empty($this->apiKey)) {
-            throw new Exception('GEMINI_API_KEY is not set in the .env file.');
+            Log::error('GEMINI_API_KEY is not set in the .env file.');
         }
     }
 
@@ -176,7 +176,7 @@ class AiService
             ## PRIMARY TASK ##
             1.  **Analyze the Topic:** First, analyze the topic from the '## TOPIC INPUT ##' section to identify the core subject, user intent, and main keywords.
             2.  **Generate Keywords:** Based on your analysis, generate a list of 5-10 relevant SEO keywords.
-            3.  **Write the Article:** Write a long, comprehensive article in English (700-2000 words) using the keywords you identified, following all content and formatting guidelines.
+            3.  **Write the Article:** Write a long, comprehensive article in English (800-1800 words) using the keywords you identified, following all content and formatting guidelines.
 
             ## CONTENT GUIDELINES ##
             1.  **Target Audience:**

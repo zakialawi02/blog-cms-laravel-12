@@ -9,7 +9,7 @@
                         </a>
                         <p class="text-muted dark:text-dark-muted max-w-xs text-base font-medium">Discover the latest stories, thoughts and inspiration | Zakialawi Personal Blog & web platform</p>
 
-                        <h3 class="text-dark dark:text-dark-light mt-5 text-xl font-bold">Follow Us:</h3>
+                        <h5 class="text-dark dark:text-dark-light mt-5 text-xl font-bold">Follow Us:</h5>
                         <div class="text-dark dark:text-dark-light mt-4 flex gap-3 font-normal">
                             <a class="hover:border-primary hover:bg-primary hover:text-light border-neutral dark:border-dark-muted flex h-10 w-10 items-center justify-center rounded-md border bg-transparent text-xl transition-all duration-500" href="{{ $data['web_setting']['link_fb'] ?? '#' }}" target="_blank">
                                 <i class="ri-facebook-fill"></i>
@@ -62,6 +62,7 @@
                                     <input class="dark:text-dark-light w-full border-0 bg-white px-3 py-3.5 text-base text-black outline-none ring-0 focus:ring-0 dark:bg-transparent" name="email" type="email" placeholder="Your Email Address">
                                     <button class="bg-secondary dark:bg-dark-primary hover:bg-primary dark:hover:bg-dark-secondary rounded px-3 py-1 font-semibold text-white transition-all duration-500" id="send-email-button" type="button">
                                         <i class="ri-send-plane-2-line"></i>
+                                        <span class="sr-only">Send Email</span>
                                     </button>
                                 </div>
                             </form>

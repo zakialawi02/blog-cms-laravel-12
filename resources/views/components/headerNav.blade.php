@@ -6,6 +6,7 @@
         <div class="absolute right-0 top-0 p-4">
             <button class="hover:text-primary dark:hover:text-primary text-2xl text-white" id="close-search-overlay" type="button">
                 <i class="ri-close-circle-line"></i>
+                <span class="sr-only">Close</span>
             </button>
         </div>
         <div class="absolute left-1/2 top-1/2 w-11/12 -translate-x-1/2 -translate-y-1/2 transform md:w-2/3 lg:w-1/2">
@@ -15,6 +16,7 @@
                         <input class="text-dark bg-light w-full border-0 px-3 py-3.5 text-base outline-none ring-0 focus:ring-0" id="search" name="search" type="search" value="" placeholder="Search">
                         <button class="text-light bg-secondary dark:bg-dark-primary hover:bg-primary dark:hover:bg-dark-secondary rounded px-3 py-2 font-semibold transition-all duration-500" type="submit">
                             <i class="ri-search-line"></i>
+                            <span class="sr-only">Search</span>
                         </button>
                     </div>
                 </form>
@@ -50,7 +52,10 @@
                 <button id="ham-btn"><i class="ri-menu-line"></i></button>
             </div>
             <div class="hover:text-accent dark:hover:text-accent search-btn text-xl font-medium md:hidden">
-                <button><i class="ri-search-line"></i></button>
+                <button>
+                    <i class="ri-search-line"></i>
+                    <span class="sr-only">Search</span>
+                </button>
             </div>
         </div>
         <div class="hidden max-h-[100px] max-w-[800px] overflow-hidden md:block" id="ads-header">
@@ -67,7 +72,10 @@
             @endforelse
         </nav>
         <div class="hover:text-accent dark:hover:text-accent search-btn hidden text-xl font-medium md:block">
-            <button><i class="ri-search-line"></i></button>
+            <button>
+                <i class="ri-search-line"></i>
+                <span class="sr-only">Search</span>
+            </button>
         </div>
     </div>
 </header>

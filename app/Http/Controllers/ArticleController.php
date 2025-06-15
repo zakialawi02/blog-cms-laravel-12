@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Category;
 use ipinfo\ipinfo\IPinfo;
+use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Services\ArticleService;
@@ -82,10 +83,14 @@ class ArticleController extends Controller
         $cacheKey = 'article-view:' . $article_id . ':' . $ip;
         $cacheDuration = 60 * 5; // Cache for xx minutes
         if (!Cache::has($cacheKey)) {
+            $agent = new Agent();
+            if ($agent->robot()) return;
             $dataIpVisitor = $this->getIpVisitor($ip);
             try {
                 DB::table('article_views')->insert([
                     'article_id' => $article_id,
+                    'operating_system' => $agent->platform() ?? NULL,
+                    'browser' => $agent->browser() ?? NULL,
                     'ip_address' => $ip,
                     'code' => array_key_exists('country', $dataIpVisitor) ? $dataIpVisitor['country'] : NULL,
                     'location' => array_key_exists('country_name', $dataIpVisitor) ? $dataIpVisitor['country_name'] : NULL,

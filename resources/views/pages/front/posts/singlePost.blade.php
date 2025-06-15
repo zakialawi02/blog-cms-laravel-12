@@ -69,7 +69,7 @@
 
                 <section id="comments">
                     <div class="mb-3">
-                        <h3 class="text-3xl font-bold">Comments</h3>
+                        <h4 class="text-3xl font-bold">Comments</h4>
                     </div>
 
                     <form class="mb-6" id="comment-form" action="#" method="POST">

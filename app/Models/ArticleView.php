@@ -16,6 +16,8 @@ class ArticleView extends Model
         'article_id',
         'viewed_at',
         'ip_address',
+        'operating_system',
+        'browser',
         'location',
         'code',
     ];

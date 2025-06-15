@@ -29,6 +29,11 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterRequest $request): RedirectResponse
     {
+        if (!empty($request->input('_code'))) {
+            // Alih-alih melempar exception, redirect kembali dengan pesan di session
+            return redirect()->back()
+                ->with('error', 'Something went wrong.');
+        }
         $user = User::create([
             'username' => $request->username,
             'name' => $request->name,

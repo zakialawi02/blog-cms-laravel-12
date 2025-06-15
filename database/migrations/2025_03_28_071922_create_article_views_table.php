@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('article_id')->constrained()->onDelete('cascade');
             $table->timestamp('viewed_at')->useCurrent();
+            $table->string('operating_system')->nullable();
+            $table->string('browser')->nullable();
             $table->string('ip_address')->nullable();
             $table->string('location')->nullable();
             $table->string('code')->nullable();
