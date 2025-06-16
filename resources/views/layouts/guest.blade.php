@@ -47,7 +47,7 @@
             <div class="mx-auto flex flex-col items-center justify-center px-6 py-8 md:min-h-screen lg:py-4">
                 <div class="mb-4 flex items-center text-xl font-semibold text-gray-900 dark:text-white">
                     <a href="/">
-                        <x-application-logo class="h-24 w-24 fill-current text-gray-500" />
+                        <x-application-logo class="h-auto max-h-12 w-24 fill-current text-gray-500" />
                     </a>
                 </div>
 

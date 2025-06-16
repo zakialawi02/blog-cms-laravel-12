@@ -2,7 +2,7 @@
 @section('meta_description', '')
 
 <x-app-layout>
-    <section class="mb-1 flex items-center justify-between p-1 text-xl md:px-4 md:pt-4">
+    <section class="mb-1 flex flex-col items-center p-1 text-xl md:flex-row md:justify-between md:px-4 md:pt-4">
         <h2>
             {{ __('Welcome') }}, {{ Auth::user()->name }}
         </h2>

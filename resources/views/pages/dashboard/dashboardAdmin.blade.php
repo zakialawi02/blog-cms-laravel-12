@@ -2,7 +2,7 @@
 @section('meta_description', '')
 
 <x-app-layout>
-    <section class="mb-1 flex items-center justify-between p-1 text-xl md:px-4 md:pt-4">
+    <section class="mb-1 flex flex-col items-center p-1 text-xl md:flex-row md:justify-between md:px-4 md:pt-4">
         <h2>
             {{ __('Welcome') }}, {{ Auth::user()->name }}
         </h2>
@@ -16,6 +16,7 @@
             </x-dashboard.primary-button>
         </div>
     </section>
+
     <section class="mb-2 p-1 md:px-4">
         <div class="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-3 lg:grid-cols-4">
             <x-card>
