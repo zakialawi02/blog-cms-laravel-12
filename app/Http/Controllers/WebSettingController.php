@@ -64,6 +64,7 @@ class WebSettingController extends Controller
                 'before_close_head' => ['nullable', 'string', new ValidScriptContentRule([
                     'script',
                     'noscript',
+                    'ins',
                     'style',
                     'meta',
                     'link',
@@ -71,6 +72,7 @@ class WebSettingController extends Controller
                 'before_close_body' => ['nullable', 'string',  new ValidScriptContentRule([
                     'script',
                     'noscript',
+                    'ins',
                     'style',
                     'meta',
                     'link',

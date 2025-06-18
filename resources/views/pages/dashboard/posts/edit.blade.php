@@ -291,7 +291,8 @@
                                 .css({
                                     width: "300px",
                                     maxHeight: "200px",
-                                    objectFit: "cover"
+                                    objectFit: "cover",
+                                    objectPosition: "center"
                                 });
 
                             $(".preview-cover").html(img);

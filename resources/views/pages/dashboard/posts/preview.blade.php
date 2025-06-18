@@ -128,4 +128,8 @@
         @vite('resources/css/ckeditor.css')
         <link href="{{ asset('assets/css/prism.css') }}" rel="stylesheet">
     @endpush
+
+    @push('javascript')
+        <script src="{{ asset('assets/js/prism.js') }}"></script>
+    @endpush
 </x-app-front-layout>

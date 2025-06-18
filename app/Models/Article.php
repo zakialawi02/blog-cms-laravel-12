@@ -14,6 +14,7 @@ class Article extends Model
 
     protected $fillable = [
         'id',
+        'type',
         'category_id',
         'user_id',
         'title',
@@ -23,8 +24,10 @@ class Article extends Model
         'cover',
         'status',
         'is_featured',
+        'meta_title',
+        'meta_desc',
+        'meta_keywords',
         'published_at',
-        'views',
     ];
 
     protected $casts = [

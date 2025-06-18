@@ -20,7 +20,7 @@ class HomeController extends Controller
             'title' => env('APP_NAME')
         ];
 
-        $sectionsContent = $this->sectionContentService->fetchSectionData();
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
         return view('pages.front.indexHome', compact('data', 'sectionsContent'));
     }

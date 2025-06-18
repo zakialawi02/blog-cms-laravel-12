@@ -65,7 +65,7 @@
         @endunless
     @endif
 
-    <div class="container grid grid-cols-1 gap-2 md:gap-4 lg:grid-cols-4">
+    <div class="container mb-10 grid grid-cols-1 gap-2 md:gap-4 lg:grid-cols-4">
         <div class="lg:col-span-3">
             <!-- SECTION 1 -->
             @if ($sectionsContent['home_section_1']['config']['is_visible'] == '1' ?? false)

@@ -130,7 +130,13 @@ class ArticleService
                 if (filter_var($article->cover, FILTER_VALIDATE_URL)) {
                     $article->cover = $article->cover;
                 } else {
-                    $article->cover = asset("storage/media/img/" . $article->cover);
+                    $coverPath = "storage/media/img/" . basename($article->cover);
+                    $article->cover = asset($coverPath);
+                    if (file_exists(public_path($coverPath))) {
+                        $article->cover = asset($coverPath);
+                    } else {
+                        $article->cover = asset("assets/img/image-placeholder.png");
+                    }
                 }
             } else {
                 $article->cover = asset("assets/img/image-placeholder.png");

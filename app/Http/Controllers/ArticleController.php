@@ -134,7 +134,7 @@ class ArticleController extends Controller
         $this->saveVisitor($article->id, $ipAddress);
 
         $article = $this->articleService->articlesMappingArray(collect([$article]))->first();
-        $sectionsContent = $this->sectionContentService->fetchSectionData();
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
         return view('pages.front.posts.singlePost', compact('article', 'sectionsContent'));
     }

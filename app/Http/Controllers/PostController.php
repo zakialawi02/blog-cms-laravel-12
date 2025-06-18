@@ -17,16 +17,19 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ArticleRequest;
 use App\Actions\DeletePostPermanently;
+use App\Services\SectionContentService;
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 
 class PostController extends Controller
 {
     protected $aiService;
+    protected $sectionContentService;
 
-    public function __construct(AiService $aiService)
+    public function __construct(AiService $aiService, SectionContentService $sectionContentService)
     {
         $this->aiService = $aiService;
+        $this->sectionContentService = $sectionContentService;
     }
 
     /**
@@ -170,8 +173,9 @@ class PostController extends Controller
         ];
 
         $article = Article::where('slug', $slug)->first();
+        $data['menu'] = $this->sectionContentService->getNavigationData();
 
-        return view('pages.dashboard.posts.preview', compact('data', 'article'));
+        return view('pages.dashboard.posts.preview', compact('data', 'article', 'data'));
     }
 
     /**
@@ -307,6 +311,7 @@ class PostController extends Controller
      */
     public function update(ArticleRequest $request, Article $post)
     {
+        // dd($request->all());
         try {
             // Cek apakah user memiliki izin untuk mengeksekusi
             if (! $post->isOwnedOrSuperadmin(Auth::user())) {

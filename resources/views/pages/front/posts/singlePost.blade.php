@@ -126,6 +126,7 @@
     @endpush
 
     @push('javascript')
+        <script src="{{ asset('assets/js/prism.js') }}"></script>
         <script>
             const query = new URLSearchParams(window.location.search);
             const source = query.get('source');

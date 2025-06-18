@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Models\Tag;
+use App\Models\Menu;
 use App\Models\Category;
 use App\Models\WebSetting;
 use App\Enums\LayoutSection;
 use App\Services\ArticleService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class SectionContentService
 {
@@ -30,7 +32,7 @@ class SectionContentService
      *               - data: \Illuminate\Support\Collection of \App\Models\Article
      *               - config: array of config values for the section
      */
-    public function fetchSectionData()
+    public function getSectionData(): array
     {
         $allSettings = WebSetting::getAllSettings();
         $sectionsContent = [];
@@ -49,7 +51,7 @@ class SectionContentService
 
                 // Only run the query to retrieve data if the section is visible
                 if ($isVisible) {
-                    $dataForSection = $this->articleService->articlesMappingArray($this->fetchLayoutSectionData($itemsKey, $total));
+                    $dataForSection = $this->articleService->articlesMappingArray($this->getLayoutSectionData($itemsKey, $total));
                 }
                 // Always add section information to $sectionsContent
                 // The view will use $config['is_visible'] to decide how to display it
@@ -69,7 +71,7 @@ class SectionContentService
      * Retrieves data for a section based on itemsKey and total items.
      * This method will make extensive use of your ArticleService.
      */
-    private function fetchLayoutSectionData(?string $itemsKey, int $total)
+    private function getLayoutSectionData(?string $itemsKey, int $total)
     {
         $parts = explode(':', $itemsKey, 2);
         $type = $parts[0];
@@ -118,7 +120,7 @@ class SectionContentService
                 return collect();
                 break;
             default:
-                Log::warning("Unknown itemsKey type in fetchLayoutSectionData: {$itemsKey}");
+                Log::warning("Unknown itemsKey type in getLayoutSectionData: {$itemsKey}");
                 return collect();
         }
 
@@ -130,5 +132,30 @@ class SectionContentService
         }
 
         return $articles ?? collect(); // Return the collection of articles or an empty collection
+    }
+
+    /**
+     * Retrieves navigation menu data from the cache or database.
+     *
+     * This method fetches navigation menus with their items and any child items,
+     * ordered by their sort order. The results are cached for 30 days to improve
+     * performance. The navigation menus are keyed by their location.
+     *
+     * @return array An associative array of navigation menus keyed by location.
+     */
+    public function getNavigationData(): array
+    {
+        $navMenus = Cache::remember('nav_menus', now()->addDays(30), function () {
+            return Menu::with([
+                'items' => function ($q) {
+                    $q->where('parent', null)->orderBy('sort')
+                        ->with(['children' => function ($c) {
+                            $c->orderBy('sort');
+                        }]);
+                }
+            ])->get()->keyBy('location')->toArray(); // keyBy location
+        });
+
+        return $navMenus;
     }
 }

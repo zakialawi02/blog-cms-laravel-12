@@ -305,3 +305,7 @@ button.btn {
 .editor_container__word-count .ck-word-count {
     @apply bg-gray-50 text-back-dark dark:text-back-dark-light dark:bg-back-dark-base-300;
 }
+
+pre {
+    @apply overflow-auto;
+}
