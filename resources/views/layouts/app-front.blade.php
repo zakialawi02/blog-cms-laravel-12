@@ -56,7 +56,7 @@
         @endif
 
         @if (filled($data['web_setting']['before_close_head'] ?? false))
-            {!! $data['web_setting']['before_close_head'] !!}
+            {!! $data['web_setting']['before_close_head'] ?? null !!}
         @endif
 
     </head>
@@ -78,7 +78,7 @@
         {{ $javascript ?? '' }}
 
         @if (filled($data['web_setting']['before_close_body'] ?? false))
-            {!! $data['web_setting']['before_close_body'] !!}
+            {!! $data['web_setting']['before_close_body'] ?? null !!}
         @endif
     </body>
 

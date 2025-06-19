@@ -1,6 +1,6 @@
 @section('title', $article->title ?? ($data['title'] ?? $data['web_setting']['web_name']))
 @section('meta_description', $article->excerpt ?? ($data['description'] ?? ''))
-@section('meta_keywords', $article->keywords ?? ($data['keywords'] ?? ''))
+@section('meta_keywords', $article->meta_title ?? ($data['keywords'] ?? ''))
 @section('og_title', $article->title . ' | ' . $data['web_setting']['web_name'] ?? ($data['title'] ?? $data['web_setting']['web_name']))
 @section('og_description', $article->excerpt ?? ($data['og_description'] ?? ''))
 @section('og_image', $article->cover ?? ($data['og_image'] ?? ''))

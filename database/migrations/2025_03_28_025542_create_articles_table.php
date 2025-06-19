@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('excerpt', 2048)->nullable();
             $table->string('cover')->nullable()->comment('cover thumbnail image');
             $table->string('cover_large')->nullable();
-            $table->enum('status', ['published', 'draft'])->default('draft');
+            $table->enum('status', ['published', 'draft', 'pending'])->default('draft');
             $table->boolean('is_featured')->default(0);
             $table->string("meta_title")->nullable();
             $table->text("meta_desc", 300)->nullable();
