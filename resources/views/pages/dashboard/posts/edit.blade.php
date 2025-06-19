@@ -7,7 +7,7 @@
         <form id="post-form" action="{{ route('admin.posts.update', $post->slug) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            <div class="align-center mb-4 flex items-center justify-between">
+            <div class="align-center mb-3 flex items-center justify-between">
                 <div class="">
                     <x-dashboard.neutral-button type="button" onclick="window.history.length > 1 ? history.back() : window.location='{{ route('admin.posts.index') }}'">
                         <i class="ri-arrow-left-line"></i>
@@ -18,7 +18,7 @@
                 <div class="space-x-0.5 md:space-x-1.5">
                     <x-dashboard.primary-button name="publish" type="submit">
                         <i class="ri-save-3-line"></i>
-                        <span>Save and Publish</span>
+                        <span>Update and {{ Auth::user()->role === 'writer' ? 'Save' : 'Publish' }}</span>
                     </x-dashboard.primary-button>
                     <x-dashboard.secondary-button name="unpublish" type="submit">
                         <i class="ri-draft-line"></i>
@@ -27,13 +27,14 @@
                 </div>
             </div>
 
+
             <div class="mb-3 border-b border-gray-200 dark:border-gray-700">
                 <ul class="-mb-px flex flex-wrap text-center text-sm font-medium" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
                     <li class="me-2" role="presentation">
-                        <button class="inline-block rounded-t-lg border-b-2 p-4" id="content-styled-tab" data-tabs-target="#styled-content" type="button" role="tab" aria-controls="content" aria-selected="false">content</button>
+                        <button class="inline-block rounded-t-lg border-b-2 p-4" id="content-styled-tab" data-tabs-target="#styled-content" type="button" role="tab" aria-controls="content" aria-selected="{{ $errors->get('title') || $errors->get('slug') ? 'true' : 'false' }}">content</button>
                     </li>
                     <li class="me-2" role="presentation">
-                        <button class="inline-block rounded-t-lg border-b-2 p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300" id="metadata-styled-tab" data-tabs-target="#styled-metadata" type="button" role="tab" aria-controls="metadata" aria-selected="false">metadata</button>
+                        <button class="inline-block rounded-t-lg border-b-2 p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300" id="metadata-styled-tab" data-tabs-target="#styled-metadata" type="button" role="tab" aria-controls="metadata" aria-selected="{{ $errors->get('meta_title') || $errors->get('meta_desc') || $errors->get('meta_keywords') ? 'true' : 'false' }}">metadata</button>
                     </li>
                 </ul>
             </div>

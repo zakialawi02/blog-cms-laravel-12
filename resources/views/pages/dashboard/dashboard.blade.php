@@ -241,11 +241,11 @@
                                                 <div class="flex items-center gap-2">
                                                     <div>
                                                         <i class="ri-article-line text-back-muted dark:text-back-dark-muted"></i>
-                                                        <span class="bg-${post.status === 'draft' ? 'back-secondary dark:bg-back-dark-secondary/50' : 'back-primary dark:bg-back-dark-primary/50'} rounded px-1 text-back-light">${post.status}</span>
+                                                        <span class="bg-${post.status === 'draft'|| post.status === 'pending' ? 'back-secondary dark:bg-back-dark-secondary/50' : 'back-primary dark:bg-back-dark-primary/50'} rounded px-1 text-back-light">${post.status}</span>
                                                     </div>
                                                     <div>
                                                         <i class="ri-time-line text-back-muted dark:text-back-dark-muted"></i>
-                                                        <span class="text-back-muted dark:text-back-dark-muted">${timeAgo(post.published_at)}</span>
+                                                        <span class="text-back-muted dark:text-back-dark-muted">${timeAgo(post.published_at ?? post.created_at)}</span>
                                                     </div>
                                                 </div>
                                             </div>

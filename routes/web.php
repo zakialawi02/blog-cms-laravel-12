@@ -79,6 +79,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
         Route::get('/posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit');
         Route::get('/posts/{post:slug}/preview', [PostController::class, 'preview'])->name('posts.preview');
+        Route::post('/posts/{post:slug}/approve', [PostController::class, 'approve'])->name('posts.approve');
         Route::put('/posts/{post:slug}', [PostController::class, 'update'])->name('posts.update');
         Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
         Route::delete('/posts/{post:slug}/permanent', [PostController::class, 'permanentlyDelete'])->name('posts.destroy-permanent');

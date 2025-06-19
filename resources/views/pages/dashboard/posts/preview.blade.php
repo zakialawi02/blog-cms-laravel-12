@@ -4,6 +4,38 @@
 @section('meta_robots', 'noindex, nofollow')
 
 <x-app-front-layout>
+    @if (($article->status == 'pending' && Auth::user()->role == 'admin') || Auth::user()->role == 'superadmin')
+        <div class="fixed bottom-0 left-0 z-50 w-full bg-gray-900 text-white shadow-lg transition-transform duration-300 ease-in-out" id="floating-bar">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex flex-col items-center justify-between gap-3 sm:flex-row">
+                    <p class="text-center text-sm sm:text-left sm:text-base">
+                        <span class="font-semibold">Preview Mode</span> <span class="hidden sm:inline">- Preview this post article before publishing.</span>
+                    </p>
+
+                    <div class="flex flex-shrink-0 items-center gap-2">
+                        <form method="POST" action="{{ route('admin.posts.approve', $article->slug) }}">
+                            @csrf
+
+                            <div class="flex items-center gap-2">
+                                <x-dashboard.input-label for="published_at" :value="__('Author')" />
+                                <select class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-32 rounded-lg border border-gray-300 bg-gray-50 px-2 py-1 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500" id="published_at" name="published_at" required {{ $article->status == 'pending' ? '' : 'disabled' }}>
+                                    <option value="published" {{ $article->status == 'published' ? 'selected' : '' }}>Published</option>
+                                    <option value="draft" {{ $article->status == 'draft' ? 'selected' : '' }}>Draft</option>
+                                    <option value="pending" {{ $article->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                </select>
+                                <x-dashboard.input-error class="mt-2" :messages="$errors->get('user_id')" />
+
+                                <button class="rounded-md bg-blue-600 px-3 py-1 text-sm font-medium transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800" type="submit">
+                                    Approve
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="relative">
         <div class="z-1000 pointer-events-none absolute inset-0 h-full w-full">
             <div class="px-62 top-50 -left-50 absolute origin-top-left -translate-y-2 translate-x-1/4 -rotate-45 transform bg-red-800 py-1 text-lg font-bold text-white shadow-md">Preview Mode</div>

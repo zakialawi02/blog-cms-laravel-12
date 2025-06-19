@@ -19,6 +19,7 @@
                                 <option value="all">All</option>
                                 <option value="published">Published</option>
                                 <option value="draft">Draft</option>
+                                <option value="pending">Pending</option>
                                 <option value="trash">Trash</option>
                             </select>
                         </div>
@@ -61,7 +62,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Title</th>
                             <th scope="col">Category</th>
-                            <th style="min-width: 150px max-width: 200px" scope="col">Tags</th>
+                            <th scope="col">Tags</th>
                             <th scope="col">Status</th>
                             <th scope="col">View</th>
                             <th scope="col">Author</th>
@@ -143,7 +144,10 @@
                         },
                         {
                             data: 'tags',
-                            name: 'tags'
+                            name: 'tags',
+                            render: function(data, type, row, meta) {
+                                return `<span class="line-clamp-1 truncate w-36">${data}</span>`;
+                            }
                         },
                         {
                             data: 'status',
@@ -163,8 +167,8 @@
                             name: 'author'
                         },
                         {
-                            data: 'updated_at',
-                            name: 'updated_at'
+                            data: 'created_at',
+                            name: 'created_at'
                         },
                         {
                             data: 'action',

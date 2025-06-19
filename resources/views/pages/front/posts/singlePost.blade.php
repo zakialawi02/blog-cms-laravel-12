@@ -24,10 +24,10 @@
                     </div>
                 </div>
                 <div class="mb-3" id="feature-image">
-                    <img class="max-h-[26rem] w-full rounded-lg object-cover object-center" src="{{ $article->cover }}" alt="Feature Image" loading="lazy">
+                    <img class="max-h-[26rem] w-full rounded-lg object-cover object-center" src="{{ $article->cover_large }}" alt="Feature Image" loading="lazy">
                 </div>
                 <div class="ck ck-content text-lg" id="post-content">
-
+                    {{-- @dd($article) --}}
                     {!! $article->content !!}
 
                 </div>

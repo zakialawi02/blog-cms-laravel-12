@@ -158,7 +158,7 @@
                     <div class="mb-2 flex items-center justify-between">
                         <div class="">
                             <h4 class="mb-0 text-xl">Recent Posts</h4>
-                            <p class="text-back-muted dark:text-back-dark-muted">{{ Auth::user()->username == 'superadmin' ? 'All recently created blog posts' : 'Your recently created blog posts' }}</p>
+                            <p class="text-back-muted dark:text-back-dark-muted">All recently created blog posts</p>
                         </div>
                         <x-dashboard.light-button href="{{ route('admin.posts.index') }}" :size="'small'">
                             View All
@@ -172,7 +172,7 @@
                     <div class="mb-2 flex items-center justify-between">
                         <div class="">
                             <h4 class="mb-0 text-xl">Recent Comments</h4>
-                            <p class="text-back-muted dark:text-back-dark-muted">Recent comments on your posts</p>
+                            <p class="text-back-muted dark:text-back-dark-muted">Recent comments activity</p>
                         </div>
                         <x-dashboard.light-button href="{{ route('admin.comments.index') }}" :size="'small'">
                             View All
@@ -192,7 +192,7 @@
                     <div class="mb-2 flex items-center justify-between">
                         <div class="">
                             <h4 class="mb-0 text-xl">Popular Posts</h4>
-                            <p class="text-back-muted dark:text-back-dark-muted">{{ Auth::user()->username == 'superadmin' ? 'All popular content post' : 'Your most viewed content post' }}</p>
+                            <p class="text-back-muted dark:text-back-dark-muted">All popular content post</p>
                         </div>
                         <x-dashboard.light-button href="{{ route('admin.posts.statsview') }}" :size="'small'">
                             Analytics
@@ -316,11 +316,11 @@
                                                 <div class="flex items-center gap-2">
                                                     <div>
                                                         <i class="ri-article-line text-back-muted dark:text-back-dark-muted"></i>
-                                                        <span class="bg-${post.status === 'draft' ? 'back-secondary dark:bg-back-dark-secondary/50' : 'back-primary dark:bg-back-dark-primary/50'} rounded px-1 text-back-light">${post.status}</span>
+                                                        <span class="bg-${post.status === 'draft' || post.status === 'pending' ? 'back-secondary dark:bg-back-dark-secondary/50' : 'back-primary dark:bg-back-dark-primary/50'} rounded px-1 text-back-light">${post.status}</span>
                                                     </div>
                                                     <div>
                                                         <i class="ri-time-line text-back-muted dark:text-back-dark-muted"></i>
-                                                        <span class="text-back-muted dark:text-back-dark-muted">${timeAgo(post.created_at)}</span>
+                                                        <span class="text-back-muted dark:text-back-dark-muted">${timeAgo(post.published_at ?? post.created_at)}</span>
                                                     </div>
                                                 </div>
                                             </div>

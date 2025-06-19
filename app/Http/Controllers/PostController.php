@@ -41,6 +41,7 @@ class PostController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
+            $privilegedRoles = ['superadmin', 'admin'];
             $query = Article::select('id', 'title', 'content', 'slug', 'excerpt', 'cover', 'category_id', 'published_at', 'status', 'created_at', 'updated_at', 'deleted_at', 'user_id')
                 ->with(['user', 'category', 'tags'])
                 ->withCount('articleViews as total_views')
@@ -63,7 +64,7 @@ class PostController extends Controller
                     }
                 })
                 // Filter by author
-                ->when(Auth::user()->role !== 'superadmin', function ($query) {
+                ->when(!in_array(Auth::user()->role, $privilegedRoles), function ($query) {
                     return $query->whereHas('user', function ($q) {
                         $q->where('username', Auth::user()->username);
                     });
@@ -84,7 +85,7 @@ class PostController extends Controller
                         <button type="button" class="btn bg-back-error permanentlyDeletePost" data-slug="' . $data->slug . '" title="Permanently Delete"><span class="ri-delete-bin-line"></span></button>';
                     } else {
                         $buttons = '';
-                        if ($data->status !== 'draft') {
+                        if ($data->status === 'published') {
                             $buttons .= '<a href="' . route('article.show', ['year' => $data->published_at->format('Y'), 'slug' => $data->slug]) . '" class="btn bg-back-info viewPost" target="_blank"><span class="ri-eye-line" title="View"></span></a>';
                         }
                         $buttons .= '<a href="' . route('admin.posts.preview', $data->slug) . '" class="btn bg-back-dark ml-1 previewPost" data-slug="' . $data->slug . '" title="Preview"><span class="ri-mac-line"></span></a>
@@ -239,8 +240,13 @@ class PostController extends Controller
 
             // Tentukan status publish/unpublish
             if ($request->has('publish')) {
-                $data['status'] = 'published';
-                $data['published_at'] = $data['published_at'] ?? now();
+                if (Auth::user()->role === 'superadmin' || Auth::user()->role === 'admin') {
+                    $data['status'] = 'published';
+                    $data['published_at'] = $data['published_at'] ?? now();
+                } else {
+                    $data['status'] = 'pending';
+                    $data['published_at'] = null;
+                }
             } elseif ($request->has('unpublish')) {
                 $data['status'] = 'draft';
                 $data['published_at'] = null;
@@ -249,11 +255,20 @@ class PostController extends Controller
             // Handle upload cover
             $uploader = new UploadCoverImage();
             $data['cover'] = $uploader->execute($request->file('cover'));
+            if (filled($data['cover'])) {
+                $data['cover_large'] = str_replace('_small.', '_large.', $data['cover']);
+            }
 
             // Buat artikel
             Article::create($data);
 
-            return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
+            $message = 'Post created successfully.';
+            if ($data['status'] == 'pending') {
+                $message .= ' Post is waiting for approval.';
+            } else {
+                $message .= ' Post is published.';
+            }
+            return redirect()->route('admin.posts.index')->with('success', $message);
         } catch (QueryException $e) {
             Log::error("Database error during article creation: " . $e->getMessage());
             return back()->withInput()->with('error', 'Failed to create post. Database error.');
@@ -278,7 +293,7 @@ class PostController extends Controller
     public function edit(Article $post)
     {
         // Cek apakah user memiliki izin untuk mengeksekusi
-        if (! $post->isOwnedOrSuperadmin(Auth::user())) {
+        if (! $post->isOwnedOrSuperadminOrAdmin(Auth::user())) {
             abort(403, 'You do not have permission to edit this post.');
         }
 
@@ -288,11 +303,29 @@ class PostController extends Controller
 
         $categories = Category::all();
         $tags = Tag::all();
-        $users = Auth::user()->role === 'superadmin'
+        $users = Auth::user()->role === 'superadmin' || Auth::user()->role === 'admin'
             ? User::orderBy('username', 'asc')->get()
             : [Auth::user()];
 
         return view('pages.dashboard.posts.edit', compact('data', 'post', 'categories',  'tags', 'users'));
+    }
+
+    /**
+     * Approve a pending post.
+     *
+     * This method sets the article's status to 'published' and saves the article.
+     * A redirect response with a success message is returned.
+     *
+     * @param  \App\Models\Article  $post
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function approve(Article $post, Request $request)
+    {
+        $post->status = $request->input('status') ?? 'published';
+        $post->published_at = now();
+        $post->save();
+
+        return redirect()->route('admin.posts.index')->with('success', 'Post approved successfully.');
     }
 
     /**
@@ -314,7 +347,7 @@ class PostController extends Controller
         // dd($request->all());
         try {
             // Cek apakah user memiliki izin untuk mengeksekusi
-            if (! $post->isOwnedOrSuperadmin(Auth::user())) {
+            if (! $post->isOwnedOrSuperadminOrAdmin(Auth::user())) {
                 abort(403, 'You do not have permission to edit this post.');
             }
 
@@ -323,8 +356,13 @@ class PostController extends Controller
 
             // Set status publish/unpublish
             if ($request->has('publish')) {
-                $data['status'] = 'published';
-                $data['published_at'] = $data['published_at'] ?? now();
+                if (Auth::user()->role === 'superadmin' || Auth::user()->role === 'admin') {
+                    $data['status'] = 'published';
+                    $data['published_at'] = $data['published_at'] ?? now();
+                } else {
+                    $data['status'] = 'pending';
+                    $data['published_at'] = null;
+                }
             } elseif ($request->has('unpublish')) {
                 $data['status'] = 'draft';
                 $data['published_at'] = null;
@@ -333,11 +371,20 @@ class PostController extends Controller
             // Handle upload cover
             $uploader = new UploadCoverImage();
             $data['cover'] = $uploader->execute($request->file('cover'), $post->cover);
+            if (filled($data['cover'])) {
+                $data['cover_large'] = str_replace('_small.', '_large.', $data['cover']);
+            }
 
             // Update post
             $post->update($data);
 
-            return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
+            $message = 'Post updated successfully.';
+            if ($data['status'] == 'pending') {
+                $message .= ' Post is waiting for approval.';
+            } else {
+                $message .= ' Post is published.';
+            }
+            return redirect()->route('admin.posts.index')->with('success', $message);
         } catch (QueryException $e) {
             Log::error("Database error during article update: " . $e->getMessage());
             return back()->withInput()->with('error', 'Failed to update post. Database error.');

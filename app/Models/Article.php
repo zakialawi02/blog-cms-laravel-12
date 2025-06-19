@@ -22,6 +22,7 @@ class Article extends Model
         'slug',
         'excerpt',
         'cover',
+        'cover_large',
         'status',
         'is_featured',
         'meta_title',
@@ -93,6 +94,33 @@ class Article extends Model
     public function isOwnedOrSuperadmin(User $user): bool
     {
         return $user->role === 'superadmin' || $user->id === $this->user_id;
+    }
+
+    public function isOwnedOrSuperadminOrAdmin(User $user): bool
+    {
+        return $user->role === 'superadmin' || $user->role === 'admin' || $user->id === $this->user_id;
+    }
+
+    /**
+     * Check if the article is owned by the user or if the user has the admin role.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function isOwnedOrAdmin(User $user): bool
+    {
+        return $user->role === 'admin' || $user->id === $this->user_id;
+    }
+
+    /**
+     * Check if the article is owned by the given user.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function isOwned(User $user): bool
+    {
+        return $user->id === $this->user_id;
     }
 
     // Scope

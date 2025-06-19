@@ -121,25 +121,21 @@ class ArticleService
      */
     public function articlesMappingArray($articles)
     {
+
         return $articles->map(function ($article) {
+            $placeholder = asset("assets/img/image-placeholder.png");
             if (empty($article->excerpt)) {
                 $article->excerpt = strip_tags($article->content);
             }
             $article->excerpt = Str::limit($article->excerpt, 160);
-            if (!empty($article->cover)) {
-                if (filter_var($article->cover, FILTER_VALIDATE_URL)) {
-                    $article->cover = $article->cover;
-                } else {
-                    $coverPath = "storage/media/img/" . basename($article->cover);
-                    $article->cover = asset($coverPath);
-                    if (file_exists(public_path($coverPath))) {
-                        $article->cover = asset($coverPath);
-                    } else {
-                        $article->cover = asset("assets/img/image-placeholder.png");
-                    }
-                }
-            } else {
-                $article->cover = asset("assets/img/image-placeholder.png");
+            if (!empty($article->cover) && !filter_var($article->cover, FILTER_VALIDATE_URL)) {
+                $coverPath = "storage/media/img/" . basename($article->cover);
+                $article->cover = file_exists(public_path($coverPath)) ? asset($coverPath) : $placeholder;
+            } elseif (empty($article->cover)) {
+                $article->cover = $placeholder;
+            }
+            if (empty($article->cover_large) || !filter_var($article->cover_large, FILTER_VALIDATE_URL)) {
+                $article->cover_large = $article->cover;
             }
             if (empty($article->category_id)) {
                 $article->category_id = "Uncategorized";

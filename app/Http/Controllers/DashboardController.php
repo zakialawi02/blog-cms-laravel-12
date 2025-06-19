@@ -37,13 +37,6 @@ class DashboardController extends Controller
                 $popularPostsQuery = Article::withCount('articleViews as total_views')
                     ->orderBy('total_views', 'desc')
                     ->limit(5);
-                if (Auth::user()->role !== 'superadmin') {
-                    $latestAllPostsQuery->where('user_id', $userId);
-                    $popularPostsQuery->where('user_id', $userId);
-                    $recentComments = Comment::whereHas('article', function ($query) use ($userId) {
-                        $query->where('user_id', $userId);
-                    })->with(['user', 'article'])->latest()->limit(5)->get();
-                }
                 $latestAllPosts = $latestAllPostsQuery->get();
                 $popularPosts = $popularPostsQuery->get();
                 $recentComments = Comment::with(['user', 'article'])->latest()->limit(5)->get();
