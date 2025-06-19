@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `excerpt` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `cover` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'cover thumbnail image',
   `cover_large` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` enum('published','draft') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
+  `status` enum('published','draft','pending') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
   `is_featured` tinyint(1) NOT NULL DEFAULT '0',
   `meta_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `meta_desc` text COLLATE utf8mb4_unicode_ci,
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `article_views` (
   CONSTRAINT `article_views_article_id_foreign` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table blog-cms-laravel.article_views: ~0 rows (approximately)
+-- Dumping data for table blog-cms-laravel.article_views: ~1 rows (approximately)
 
 -- Dumping structure for table blog-cms-laravel.cache
 CREATE TABLE IF NOT EXISTS `cache` (
@@ -115,11 +115,11 @@ CREATE TABLE IF NOT EXISTS `categories` (
 
 -- Dumping data for table blog-cms-laravel.categories: ~5 rows (approximately)
 INSERT INTO `categories` (`id`, `category`, `slug`, `created_at`, `updated_at`) VALUES
-	(1, 'Technology', 'technology', '2025-06-19 09:24:46', '2025-06-19 09:24:46'),
-	(2, 'Book', 'book', '2025-06-19 09:24:46', '2025-06-19 09:24:46'),
-	(3, 'Diary', 'diary', '2025-06-19 09:24:46', '2025-06-19 09:24:46'),
-	(4, 'Geo', 'geography-geodesy', '2025-06-19 09:24:46', '2025-06-19 09:24:46'),
-	(5, 'Tutorial', 'tutorial', '2025-06-19 09:24:46', '2025-06-19 09:24:46');
+	(1, 'Technology', 'technology', '2025-06-19 16:42:09', '2025-06-19 16:42:09'),
+	(2, 'Book', 'book', '2025-06-19 16:42:09', '2025-06-19 16:42:09'),
+	(3, 'Diary', 'diary', '2025-06-19 16:42:09', '2025-06-19 16:42:09'),
+	(4, 'Geo', 'geography-geodesy', '2025-06-19 16:42:09', '2025-06-19 16:42:09'),
+	(5, 'Tutorial', 'tutorial', '2025-06-19 16:42:09', '2025-06-19 16:42:09');
 
 -- Dumping structure for table blog-cms-laravel.comments
 CREATE TABLE IF NOT EXISTS `comments` (
@@ -246,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table blog-cms-laravel.migrations: ~17 rows (approximately)
+-- Dumping data for table blog-cms-laravel.migrations: ~0 rows (approximately)
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '0001_01_01_000000_create_users_table', 1),
 	(2, '0001_01_01_000001_create_cache_table', 1),
@@ -295,9 +295,9 @@ CREATE TABLE IF NOT EXISTS `pages` (
 
 -- Dumping data for table blog-cms-laravel.pages: ~3 rows (approximately)
 INSERT INTO `pages` (`id`, `title`, `description`, `content`, `slug`, `isFullWidth`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	('01jy3r2nd25x8f1nm6ew1s46f7', 'Contact', 'Page of Contact', '{ "assets": [], "styles": [ { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "display": "flex", "justify-content": "flex-start", "align-items": "stretch", "flex-wrap": "nowrap", "padding-top": "10px", "padding-right": "10px", "padding-bottom": "10px", "padding-left": "10px" } }, { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "flex-wrap": "wrap" }, "mediaText": "(max-width: 768px)", "atRuleType": "media" }, { "selectors": [{ "name": "gjs-cell", "private": 1 }], "style": { "min-height": "75px", "flex-grow": "1", "flex-basis": "100%" } } ], "pages": [ { "frames": [ { "component": { "type": "wrapper", "stylable": [ "background", "background-color", "background-image", "background-repeat", "background-attachment", "background-position", "background-size" ], "attributes": { "id": "iq2q" } }, "id": "QPjKujkHrih5afuF" } ], "id": "MtEglcsgDUdI00Ua" } ] }', 'contact', 1, '2025-06-19 09:24:49', '2025-06-19 09:24:49', NULL),
-	('01jy3r2nh9r95rvrykpppr9yt3', 'Privacy Policy', 'Page of Privacy', '{ "assets": [], "styles": [ { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "display": "flex", "justify-content": "flex-start", "align-items": "stretch", "flex-wrap": "nowrap", "padding-top": "10px", "padding-right": "10px", "padding-bottom": "10px", "padding-left": "10px" } }, { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "flex-wrap": "wrap" }, "mediaText": "(max-width: 768px)", "atRuleType": "media" }, { "selectors": [{ "name": "gjs-cell", "private": 1 }], "style": { "min-height": "75px", "flex-grow": "1", "flex-basis": "100%" } } ], "pages": [ { "frames": [ { "component": { "type": "wrapper", "stylable": [ "background", "background-color", "background-image", "background-repeat", "background-attachment", "background-position", "background-size" ], "attributes": { "id": "iq2q" } }, "id": "QPjKujkHrih5afuF" } ], "id": "MtEglcsgDUdI00Ua" } ] }', 'privacy', 1, '2025-06-19 09:24:49', '2025-06-19 09:24:49', NULL),
-	('01jy3r2nmxse0trs13edp5766x', 'Term of Conditions', 'Page of Terms', '{ "assets": [], "styles": [ { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "display": "flex", "justify-content": "flex-start", "align-items": "stretch", "flex-wrap": "nowrap", "padding-top": "10px", "padding-right": "10px", "padding-bottom": "10px", "padding-left": "10px" } }, { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "flex-wrap": "wrap" }, "mediaText": "(max-width: 768px)", "atRuleType": "media" }, { "selectors": [{ "name": "gjs-cell", "private": 1 }], "style": { "min-height": "75px", "flex-grow": "1", "flex-basis": "100%" } } ], "pages": [ { "frames": [ { "component": { "type": "wrapper", "stylable": [ "background", "background-color", "background-image", "background-repeat", "background-attachment", "background-position", "background-size" ], "attributes": { "id": "iq2q" } }, "id": "QPjKujkHrih5afuF" } ], "id": "MtEglcsgDUdI00Ua" } ] }', 'terms', 1, '2025-06-19 09:24:49', '2025-06-19 09:24:49', NULL);
+	('01jy4h3fmk6ds0ewgxwy22pmh1', 'Contact', 'Page of Contact', '{ "assets": [], "styles": [ { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "display": "flex", "justify-content": "flex-start", "align-items": "stretch", "flex-wrap": "nowrap", "padding-top": "10px", "padding-right": "10px", "padding-bottom": "10px", "padding-left": "10px" } }, { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "flex-wrap": "wrap" }, "mediaText": "(max-width: 768px)", "atRuleType": "media" }, { "selectors": [{ "name": "gjs-cell", "private": 1 }], "style": { "min-height": "75px", "flex-grow": "1", "flex-basis": "100%" } } ], "pages": [ { "frames": [ { "component": { "type": "wrapper", "stylable": [ "background", "background-color", "background-image", "background-repeat", "background-attachment", "background-position", "background-size" ], "attributes": { "id": "iq2q" } }, "id": "QPjKujkHrih5afuF" } ], "id": "MtEglcsgDUdI00Ua" } ] }', 'contact', 1, '2025-06-19 16:42:10', '2025-06-19 16:42:10', NULL),
+	('01jy4h3fp5tkqx1zps6q0b76n7', 'Privacy Policy', 'Page of Privacy', '{ "assets": [], "styles": [ { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "display": "flex", "justify-content": "flex-start", "align-items": "stretch", "flex-wrap": "nowrap", "padding-top": "10px", "padding-right": "10px", "padding-bottom": "10px", "padding-left": "10px" } }, { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "flex-wrap": "wrap" }, "mediaText": "(max-width: 768px)", "atRuleType": "media" }, { "selectors": [{ "name": "gjs-cell", "private": 1 }], "style": { "min-height": "75px", "flex-grow": "1", "flex-basis": "100%" } } ], "pages": [ { "frames": [ { "component": { "type": "wrapper", "stylable": [ "background", "background-color", "background-image", "background-repeat", "background-attachment", "background-position", "background-size" ], "attributes": { "id": "iq2q" } }, "id": "QPjKujkHrih5afuF" } ], "id": "MtEglcsgDUdI00Ua" } ] }', 'privacy', 1, '2025-06-19 16:42:10', '2025-06-19 16:42:10', NULL),
+	('01jy4h3fqexyffx01szpqtm8tx', 'Term of Conditions', 'Page of Terms', '{ "assets": [], "styles": [ { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "display": "flex", "justify-content": "flex-start", "align-items": "stretch", "flex-wrap": "nowrap", "padding-top": "10px", "padding-right": "10px", "padding-bottom": "10px", "padding-left": "10px" } }, { "selectors": [{ "name": "gjs-row", "private": 1 }], "style": { "flex-wrap": "wrap" }, "mediaText": "(max-width: 768px)", "atRuleType": "media" }, { "selectors": [{ "name": "gjs-cell", "private": 1 }], "style": { "min-height": "75px", "flex-grow": "1", "flex-basis": "100%" } } ], "pages": [ { "frames": [ { "component": { "type": "wrapper", "stylable": [ "background", "background-color", "background-image", "background-repeat", "background-attachment", "background-position", "background-size" ], "attributes": { "id": "iq2q" } }, "id": "QPjKujkHrih5afuF" } ], "id": "MtEglcsgDUdI00Ua" } ] }', 'terms', 1, '2025-06-19 16:42:10', '2025-06-19 16:42:10', NULL);
 
 -- Dumping structure for table blog-cms-laravel.password_reset_tokens
 CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
@@ -395,10 +395,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Dumping data for table blog-cms-laravel.users: ~4 rows (approximately)
 INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `remember_token`, `profile_photo_path`, `role`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	('02e5d95a-18d4-4dcc-bcc7-005cac5707c2', 'Writer User', 'writer', 'writer@mail.com', '2025-06-19 09:24:46', '$2y$12$Em9/kyJLS8jpJC4YFUZdL.s.0/IAjImrMETVo0.xYknWfSgZQ/UDq', NULL, '/assets/img/profile/writer.png', 'writer', '2025-06-19 09:24:46', '2025-06-19 09:24:46', NULL),
-	('0e471f88-6f0b-4c7d-a1a1-e70d1b4bf31f', 'Regular User', 'user', 'user@mail.com', '2025-06-19 09:24:46', '$2y$12$z1IG86RNlYOY57YDA7aLkumPvORO5QjQHopTIZ2hXKN/tQoBDURhS', NULL, '/assets/img/profile/user.png', 'user', '2025-06-19 09:24:46', '2025-06-19 09:24:46', NULL),
-	('7408268a-5d78-407d-97fc-a6dad6703036', 'Admin User', 'admin', 'admin@mail.com', '2025-06-19 09:24:46', '$2y$12$YL0wjUfbaSPdnMxzhhK23uufANEZmOUnqijngBxWRNsL.xlM3sQ3K', NULL, '/assets/img/profile/admin.png', 'admin', '2025-06-19 09:24:46', '2025-06-19 09:24:46', NULL),
-	('fcd09914-388c-41c1-b83c-84a18c6d5fdb', 'SuperAdmin User', 'superadmin', 'superadmin@mail.com', '2025-06-19 09:24:45', '$2y$12$DJufhOqAyrF8o0klklI8jO6TTi9cJ16rd4GOKSFjbRgK6FIy72ajS', NULL, '/assets/img/profile/admin.png', 'superadmin', '2025-06-19 09:24:45', '2025-06-19 09:24:45', NULL);
+	('2a5c5e83-c6c8-4e51-9b9b-0d2ae166545d', 'Writer User', 'writer', 'writer@mail.com', '2025-06-19 16:42:08', '$2y$12$R89U8q1wKUliBR7w1vCP9uxec2lnzt.fBZlgx/V0Bx6G/YC2k3ROO', NULL, '/assets/img/profile/writer.png', 'writer', '2025-06-19 16:42:08', '2025-06-19 16:42:08', NULL),
+	('2b041bce-bcd3-4506-a8ec-d50a9fa899fb', 'SuperAdmin User', 'superadmin', 'superadmin@mail.com', '2025-06-19 16:42:08', '$2y$12$Az96.kbOGvrXZJrF64hgtOw5GIanIBjJjRgoH6QTj6yzqfZqLwjpq', NULL, '/assets/img/profile/admin.png', 'superadmin', '2025-06-19 16:42:08', '2025-06-19 16:42:08', NULL),
+	('6b191f0f-9e75-46fb-b336-221b165b552b', 'Regular User', 'user', 'user@mail.com', '2025-06-19 16:42:08', '$2y$12$H8KjL9b7CjuaI3VImCitM.fcjPxH3GfxfaMl5S7gsP9ny4aZwTFYa', NULL, '/assets/img/profile/user.png', 'user', '2025-06-19 16:42:08', '2025-06-19 16:42:08', NULL),
+	('8a114b44-b57a-4b73-a8e0-4ae985cf6799', 'Admin User', 'admin', 'admin@mail.com', '2025-06-19 16:42:08', '$2y$12$NvBqhrtodlwSNjcjUznPgeROXYtDpBgYlNKqgjtKqEdvaPvM0ezEu', NULL, '/assets/img/profile/admin.png', 'admin', '2025-06-19 16:42:08', '2025-06-19 16:42:08', NULL);
 
 -- Dumping structure for table blog-cms-laravel.web_settings
 CREATE TABLE IF NOT EXISTS `web_settings` (
@@ -410,46 +410,46 @@ CREATE TABLE IF NOT EXISTS `web_settings` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `web_settings_key_unique` (`key`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table blog-cms-laravel.web_settings: ~36 rows (approximately)
 INSERT INTO `web_settings` (`id`, `key`, `value`, `type`, `created_at`, `updated_at`) VALUES
-	(1, 'web_name', 'My Blog', 'string', '2025-06-19 09:24:39', '2025-06-19 09:24:39'),
-	(2, 'web_name_variant', '3', 'string', '2025-06-19 09:24:39', '2025-06-19 09:24:39'),
-	(3, 'tagline', 'My Blog Tagline Here', 'string', '2025-06-19 09:24:39', '2025-06-19 09:24:39'),
-	(4, 'description', 'My Blog Description Here for SEO', 'string', '2025-06-19 09:24:39', '2025-06-19 09:24:39'),
-	(5, 'keywords', 'My Blog, keywords, Laravel, blog, zakialawi, zakialawi.my.id, zakialawi.com', 'string', '2025-06-19 09:24:39', '2025-06-19 09:24:39'),
-	(6, 'app_logo', 'app_logo.png', 'string', '2025-06-19 09:24:39', '2025-06-19 09:24:39'),
-	(7, 'favicon', 'favicon.png', 'string', '2025-06-19 09:24:40', '2025-06-19 09:24:40'),
-	(8, 'email', 'hallo@zakialawi.my.id', 'string', '2025-06-19 09:24:40', '2025-06-19 09:24:40'),
-	(9, 'link_fb', NULL, 'string', '2025-06-19 09:24:40', '2025-06-19 09:24:40'),
-	(10, 'link_tiktok', NULL, 'string', '2025-06-19 09:24:40', '2025-06-19 09:24:40'),
-	(11, 'link_ig', NULL, 'string', '2025-06-19 09:24:40', '2025-06-19 09:24:40'),
-	(12, 'link_twitter', NULL, 'string', '2025-06-19 09:24:40', '2025-06-19 09:24:40'),
-	(13, 'link_youtube', NULL, 'string', '2025-06-19 09:24:40', '2025-06-19 09:24:40'),
-	(14, 'link_linkedin', NULL, 'string', '2025-06-19 09:24:41', '2025-06-19 09:24:41'),
-	(15, 'link_github', NULL, 'string', '2025-06-19 09:24:41', '2025-06-19 09:24:41'),
-	(16, 'can_join_contributor', '1', 'boolean', '2025-06-19 09:24:41', '2025-06-19 09:24:41'),
-	(17, 'google_adsense', NULL, 'string', '2025-06-19 09:24:41', '2025-06-19 09:24:41'),
-	(18, 'google_analytics', NULL, 'string', '2025-06-19 09:24:41', '2025-06-19 09:24:41'),
-	(19, 'home_feature_section', '{"label":"Featured Posts","is_visible":true,"total":6,"items":"random-posts"}', 'json', '2025-06-19 09:24:41', '2025-06-19 09:24:41'),
-	(20, 'ads_featured', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 09:24:42', '2025-06-19 09:24:42'),
-	(21, 'home_section_1', '{"label":"Recent Posts","is_visible":true,"total":6,"items":"recent-posts"}', 'json', '2025-06-19 09:24:42', '2025-06-19 09:24:42'),
-	(22, 'home_section_2', '{"label":"Default label","is_visible":false,"total":"6","items":""}', 'json', '2025-06-19 09:24:42', '2025-06-19 09:24:42'),
-	(23, 'home_section_3', '{"label":"Default label","is_visible":false,"total":"3","items":""}', 'json', '2025-06-19 09:24:42', '2025-06-19 09:24:42'),
-	(24, 'home_section_4', '{"label":"Default label","is_visible":false,"total":"3","items":""}', 'json', '2025-06-19 09:24:42', '2025-06-19 09:24:42'),
-	(25, 'home_section_5', '{"label":"Default label","is_visible":false,"total":"3","items":""}', 'json', '2025-06-19 09:24:42', '2025-06-19 09:24:42'),
-	(26, 'home_sidebar_1', '{"label":"Popular Posts","is_visible":true,"total":4,"items":"popular-posts"}', 'json', '2025-06-19 09:24:43', '2025-06-19 09:24:43'),
-	(27, 'home_sidebar_2', '{"label":"Tags","is_visible":true,"total":10,"items":"all-tags-widget"}', 'json', '2025-06-19 09:24:43', '2025-06-19 09:24:43'),
-	(28, 'home_sidebar_3', '{"label":"Default label","is_visible":false,"total":"5","items":""}', 'json', '2025-06-19 09:24:43', '2025-06-19 09:24:43'),
-	(29, 'home_sidebar_4', '{"label":"Default label","is_visible":false,"total":"5","items":""}', 'json', '2025-06-19 09:24:43', '2025-06-19 09:24:43'),
-	(30, 'ads_sidebar_1', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 09:24:43', '2025-06-19 09:24:43'),
-	(31, 'ads_sidebar_2', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 09:24:43', '2025-06-19 09:24:43'),
-	(32, 'ads_bottom_1', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 09:24:43', '2025-06-19 09:24:43'),
-	(33, 'home_bottom_section_1', '{"label":"You Missed","is_visible":true,"total":4,"items":"random-posts"}', 'json', '2025-06-19 09:24:44', '2025-06-19 09:24:44'),
-	(34, 'ads_bottom_2', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 09:24:45', '2025-06-19 09:24:45'),
-	(35, 'before_close_head', NULL, 'string', '2025-06-19 09:24:45', '2025-06-19 09:24:45'),
-	(36, 'before_close_body', NULL, 'string', '2025-06-19 09:24:45', '2025-06-19 09:24:45');
+	(1, 'web_name', 'My Blog', 'string', '2025-06-19 16:42:01', '2025-06-19 16:42:01'),
+	(2, 'web_name_variant', '3', 'string', '2025-06-19 16:42:01', '2025-06-19 16:42:01'),
+	(3, 'tagline', 'My Blog Tagline Here', 'string', '2025-06-19 16:42:02', '2025-06-19 16:42:02'),
+	(4, 'description', 'My Blog Description Here for SEO', 'string', '2025-06-19 16:42:02', '2025-06-19 16:42:02'),
+	(5, 'keywords', 'My Blog, keywords, Laravel, blog, zakialawi, zakialawi.my.id, zakialawi.com', 'string', '2025-06-19 16:42:02', '2025-06-19 16:42:02'),
+	(6, 'app_logo', 'app_logo.png', 'string', '2025-06-19 16:42:02', '2025-06-19 16:42:02'),
+	(7, 'favicon', 'favicon.png', 'string', '2025-06-19 16:42:02', '2025-06-19 16:42:02'),
+	(8, 'email', 'hallo@zakialawi.my.id', 'string', '2025-06-19 16:42:02', '2025-06-19 16:42:02'),
+	(9, 'link_fb', NULL, 'string', '2025-06-19 16:42:03', '2025-06-19 16:42:03'),
+	(10, 'link_tiktok', NULL, 'string', '2025-06-19 16:42:03', '2025-06-19 16:42:03'),
+	(11, 'link_ig', NULL, 'string', '2025-06-19 16:42:03', '2025-06-19 16:42:03'),
+	(12, 'link_twitter', NULL, 'string', '2025-06-19 16:42:03', '2025-06-19 16:42:03'),
+	(13, 'link_youtube', NULL, 'string', '2025-06-19 16:42:03', '2025-06-19 16:42:03'),
+	(14, 'link_linkedin', NULL, 'string', '2025-06-19 16:42:03', '2025-06-19 16:42:03'),
+	(15, 'link_github', NULL, 'string', '2025-06-19 16:42:03', '2025-06-19 16:42:03'),
+	(16, 'can_join_contributor', '1', 'boolean', '2025-06-19 16:42:04', '2025-06-19 16:42:04'),
+	(17, 'google_adsense', NULL, 'string', '2025-06-19 16:42:04', '2025-06-19 16:42:04'),
+	(18, 'google_analytics', NULL, 'string', '2025-06-19 16:42:04', '2025-06-19 16:42:04'),
+	(19, 'home_feature_section', '{"label":"Featured Posts","is_visible":true,"total":6,"items":"random-posts"}', 'json', '2025-06-19 16:42:04', '2025-06-19 16:42:04'),
+	(20, 'ads_featured', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 16:42:04', '2025-06-19 16:42:04'),
+	(21, 'home_section_1', '{"label":"Recent Posts","is_visible":true,"total":6,"items":"recent-posts"}', 'json', '2025-06-19 16:42:04', '2025-06-19 16:42:04'),
+	(22, 'home_section_2', '{"label":"Default label","is_visible":false,"total":"6","items":""}', 'json', '2025-06-19 16:42:04', '2025-06-19 16:42:04'),
+	(23, 'home_section_3', '{"label":"Default label","is_visible":false,"total":"3","items":""}', 'json', '2025-06-19 16:42:05', '2025-06-19 16:42:05'),
+	(24, 'home_section_4', '{"label":"Default label","is_visible":false,"total":"3","items":""}', 'json', '2025-06-19 16:42:05', '2025-06-19 16:42:05'),
+	(25, 'home_section_5', '{"label":"Default label","is_visible":false,"total":"3","items":""}', 'json', '2025-06-19 16:42:05', '2025-06-19 16:42:05'),
+	(26, 'home_sidebar_1', '{"label":"Popular Posts","is_visible":true,"total":4,"items":"popular-posts"}', 'json', '2025-06-19 16:42:05', '2025-06-19 16:42:05'),
+	(27, 'home_sidebar_2', '{"label":"Tags","is_visible":true,"total":10,"items":"all-tags-widget"}', 'json', '2025-06-19 16:42:05', '2025-06-19 16:42:05'),
+	(28, 'home_sidebar_3', '{"label":"Default label","is_visible":false,"total":"5","items":""}', 'json', '2025-06-19 16:42:05', '2025-06-19 16:42:05'),
+	(29, 'home_sidebar_4', '{"label":"Default label","is_visible":false,"total":"5","items":""}', 'json', '2025-06-19 16:42:05', '2025-06-19 16:42:05'),
+	(30, 'ads_sidebar_1', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 16:42:06', '2025-06-19 16:42:06'),
+	(31, 'ads_sidebar_2', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 16:42:06', '2025-06-19 16:42:06'),
+	(32, 'ads_bottom_1', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 16:42:06', '2025-06-19 16:42:06'),
+	(33, 'home_bottom_section_1', '{"label":"You Missed","is_visible":true,"total":4,"items":"random-posts"}', 'json', '2025-06-19 16:42:06', '2025-06-19 16:42:06'),
+	(34, 'ads_bottom_2', '{"label":"","is_visible":false,"total":null,"items":"js-script"}', 'json', '2025-06-19 16:42:06', '2025-06-19 16:42:06'),
+	(35, 'before_close_head', NULL, 'string', '2025-06-19 16:42:06', '2025-06-19 16:42:06'),
+	(36, 'before_close_body', NULL, 'string', '2025-06-19 16:42:07', '2025-06-19 16:42:07');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
