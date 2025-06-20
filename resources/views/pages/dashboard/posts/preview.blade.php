@@ -1,6 +1,9 @@
 @section('title', $article->title ?? ($data['title'] ?? $data['web_setting']['web_name']))
-@section('meta_description', $article->excerpt ?? ($data['description'] ?? ''))
-@section('meta_keywords', $article->keywords ?? ($data['keywords'] ?? ''))
+@section('meta_description', $article->meta_desc ?? $article->excerpt)
+@section('meta_keywords', $article->meta_keywords)
+@section('og_title', $article->meta_title ?? $article->title . ' | ' . $data['web_setting']['web_name'])
+@section('og_description', $article->excerpt)
+@section('og_image', $article->cover)
 @section('meta_robots', 'noindex, nofollow')
 
 <x-app-front-layout>

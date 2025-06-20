@@ -18,7 +18,7 @@
         <meta name="description" content="@yield('meta_description', $data['web_setting']['description'] ?? '')">
         <meta name="author" content="@yield('meta_author', 'Zaki Alawi')">
         <meta name="keywords" content="@yield('meta_keywords', $data['web_setting']['keywords'] ?? 'Zaki Alawi, Blog')">
-        <meta property="og:title" content="@yield('og_title', $data['web_setting']['web_name'] ?? config('app.name')) | {{ $data['web_setting']['web_name'] ?? config('app.name') }}" />
+        <meta property="og:title" content="@yield('og_title', $page->title . ' | ' . $data['web_setting']['web_name'] ?? config('app.name'))" />
         <meta property="og:type" content="@yield('og_type', 'website')" />
         <meta property="og:url" content="@yield('og_url', url()->current())" />
         <meta property="og:description" content="@yield('og_description', $data['web_setting']['description'] ?? config('app.name'))" />
@@ -121,7 +121,7 @@
 
             {{-- @dd($page) --}}
 
-            <div id="gjs"></div>
+            <div class="dark:invert" id="gjs"></div>
             <div id="gjscss"></div>
 
             @if ($page->isFullWidth == 1)

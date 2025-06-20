@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
 use App\Models\Article;
 use App\Models\Comment;
-use App\Models\Category;
 use ipinfo\ipinfo\IPinfo;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;

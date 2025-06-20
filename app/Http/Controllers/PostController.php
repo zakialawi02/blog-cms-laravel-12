@@ -11,6 +11,7 @@ use App\Services\AiService;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Services\ArticleService;
 use App\Actions\UploadCoverImage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -24,11 +25,13 @@ use Yajra\DataTables\Facades\DataTables;
 class PostController extends Controller
 {
     protected $aiService;
+    protected $articleService;
     protected $sectionContentService;
 
-    public function __construct(AiService $aiService, SectionContentService $sectionContentService)
+    public function __construct(AiService $aiService, ArticleService $articleService, SectionContentService $sectionContentService)
     {
         $this->aiService = $aiService;
+        $this->articleService = $articleService;
         $this->sectionContentService = $sectionContentService;
     }
 
@@ -173,7 +176,7 @@ class PostController extends Controller
             'title' => 'Preview Post',
         ];
 
-        $article = Article::where('slug', $slug)->first();
+        $article = $this->articleService->articlesMappingArray(collect(Article::where('slug', $slug)->get()))->first();
         $data['menu'] = $this->sectionContentService->getNavigationData();
 
         return view('pages.dashboard.posts.preview', compact('data', 'article', 'data'));
