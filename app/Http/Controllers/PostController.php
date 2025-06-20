@@ -325,7 +325,7 @@ class PostController extends Controller
         $post->published_at = now();
         $post->save();
 
-        return redirect()->route('admin.posts.index')->with('success', 'Post approved successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
 
     /**

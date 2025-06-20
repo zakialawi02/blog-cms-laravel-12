@@ -4,7 +4,7 @@
 @section('meta_robots', 'noindex, nofollow')
 
 <x-app-front-layout>
-    @if (($article->status == 'pending' && Auth::user()->role == 'admin') || Auth::user()->role == 'superadmin')
+    @if ($article->status == 'pending' && (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin'))
         <div class="fixed bottom-0 left-0 z-50 w-full bg-gray-900 text-white shadow-lg transition-transform duration-300 ease-in-out" id="floating-bar">
             <div class="container mx-auto px-4 py-3">
                 <div class="flex flex-col items-center justify-between gap-3 sm:flex-row">
@@ -17,8 +17,8 @@
                             @csrf
 
                             <div class="flex items-center gap-2">
-                                <x-dashboard.input-label for="published_at" :value="__('Author')" />
-                                <select class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-32 rounded-lg border border-gray-300 bg-gray-50 px-2 py-1 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500" id="published_at" name="published_at" required {{ $article->status == 'pending' ? '' : 'disabled' }}>
+                                <x-dashboard.input-label for="status" :value="__('Author')" />
+                                <select class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-32 rounded-lg border border-gray-300 bg-gray-50 px-2 py-1 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500" id="status" name="status" required {{ $article->status == 'pending' ? '' : 'disabled' }}>
                                     <option value="published" {{ $article->status == 'published' ? 'selected' : '' }}>Published</option>
                                     <option value="draft" {{ $article->status == 'draft' ? 'selected' : '' }}>Draft</option>
                                     <option value="pending" {{ $article->status == 'pending' ? 'selected' : '' }}>Pending</option>
