@@ -45,7 +45,7 @@ class PostController extends Controller
     {
         if ($request->ajax()) {
             $privilegedRoles = ['superadmin', 'admin'];
-            $query = Article::select('id', 'title', 'content', 'slug', 'excerpt', 'cover', 'category_id', 'published_at', 'status', 'created_at', 'updated_at', 'deleted_at', 'user_id')
+            $query = Article::select('id', 'title', 'slug', 'excerpt', 'cover', 'category_id', 'published_at', 'status', 'created_at', 'updated_at', 'deleted_at', 'user_id')
                 ->with(['user', 'category', 'tags'])
                 ->withCount('articleViews as total_views')
                 // Filter by status
@@ -196,9 +196,10 @@ class PostController extends Controller
         ]);
 
         $prompt = $request->input('prompt');
+        $exsistData = $request->input('exsistData');
         $type = $request->input('type');
 
-        $response = $this->aiService->generateArticle($prompt);
+        $response = $this->aiService->generateArticle($prompt, $exsistData);
 
         return $response;
     }

@@ -7,7 +7,7 @@
         <form class="" id="post-form" action="{{ route('admin.posts.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('post')
-            <div class="align-center mb-4 flex items-center justify-between">
+            <div class="align-center mb-3 flex items-center justify-between gap-3">
                 <div class="">
                     <x-dashboard.neutral-button type="button" onclick="window.history.length > 1 ? history.back() : window.location='{{ route('admin.posts.index') }}'">
                         <i class="ri-arrow-left-line"></i>
@@ -15,7 +15,7 @@
                     </x-dashboard.neutral-button>
                 </div>
 
-                <div class="space-x-0.5 md:space-x-1.5">
+                <div class="flex flex-wrap justify-end gap-1 space-x-0.5 md:space-x-1.5">
                     <x-dashboard.primary-button name="publish" type="submit">
                         <i class="ri-save-3-line"></i>
                         <span>Save and Publish</span>

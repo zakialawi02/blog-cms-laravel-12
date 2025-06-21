@@ -306,6 +306,27 @@ button.btn {
     @apply bg-gray-50 text-back-dark dark:text-back-dark-light dark:bg-back-dark-base-300;
 }
 
+#post-content a {
+    color: #2e62af;
+    text-decoration: none;
+    line-height: 1;
+    background: linear-gradient(0deg, #548adc, #548adc) no-repeat right bottom /
+        0 var(--bg-h);
+    transition: background-size 350ms;
+    --bg-h: 100%;
+    padding-bottom: 2px;
+    --bg-h: 2px;
+}
+
+#post-content a:where(:hover, :focus-visible) {
+    background-size: 100% var(--bg-h);
+    background-position-x: left;
+}
+
+#post-content a:hover {
+    color: #548adc;
+}
+
 pre {
     @apply overflow-auto;
 }

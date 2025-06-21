@@ -19,11 +19,9 @@
 
         <div class="rounded-b-lg border-t bg-white p-4">
             <form class="relative" id="ai-form">
-                <input class="focus:ring-back-primary dark:focus:ring-back-dark-primary w-full rounded-full border bg-white py-2 pl-4 pr-12 text-gray-900 focus:outline-none focus:ring-1" id="prompt-input" type="text" placeholder="Write article topics..." required>
+                <x-dashboard.textarea-input class="pr-8" id="prompt-input" name="prompt" rows="2" placeholder="Write article topics..."></x-dashboard.textarea-input>
                 <button class="text-back-primary dark:text-back-primary hover:text-back-secondary dark:hover:text-back-secondary absolute inset-y-0 right-0 flex h-full w-12 items-center justify-center" type="submit">
-                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                    </svg>
+                    <i class="ri-send-plane-2-fill h-8 w-8"></i>
                 </button>
             </form>
         </div>
@@ -60,7 +58,7 @@
             const addMessageToChat = (message, sender, fullContent = '', buttonType = '') => {
                 const messageWrapper = document.createElement('div');
                 const messageBubble = document.createElement('div');
-                messageBubble.classList.add('leading-1.5', 'p-3', 'w-full', 'text-sm', 'font-normal');
+                messageBubble.classList.add('leading-3.5', 'p-3', 'w-full', 'text-sm', 'font-normal');
 
                 if (sender === 'user') {
                     messageWrapper.classList.add('flex', 'justify-end', 'mb-4');
@@ -113,12 +111,26 @@
                 const prompt = promptInput.value.trim();
                 if (!prompt) return;
 
+                const exsistData = window.editorInstance.getData();
+                console.log(exsistData);
+
                 addMessageToChat(prompt, 'user');
                 promptInput.value = '';
                 showLoadingIndicator();
 
                 try {
-                    const response = await fetch(`/dashboard/posts/generateAiContent?prompt=${encodeURIComponent(prompt)}&type=text`);
+                    const response = await fetch(`/dashboard/posts/generateAiContent`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            _token: "{{ csrf_token() }}",
+                            prompt: prompt,
+                            type: 'text',
+                            exsistData: exsistData,
+                        }),
+                    });
                     removeLoadingIndicator();
 
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -136,7 +148,7 @@
                         <h3 class="font-semibold mb-2 text-base">${title}</h3>
                         <div class="prose prose-sm max-w-none">${mainContent}</div>`;
 
-                        // **MODIFICATION: Create a separate bubble for keywords for clarity**
+                        // Create a separate bubble for keywords for clarity
                         const aiKeywordsResponseForBubble = `
                         <p class="text-xs text-gray-500 break-all">Keywords: ${keywords}</p>`;
 
@@ -164,7 +176,7 @@
                     const contentToSet = replaceButton.dataset.content;
                     const buttonType = replaceButton.dataset.type; // Get the button type
 
-                    // **MODIFICATION: Check the button type and update the corresponding element**
+                    // Check the button type and update the corresponding element
                     if (buttonType === 'content') {
                         // Check if the editor instance is available
                         if (window.editorInstance) {

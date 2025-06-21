@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteRule .* - [E=noconntimeout:1]
 
     # Redirect permanen dari www ke non-www
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
