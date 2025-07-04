@@ -401,6 +401,26 @@ const editorConfig = {
                 classes: ["category"],
             },
             {
+                name: "Button Download-1",
+                element: "a",
+                classes: ["button-download1"],
+            },
+            {
+                name: "Button Download-2",
+                element: "a",
+                classes: ["button-download2"],
+            },
+            {
+                name: "Button Download-3",
+                element: "a",
+                classes: ["button-download3"],
+            },
+            {
+                name: "Button Download-4",
+                element: "a",
+                classes: ["button-download4"],
+            },
+            {
                 name: "Title",
                 element: "h2",
                 classes: ["document-title"],
@@ -421,6 +441,11 @@ const editorConfig = {
                 classes: ["side-quote"],
             },
             {
+                name: "Blockquote Highlighted",
+                element: "blockquote",
+                classes: ["quote-highlight"],
+            },
+            {
                 name: "Marker",
                 element: "span",
                 classes: ["marker"],
@@ -439,6 +464,36 @@ const editorConfig = {
                 name: "Code (bright)",
                 element: "pre",
                 classes: ["fancy-code", "fancy-code-bright"],
+            },
+            {
+                name: "Alert - Info",
+                element: "span",
+                classes: ["ck-alert", "ck-alert-info"],
+            },
+            {
+                name: "Alert - Warning",
+                element: "span",
+                classes: ["ck-alert", "ck-alert-warning"],
+            },
+            {
+                name: "Alert - Success",
+                element: "span",
+                classes: ["ck-alert", "ck-alert-success"],
+            },
+            {
+                name: "Alert - Danger",
+                element: "span",
+                classes: ["ck-alert", "ck-alert-danger"],
+            },
+            {
+                name: "Alert - Lock",
+                element: "span",
+                classes: ["ck-alert", "ck-alert-lock"],
+            },
+            {
+                name: "Lead Text",
+                element: "p",
+                classes: ["ck-lead"],
             },
         ],
     },

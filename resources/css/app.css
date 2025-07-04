@@ -327,6 +327,62 @@ button.btn {
     color: #548adc;
 }
 
+#post-content a.button-download1 {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--color-light);
+    padding: 10px 20px;
+    margin: 0 2px;
+    border-radius: 5px;
+    font-weight: bold;
+    background: var(--color-info) url("@assets/icon/download1.png") no-repeat
+        10px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+#post-content a.button-download2 {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--color-light);
+    padding: 10px 20px;
+    margin: 0 2px;
+    border-radius: 5px;
+    font-weight: bold;
+    background: var(--color-accent) url("@assets/icon/download2.svg") no-repeat
+        10px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+#post-content a.button-download3 {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--color-light);
+    padding: 10px 20px;
+    margin: 0 2px;
+    border-radius: 5px;
+    font-weight: bold;
+    background: var(--color-primary) url("@assets/icon/download3.svg") no-repeat
+        10px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+#post-content a.button-download4 {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--color-light);
+    padding: 10px 20px;
+    margin: 0 2px;
+    border-radius: 5px;
+    font-weight: bold;
+    background: var(--color-primary) url("@assets/icon/download4.png") no-repeat
+        10px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
 pre {
     @apply overflow-auto;
 }

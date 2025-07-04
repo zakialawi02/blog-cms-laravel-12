@@ -4,7 +4,7 @@
             <!-- Logo -->
             <a class="focus:outline-hidden inline-flex flex-none items-end rounded-xl py-1 text-xl font-semibold focus:opacity-80" href="/dashboard" aria-label="Preline">
                 <x-application-logo class="h-auto max-h-10 max-w-28" />
-                <h1 class="text-base font-semibold">Dashboard</h1>
+                <h1 class="text-base font-semibold uppercase dark:invert">Dashboard</h1>
             </a>
             <!-- End Logo -->
 
