@@ -99,7 +99,7 @@
     </section>
 
     @if ($sectionsContent['ads_bottom_1']['config']['is_visible'] == '1' ?? false)
-        <div class="container">
+        <div class="container flex items-center justify-center">
             <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_1']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_1']" />
         </div>
     @endif
@@ -129,7 +129,7 @@
     @endif
 
     @if ($sectionsContent['ads_bottom_2']['config']['is_visible'] == '1' ?? false)
-        <div class="container">
+        <div class="container flex items-center justify-center">
             <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_2']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_2']" />
         </div>
     @endif
