@@ -43,8 +43,9 @@ class ArticleController extends Controller
         $this->articleService->articlesMappingArray($articles);
         $featured = $this->articleService->getFeaturedArticles($articles);
         $randomPosts = $this->articleService->getRandomArticles(4);
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.posts', compact('data', 'articles', 'featured', 'randomPosts'));
+        return view('pages.front.posts.posts', compact('data', 'articles', 'featured', 'randomPosts', 'sectionsContent'));
     }
 
     /**

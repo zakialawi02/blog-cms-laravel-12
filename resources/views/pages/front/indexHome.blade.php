@@ -65,6 +65,12 @@
         @endunless
     @endif
 
+    @if ($sectionsContent['ads_featured']['config']['is_visible'] == '1' ?? false)
+        <div class="container">
+            <x-home-section-layout :sectionKey="$sectionsContent['ads_featured']['itemsKey']" :sectionData="$sectionsContent['ads_featured']" />
+        </div>
+    @endif
+
     <div class="container mb-10 grid grid-cols-1 gap-2 md:gap-4 lg:grid-cols-4">
         <div class="lg:col-span-3">
             <!-- SECTION 1 -->
@@ -115,6 +121,12 @@
         </div>
     </div>
 
+    @if ($sectionsContent['ads_bottom_1']['config']['is_visible'] == '1' ?? false)
+        <div class="container">
+            <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_1']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_1']" />
+        </div>
+    @endif
+
     <!-- You Missed/Random Posts Section -->
     @if ($sectionsContent['home_bottom_section_1']['config']['is_visible'] == '1' ?? false)
         <section class="fluid container px-6 py-5 md:px-4">
@@ -137,6 +149,12 @@
                 @endforelse
             </div>
         </section>
+    @endif
+
+    @if ($sectionsContent['ads_bottom_2']['config']['is_visible'] == '1' ?? false)
+        <div class="container">
+            <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_2']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_2']" />
+        </div>
     @endif
 
     @push('javascript')
