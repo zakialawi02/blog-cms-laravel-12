@@ -61,24 +61,41 @@
         </div>
     </section>
 
-    <section class="fluid container px-6 py-5 md:px-4">
-        <h2 class="text-dark dark:text-dark-light mb-5 text-2xl font-bold">You Missed</h2>
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-            @foreach ($randomPosts->take(4) as $post)
-                <div class="group relative overflow-hidden rounded-lg">
-                    <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->cover }}" alt="Post Cover" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
-                    <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
-                        <div class="mb-2 flex space-x-2">
-                            <span class="text-accent dark:text-dark-accent bg-light dark:bg-dark-light rounded-full px-2 py-1 text-xs font-semibold">{{ $post->category->category }}</span>
-                        </div>
-                        <h3 class="text-light hover:text-accent dark:hover:text-dark-accent all line-clamp-3 text-lg font-semibold transition duration-300">
-                            <a href={{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}>{{ $post->title }}</a>
-                        </h3>
-                    </div>
-                </div>
-            @endforeach
+    @if ($sectionsContent['ads_bottom_1']['config']['is_visible'] == '1' ?? false)
+        <div class="container flex items-center justify-center">
+            <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_1']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_1']" />
         </div>
-    </section>
+    @endif
+
+    <!-- You Missed/Random Posts Section -->
+    @if ($sectionsContent['home_bottom_section_1']['config']['is_visible'] == '1' ?? false)
+        <section class="fluid container px-6 py-5 md:px-4">
+            <h2 class="text-dark dark:text-dark-light mb-5 text-2xl font-bold">{{ $sectionsContent['home_bottom_section_1']['config']['label'] }}</h2>
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+                @forelse ($sectionsContent['home_bottom_section_1']['data']->take(4) as $post)
+                    <div class="group relative overflow-hidden rounded-lg">
+                        <img class="h-48 w-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->cover }}" alt="Post Cover" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/img/image-placeholder.png') }}'">
+                        <div class="absolute inset-0 flex flex-col justify-end bg-black/50 p-4 dark:bg-black/20">
+                            <div class="mb-2 flex space-x-2">
+                                <span class="text-accent dark:text-dark-accent bg-light dark:bg-dark-light rounded-full px-2 py-1 text-xs font-semibold">{{ $post->category->category ?? 'Uncategorized' }}</span>
+                            </div>
+                            <h3 class="text-light hover:text-accent dark:hover:text-dark-accent all line-clamp-3 text-lg font-semibold transition duration-300">
+                                <a href={{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}>{{ $post->title }}</a>
+                            </h3>
+                        </div>
+                    </div>
+                @empty
+                    <p class="my-2 text-center">No Posts Available</p>
+                @endforelse
+            </div>
+        </section>
+    @endif
+
+    @if ($sectionsContent['ads_bottom_2']['config']['is_visible'] == '1' ?? false)
+        <div class="container flex items-center justify-center">
+            <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_2']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_2']" />
+        </div>
+    @endif
 
     @push('javascript')
     @endpush

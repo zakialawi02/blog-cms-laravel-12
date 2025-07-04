@@ -156,9 +156,9 @@ class ArticleController extends Controller
         ];
         $articles = $this->articleService->getPopularPosts();
         $this->articleService->articlesMappingArray($articles);
-        $randomPosts = $this->articleService->getRandomArticles(4);
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.popular', compact('data', 'articles', 'randomPosts'));
+        return view('pages.front.posts.popular', compact('data', 'articles',  'sectionsContent'));
     }
 
     /**
@@ -175,9 +175,9 @@ class ArticleController extends Controller
         $data = ['title' => 'Posts in tag of ' . request()->segment(3) . ' | zakialawi'];
         $articles = $this->articleService->fetchArticles(['tag' => $slug]);
         $this->articleService->articlesMappingArray($articles);
-        $randomPosts = $this->articleService->getRandomArticles(4);
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.posts', compact('data', 'articles', 'randomPosts'));
+        return view('pages.front.posts.posts', compact('data', 'articles', 'sectionsContent'));
     }
 
     /**
@@ -194,10 +194,9 @@ class ArticleController extends Controller
         $data = ['title' => "Posts in category of " . request()->segment(3) . " | zakialawi"];
         $articles = $this->articleService->fetchArticles(['category' => $slug]);
         $this->articleService->articlesMappingArray($articles);
-        $featured = $this->articleService->getFeaturedArticles($articles);
-        $randomPosts = $this->articleService->getRandomArticles(4);
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.posts', compact('data', 'articles', 'featured', 'randomPosts'));
+        return view('pages.front.posts.posts', compact('data', 'articles',  'sectionsContent'));
     }
 
     /**
@@ -214,10 +213,9 @@ class ArticleController extends Controller
         $data = ['title' => 'Posts by ' . $username];
         $articles = $this->articleService->fetchArticles(['user' => $username]);
         $this->articleService->articlesMappingArray($articles);
-        $featured = $this->articleService->getFeaturedArticles($articles);
-        $randomPosts = $this->articleService->getRandomArticles(4);
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.posts', compact('data', 'articles', 'featured', 'randomPosts'));
+        return view('pages.front.posts.posts', compact('data', 'articles',  'sectionsContent'));
     }
 
     /**
@@ -237,9 +235,9 @@ class ArticleController extends Controller
         $data = ['title' => 'Posts in ' . $year];
         $articles = $this->articleService->fetchArticles(['year' => $year]);
         $this->articleService->articlesMappingArray($articles);
-        $randomPosts = $this->articleService->getRandomArticles(4);
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.archive', compact('data', 'articles', 'randomPosts'));
+        return view('pages.front.posts.archive', compact('data', 'articles', 'sectionsContent'));
     }
 
     /**
@@ -262,8 +260,8 @@ class ArticleController extends Controller
         $data = ['title' => 'Posts in ' . date('F', strtotime($year . '-' . $month . '-01')) . ' ' . $year];
         $articles = $this->articleService->fetchArticles(['month' => $month, 'year' => $year]);
         $this->articleService->articlesMappingArray($articles);
-        $randomPosts = $this->articleService->getRandomArticles(4);
+        $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.archive', compact('data', 'articles', 'randomPosts'));
+        return view('pages.front.posts.archive', compact('data', 'articles', 'sectionsContent'));
     }
 }
