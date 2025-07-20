@@ -21,7 +21,7 @@
 
         function deleteComment(commentId) {
             const slug = "{{ request()->segment(3) }}";
-            const url = "{{ route('admin.comment.destroy', ':commentId') }}".replace(':commentId', commentId);
+            const url = "{{ route('comment.destroy', ':commentId') }}".replace(':commentId', commentId);
             ZkPopAlert.show({
                 message: "Are you sure you want to delete this comment?",
                 confirmText: "Yes, delete it",

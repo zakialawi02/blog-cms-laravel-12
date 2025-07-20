@@ -113,6 +113,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/comments/{post:slug}', [CommentController::class, 'store'])->name('comment.store');
+    Route::delete('/comments/{comment:id}', [CommentController::class, 'destroy'])->name('comment.destroy');
 });
 
 Route::get('/admin', function () {
@@ -131,6 +132,7 @@ Route::get('/blog/users/{username}', [ArticleController::class, 'articlesByUser'
 Route::get('/blog/archive/{year}', [ArticleController::class, 'articlesByYear'])->name('article.year');
 Route::get('/blog/archive/{year}/{month}', [ArticleController::class, 'articlesByMonth'])->name('article.month');
 Route::get('/blog/{year}/{slug}', [ArticleController::class, 'show'])->name('article.show');
+Route::post('/blog/{month}/{year}/{slug}/{token}/record', [ArticleController::class, 'recordVisitor'])->middleware('throttle:10,1')->name('article.record');
 
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 

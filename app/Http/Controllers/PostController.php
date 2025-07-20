@@ -190,6 +190,7 @@ class PostController extends Controller
      */
     public function generateArticle(Request $request)
     {
+        set_time_limit(0);
         $request->validate([
             'prompt' => 'required|string',
             'type' => 'required|in:text',

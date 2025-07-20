@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Comment;
 use ipinfo\ipinfo\IPinfo;
+use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -41,11 +42,9 @@ class ArticleController extends Controller
         $search = $request->query('search');
         $articles = $this->articleService->fetchArticles(['search' => $search]);
         $this->articleService->articlesMappingArray($articles);
-        $featured = $this->articleService->getFeaturedArticles($articles);
-        $randomPosts = $this->articleService->getRandomArticles(4);
         $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.posts', compact('data', 'articles', 'featured', 'randomPosts', 'sectionsContent'));
+        return view('pages.front.posts.posts', compact('data', 'articles',  'sectionsContent'));
     }
 
     /**
@@ -105,6 +104,81 @@ class ArticleController extends Controller
     }
 
     /**
+     * Record visitor data/Save visitor information if not already cached.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $year
+     * @param  string  $month
+     * @param  string  $slug
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function recordVisitor(Request $request, $year, $month, $slug, $token)
+    {
+        try {
+            if (!is_numeric($year) || !is_numeric($month) || $month < 1 || $month > 12) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid format.'
+                ], 400);
+            }
+
+            $expectedToken = Cache::get("article_visit_token_{$slug}");
+
+            if (!$expectedToken || $token !== $expectedToken) {
+                Log::warning("Invalid or expired token for article slug: {$slug}. Provided token: {$token}, Expected: {$expectedToken}");
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid or expired security token.'
+                ], 403);
+            }
+
+            Cache::forget("article_visit_token_{$slug}");
+
+            $targetMonth = Carbon::createFromFormat('Y-m', "$year-$month");
+
+            $article = Article::where('slug', $slug)
+                ->whereMonth('published_at', $targetMonth->month)
+                ->whereYear('published_at', $targetMonth->year)
+                ->where('published_at', '<=', Carbon::now())
+                ->first();
+
+            if (!$article) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Article not found or not yet published.'
+                ], 404);
+            }
+
+            $article_id = $article->id;
+
+            $ip = $request->header('CF-Connecting-IP') ?? $request->header('X-Forwarded-For') ?? $request->ip();
+
+            $this->saveVisitor($article_id, $ip);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Visitor recorded successfully.',
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning("Article not found for slug: {$slug} in {$year}-{$month}. Error: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Article not found.'
+            ], 404);
+        } catch (\Throwable $e) {
+            Log::error("Error recording visitor for slug: {$slug}. Error: " . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request_ip' => $request->ip(),
+                'headers' => $request->headers->all(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'An unexpected error occurred while recording the visit.',
+            ], 500);
+        }
+    }
+
+    /**
      * Show the specified article.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -129,13 +203,15 @@ class ArticleController extends Controller
             ->where('published_at', '<=', Carbon::now())
             ->firstOrFail();
 
-        $ipAddress = $request->header('CF-Connecting-IP') ?? $request->header('X-Forwarded-For');
-        $this->saveVisitor($article->id, $ipAddress);
+        $visitToken = Str::uuid()->toString();
+        Cache::put("article_visit_token_{$slug}", $visitToken, Carbon::now()->addMinutes(5));
+        // $ipAddress = $request->header('CF-Connecting-IP') ?? $request->header('X-Forwarded-For');
+        // $this->saveVisitor($article->id, $ipAddress);
 
         $article = $this->articleService->articlesMappingArray(collect([$article]))->first();
         $sectionsContent = $this->sectionContentService->getSectionData();
 
-        return view('pages.front.posts.singlePost', compact('article', 'sectionsContent'));
+        return view('pages.front.posts.singlePost', compact('article', 'visitToken', 'sectionsContent'));
     }
 
     /**

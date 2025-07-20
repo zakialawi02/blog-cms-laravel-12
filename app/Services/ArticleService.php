@@ -125,7 +125,7 @@ class ArticleService
         return $articles->map(function ($article) {
             $placeholder = asset("assets/img/image-placeholder.png");
             if (empty($article->excerpt)) {
-                $article->excerpt = strip_tags($article->content);
+                $article->excerpt = strip_tags((string)$article->content);
             }
             $article->excerpt = Str::limit($article->excerpt, 160);
             if (!empty($article->cover) && !filter_var($article->cover, FILTER_VALIDATE_URL)) {

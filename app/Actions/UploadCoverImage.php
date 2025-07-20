@@ -54,7 +54,7 @@ class UploadCoverImage
             // <-- 3. Gunakan manager untuk membaca (read) file dan memprosesnya
             $image = $manager->read($file);
 
-            $image->scale(height: 600)->save($fullPathToSaveSmall, 75);
+            $image->scale(height: 300)->save($fullPathToSaveSmall, 60);
         } catch (Exception $e) {
             Storage::disk('public')->delete($largeRelativePath);
             Log::error('Gagal membuat gambar terkompresi: ' . $e->getMessage());

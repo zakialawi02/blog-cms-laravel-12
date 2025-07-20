@@ -7,7 +7,6 @@ use App\Models\Article;
 use App\Models\Comment;
 use App\Models\ArticleView;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use App\Models\RequestContributor;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,10 +32,10 @@ class DashboardController extends Controller
                 $usersCount = User::count();
                 $visitors = ArticleView::count();
                 $viewsMyPosts = Article::where('user_id', $userId)->withCount('articleViews')->get()->sum('article_views_count');
-                $latestAllPostsQuery = Article::with('user')->latest()->limit(5);
-                $popularPostsQuery = Article::withCount('articleViews as total_views')
-                    ->orderBy('total_views', 'desc')
-                    ->limit(5);
+                $latestAllPostsQuery = Article::select('id', 'title', 'slug', 'published_at', 'status', 'created_at', 'user_id')
+                    ->with('user')->latest()->limit(5);
+                $popularPostsQuery = Article::select('id', 'title', 'slug', 'published_at', 'status', 'created_at')->withCount('articleViews as total_views')
+                    ->orderByDesc('total_views')->limit(5);
                 $latestAllPosts = $latestAllPostsQuery->get();
                 $popularPosts = $popularPostsQuery->get();
                 $recentComments = Comment::with(['user', 'article'])->latest()->limit(5)->get();
@@ -71,10 +70,12 @@ class DashboardController extends Controller
                     ->count();
                 $myCommentsCount = Comment::where('user_id', $userId)->count();
                 $viewsMyPosts = Article::where('user_id', $userId)->withCount('articleViews')->get()->sum('article_views_count');
-                $latestAllPostsQuery = Article::with('user')
-                    ->latest()->limit(5)->where('user_id', $userId);
-                $popularPostsQuery = Article::withCount('articleViews as total_views')
-                    ->orderBy('total_views', 'desc')->limit(5)->where('user_id', $userId);
+                $latestAllPostsQuery = Article::select('id', 'title', 'slug', 'published_at', 'status', 'created_at', 'user_id')
+                    ->with('user')->latest()->limit(5)
+                    ->where('user_id', $userId);
+                $popularPostsQuery = Article::select('id', 'title', 'slug', 'published_at', 'status', 'created_at')->withCount('articleViews as total_views')
+                    ->orderByDesc('total_views')->limit(5)
+                    ->where('user_id', $userId);
                 $latestAllPosts = $latestAllPostsQuery->get();
                 $popularPosts = $popularPostsQuery->get();
                 $recentComments = Comment::whereHas('article', function ($query) use ($userId) {

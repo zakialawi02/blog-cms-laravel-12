@@ -198,6 +198,26 @@
                     });
                 }, delay);
             }
+
+            $(document).ready(function() {
+                setTimeout(() => {
+                    $.ajax({
+                        type: "POST",
+                        url: `/blog/{{ $article->published_at->format('Y') }}/{{ $article->published_at->format('m') }}/{{ $article->slug }}/{{ $visitToken }}/record`,
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            article: "{{ $article->slug }}"
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            console.log('Visit recorded:', response.message);
+                        },
+                        error: function(xhr) {
+                            console.error('AJAX Error:', xhr.status, xhr.responseText);
+                        }
+                    });
+                }, 3000);
+            });
         </script>
     @endpush
 </x-app-front-layout>
