@@ -15,6 +15,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\WebSettingController;
 use App\Http\Controllers\ArticleViewController;
+use App\Http\Controllers\Socialite\ProviderCallbackController;
+use App\Http\Controllers\Socialite\ProviderRedirectController;
+
+Route::get('/auth/{provider}/redirect', ProviderRedirectController::class)->name('auth.redirect');
+Route::get('/auth/{provider}/callback', ProviderCallbackController::class)->name('auth.callback');
 
 Route::get('/docs', function () {
     return view('pages.docs');

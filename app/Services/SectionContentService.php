@@ -84,7 +84,7 @@ class SectionContentService
                 $articles = $this->articleService->fetchArticles(['per_page' => $total]);
                 break;
             case 'featured-posts':
-                $articles = $this->articleService->getFeaturedArticles($this->articleService->fetchArticles(), $total);
+                $articles = $this->articleService->getFeaturedArticles($total);
                 break;
             case 'popular-posts':
                 $articles = $this->articleService->getPopularPosts($total);

@@ -58,7 +58,7 @@ class ArticleService
     /**
      * Get popular articles sorted by total views.
      */
-    public function getPopularPosts(int $limit = null)
+    public function getPopularPosts(?int $limit = null)
     {
         return Article::has('articleViews')
             ->withCount(['articleViews as total_views'])
@@ -77,7 +77,7 @@ class ArticleService
      * @param string|null $categorySlug Category slug to restrict to.
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getRandomArticles(int $limit = null, string $categorySlug = null)
+    public function getRandomArticles(?int $limit = null, ?string $categorySlug = null)
     {
         return Article::with(['user', 'category'])
             ->published()
@@ -93,17 +93,29 @@ class ArticleService
      * @param \Illuminate\Support\Collection $articles
      * @return \Illuminate\Support\Collection
      */
-    public function getFeaturedArticles($articles, int $total = 5)
+    public function getFeaturedArticles(int $total = 5)
     {
-        $featured = $articles
-            ->filter(fn($article) => $article->is_featured)
-            ->sortByDesc('published_at')
-            ->take(5);
+        // Get featured articles directly from the database
+        $featured = Article::with(['user', 'category'])
+            ->published()
+            ->where('is_featured', true)
+            ->orderByDesc('published_at')
+            ->take($total)
+            ->get();
+
+        // If not enough, get more random articles
         if ($featured->count() < $total) {
             $remainingCount = $total - $featured->count();
-            $nonFeatured = $articles
-                ->reject(fn($article) => $article->is_featured)->shuffle()
-                ->take($remainingCount);
+
+            // Exclude already fetched featured articles
+            $nonFeatured = Article::with(['user', 'category'])
+                ->published()
+                ->where('is_featured', false)
+                ->whereNotIn('id', $featured->pluck('id'))
+                ->inRandomOrder()
+                ->take($remainingCount)
+                ->get();
+
             $featured = $featured->concat($nonFeatured);
         }
         return $featured;
