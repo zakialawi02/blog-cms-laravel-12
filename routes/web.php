@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -102,6 +103,12 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+        // Products
+        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+
+        // Request Contributor
         Route::post('/requests-contributors', [UserController::class, 'storeRequestContributor'])->name('requestsContributors');
         Route::post('/requests-contributors/confirm', [UserController::class, 'confirmCodeContributor'])->name('confirmCodeContributor');
 
@@ -147,6 +154,8 @@ Route::get('/p/{page:slug}', [PageController::class, 'show'])->name('page.show')
 
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
-
+// Shop
+Route::get('/shop', [ProductController::class, 'shop'])->name('shop.index');
+Route::get('/shop/{product:slug}', [ProductController::class, 'show'])->name('shop.product.show');
 
 require __DIR__ . '/auth.php';

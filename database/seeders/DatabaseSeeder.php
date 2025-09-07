@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(WebSettingsSeeder::class);
-        $this->call(Users::class);
+        $this->call(UsersSeeder::class);
 
         // User::factory(200)->create();
         $this->call(CategorySeeder::class);
@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(ArticleSeeder::class);
         // ArticleView::factory(500)->create();
         $this->call(PagesSeeder::class);
+        $this->call(ProductSeeder::class);
 
         $this->call(MenuSeeder::class);
     }
