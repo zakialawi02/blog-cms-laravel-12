@@ -34,37 +34,40 @@ class SectionContentService
      */
     public function getSectionData(): array
     {
-        $allSettings = WebSetting::getAllSettings();
-        $sectionsContent = [];
+        $cacheKey = 'section_content:' . app()->getLocale();
 
-        foreach (LayoutSection::values() as $sectionKey) {
-            $config = $allSettings[$sectionKey] ?? null;
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () {
+            $allSettings = WebSetting::getAllSettings();
+            $sectionsContent = [];
 
-            // Process if the basic configuration for this section exists
-            if ($config) {
-                $itemsKey = $config['items'] ?? null;
-                $total = (int)($config['total'] ?? 3); // Default number of items
-                $label = $config['label'] ?? $this->getDefaultLabelForKey($sectionKey); // Get the label
-                $isVisible = $config['is_visible'] ?? false; // Get the visibility status
+            foreach (LayoutSection::values() as $sectionKey) {
+                $config = $allSettings[$sectionKey] ?? null;
 
-                $dataForSection = collect(); // Initialize the data as an empty collection
+                if ($config) {
+                    $itemsKey = $config['items'] ?? null;
+                    $total = (int)($config['total'] ?? 3);
+                    $label = $config['label'] ?? $this->getDefaultLabelForKey($sectionKey);
+                    $isVisible = $config['is_visible'] ?? false;
 
-                // Only run the query to retrieve data if the section is visible
-                if ($isVisible) {
-                    $dataForSection = $this->articleService->articlesMappingArray($this->getLayoutSectionData($itemsKey, $total));
+                    $dataForSection = collect();
+
+                    if ($isVisible) {
+                        $dataForSection = $this->articleService->articlesMappingArray(
+                            $this->getLayoutSectionData($itemsKey, $total)
+                        );
+                    }
+
+                    $sectionsContent[$sectionKey] = [
+                        'label' => $label,
+                        'itemsKey' => $itemsKey,
+                        'data' => $dataForSection,
+                        'config' => $config,
+                    ];
                 }
-                // Always add section information to $sectionsContent
-                // The view will use $config['is_visible'] to decide how to display it
-                $sectionsContent[$sectionKey] = [
-                    'label' => $label,
-                    'itemsKey' => $itemsKey,
-                    'data' => $dataForSection, // Will be an empty collection if is_visible is false
-                    'config' => $config,       // Contains the original 'is_visible' flag and other config
-                ];
             }
-        }
 
-        return $sectionsContent;
+            return $sectionsContent;
+        });
     }
 
     /**
@@ -77,61 +80,53 @@ class SectionContentService
         $type = $parts[0];
         $identifier = $parts[1] ?? null;
 
-        $articles = null; // Inisialisasi
+        $cacheKey = $this->buildSectionCacheKey($itemsKey, $total);
 
-        switch ($type) {
-            case 'recent-posts':
-                $articles = $this->articleService->fetchArticles(['per_page' => $total]);
-                break;
-            case 'featured-posts':
-                $articles = $this->articleService->getFeaturedArticles($total);
-                break;
-            case 'popular-posts':
-                $articles = $this->articleService->getPopularPosts($total);
-                break;
-            case 'random-posts':
-                $articles = $this->articleService->getRandomArticles($total);
-                break;
-            case 'categories':
-                if ($identifier) {
-                    $articles = $this->articleService->fetchArticles([
-                        'category' => $identifier,
-                        'per_page' => $total
-                    ]);
-                }
-                break;
-            case 'tags':
-                if ($identifier) {
-                    $articles = $this->articleService->fetchArticles([
-                        'tag' => $identifier,
-                        'per_page' => $total
-                    ]);
-                }
-                break;
-            case 'all-tags-widget':
-                // This does not return articles, but a collection of tags.
-                return Tag::inRandomOrder()->limit($total ?? 10)->get(); // Adjust this query
-                break;
-            case 'all-categories-widget':
-                // This does not return articles, but a collection of categories.
-                return Category::inRandomOrder()->limit($total ?? 5)->get(); // Adjust this query
-                break;
-            case 'js-script':
-                return collect();
-                break;
-            default:
-                Log::warning("Unknown itemsKey type in getLayoutSectionData: {$itemsKey}");
-                return collect();
-        }
-
-        // Call mapping if articles are retrieved and mapping is required
-        if ($articles instanceof \Illuminate\Support\Collection && $articles->isNotEmpty()) {
-            $this->articleService->articlesMappingArray($articles); // Call if this method modifies the collection directly (by reference)
-            // or if it returns a new collection:
-            // $articles = $this->articleService->articlesMappingArray($articles);
-        }
-
-        return $articles ?? collect(); // Return the collection of articles or an empty collection
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($type, $identifier, $total) {
+            switch ($type) {
+                case 'recent-posts':
+                    return $this->articleService->fetchArticles([
+                        'per_page' => $total,
+                        'page' => 1,
+                    ])->getCollection();
+                case 'featured-posts':
+                    return $this->articleService->getFeaturedArticles($total);
+                case 'popular-posts':
+                    $popular = $this->articleService->getPopularPosts($total);
+                    return $popular instanceof \Illuminate\Pagination\LengthAwarePaginator
+                        ? $popular->getCollection()
+                        : $popular;
+                case 'random-posts':
+                    return $this->articleService->getRandomArticles($total);
+                case 'categories':
+                    if ($identifier) {
+                        return $this->articleService->fetchArticles([
+                            'category' => $identifier,
+                            'per_page' => $total,
+                            'page' => 1,
+                        ])->getCollection();
+                    }
+                    return collect();
+                case 'tags':
+                    if ($identifier) {
+                        return $this->articleService->fetchArticles([
+                            'tag' => $identifier,
+                            'per_page' => $total,
+                            'page' => 1,
+                        ])->getCollection();
+                    }
+                    return collect();
+                case 'all-tags-widget':
+                    return Tag::inRandomOrder()->limit($total ?? 10)->get();
+                case 'all-categories-widget':
+                    return Category::inRandomOrder()->limit($total ?? 5)->get();
+                case 'js-script':
+                    return collect();
+                default:
+                    Log::warning("Unknown itemsKey type in getLayoutSectionData: {$itemsKey}");
+                    return collect();
+            }
+        });
     }
 
     /**
@@ -157,5 +152,10 @@ class SectionContentService
         });
 
         return $navMenus;
+    }
+
+    protected function buildSectionCacheKey(?string $itemsKey, int $total): string
+    {
+        return sprintf('section:%s:%s', $itemsKey ?? 'none', $total);
     }
 }

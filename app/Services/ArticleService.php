@@ -3,10 +3,24 @@
 namespace App\Services;
 
 use App\Models\Article;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ArticleService
 {
+    /**
+     * Default number of articles per page for paginated responses.
+     */
+    protected int $defaultPerPage = 9;
+
+    /**
+     * Cache lifetime in minutes for frequently accessed article lists.
+     */
+    protected int $cacheTtl = 10;
+
     /**
      * Fetch filtered and paginated articles.
      *
@@ -20,39 +34,63 @@ class ArticleService
      */
     public function fetchArticles(array $filters = [])
     {
-        $query = Article::with(['user', 'category', 'tags'])
-            ->published()
-            ->orderBy('published_at', 'desc');
+        $page = (int) ($filters['page'] ?? request()->query('page', 1));
+        $perPage = (int) ($filters['per_page'] ?? $this->defaultPerPage);
 
-        if (!empty($filters['category'])) {
-            if ($filters['category'] === 'uncategorized') {
-                $query->whereNull('category_id');
-            } else {
-                $query->withCategorySlug($filters['category']);
+        $cacheKey = $this->buildCacheKey('articles', array_merge($filters, [
+            'page' => $page,
+            'per_page' => $perPage,
+        ]));
+
+        return Cache::remember($cacheKey, now()->addMinutes($this->cacheTtl), function () use ($filters, $perPage, $page) {
+            $query = Article::with(['user', 'category', 'tags'])
+                ->published()
+                ->orderBy('published_at', 'desc');
+
+            if (!empty($filters['category'])) {
+                if ($filters['category'] === 'uncategorized') {
+                    $query->whereNull('category_id');
+                } else {
+                    $query->withCategorySlug($filters['category']);
+                }
             }
-        }
 
-        if (!empty($filters['tag'])) {
-            $query->withTagSlug($filters['tag']);
-        }
+            if (!empty($filters['tag'])) {
+                $query->withTagSlug($filters['tag']);
+            }
 
-        if (!empty($filters['user'])) {
-            $query->withUsername($filters['user']);
-        }
+            if (!empty($filters['user'])) {
+                $query->withUsername($filters['user']);
+            }
 
-        if (!empty($filters['year'])) {
-            $query->whereYear('published_at', $filters['year']);
-        }
+            if (!empty($filters['year'])) {
+                $query->whereYear('published_at', $filters['year']);
+            }
 
-        if (!empty($filters['month'])) {
-            $query->whereMonth('published_at', $filters['month']);
-        }
+            if (!empty($filters['month'])) {
+                $query->whereMonth('published_at', $filters['month']);
+            }
 
-        if (!empty($filters['search'])) {
-            $query->search($filters['search']);
-        }
+            if (!empty($filters['search'])) {
+                $query->search($filters['search']);
+            }
 
-        return $query->paginate($filters['per_page'] ?? 9)->withQueryString();
+            $total = (clone $query)->toBase()->getCountForPagination();
+            $items = $query->forPage($page, $perPage)->get();
+
+            $paginator = new LengthAwarePaginator(
+                $items,
+                $total,
+                $perPage,
+                $page,
+                [
+                    'path' => request()->url(),
+                    'pageName' => 'page',
+                ]
+            );
+
+            return $paginator->appends(request()->query());
+        });
     }
 
     /**
@@ -60,12 +98,26 @@ class ArticleService
      */
     public function getPopularPosts(?int $limit = null)
     {
-        return Article::has('articleViews')
-            ->withCount(['articleViews as total_views'])
-            ->with(['user', 'category'])
-            ->published()
-            ->orderByDesc('total_views')
-            ->when($limit, fn($q) => $q->take($limit)->get(), fn($q) => $q->paginate(9)->withQueryString());
+        $page = $limit ? 1 : (int) request()->query('page', 1);
+        $cacheKey = $this->buildCacheKey('popular_posts', [
+            'limit' => $limit,
+            'page' => $page,
+            'per_page' => $this->defaultPerPage,
+        ]);
+
+        return Cache::remember($cacheKey, now()->addMinutes($this->cacheTtl), function () use ($limit) {
+            $query = Article::has('articleViews')
+                ->withCount(['articleViews as total_views'])
+                ->with(['user', 'category'])
+                ->published()
+                ->orderByDesc('total_views');
+
+            if ($limit) {
+                return $query->take($limit)->get();
+            }
+
+            return $query->paginate($this->defaultPerPage)->withQueryString();
+        });
     }
 
     /**
@@ -79,11 +131,12 @@ class ArticleService
      */
     public function getRandomArticles(?int $limit = null, ?string $categorySlug = null)
     {
-        return Article::with(['user', 'category'])
+        $query = Article::with(['user', 'category'])
             ->published()
             ->when($categorySlug, fn($q) => $q->withCategorySlug($categorySlug))
-            ->inRandomOrder()
-            ->when($limit, fn($q) => $q->take($limit)->get());
+            ->inRandomOrder();
+
+        return $limit ? $query->take($limit)->get() : $query->limit($this->defaultPerPage)->get();
     }
 
     /**
@@ -96,29 +149,32 @@ class ArticleService
     public function getFeaturedArticles(int $total = 5)
     {
         // Get featured articles directly from the database
-        $featured = Article::with(['user', 'category'])
-            ->published()
-            ->where('is_featured', true)
-            ->orderByDesc('published_at')
-            ->take($total)
-            ->get();
+        $cacheKey = $this->buildCacheKey('featured_posts', ['total' => $total]);
 
-        // If not enough, get more random articles
-        if ($featured->count() < $total) {
-            $remainingCount = $total - $featured->count();
-
-            // Exclude already fetched featured articles
-            $nonFeatured = Article::with(['user', 'category'])
+        return Cache::remember($cacheKey, now()->addMinutes($this->cacheTtl), function () use ($total) {
+            $featured = Article::with(['user', 'category'])
                 ->published()
-                ->where('is_featured', false)
-                ->whereNotIn('id', $featured->pluck('id'))
-                ->inRandomOrder()
-                ->take($remainingCount)
+                ->where('is_featured', true)
+                ->orderByDesc('published_at')
+                ->take($total)
                 ->get();
 
-            $featured = $featured->concat($nonFeatured);
-        }
-        return $featured;
+            if ($featured->count() < $total) {
+                $remainingCount = $total - $featured->count();
+
+                $nonFeatured = Article::with(['user', 'category'])
+                    ->published()
+                    ->where('is_featured', false)
+                    ->whereNotIn('id', $featured->pluck('id'))
+                    ->inRandomOrder()
+                    ->take($remainingCount)
+                    ->get();
+
+                $featured = $featured->concat($nonFeatured);
+            }
+
+            return $featured;
+        });
     }
 
     /**
@@ -133,8 +189,7 @@ class ArticleService
      */
     public function articlesMappingArray($articles)
     {
-
-        return $articles->map(function ($article) {
+        $callback = function ($article) {
             $placeholder = asset("assets/img/image-placeholder.png");
             if (empty($article->excerpt)) {
                 $article->excerpt = strip_tags((string)$article->content);
@@ -153,6 +208,27 @@ class ArticleService
                 $article->category_id = "Uncategorized";
             }
             return $article;
-        });
+        };
+
+        if ($articles instanceof LengthAwarePaginator || $articles instanceof Paginator) {
+            $articles->getCollection()->transform($callback);
+            return $articles;
+        }
+
+        if ($articles instanceof Collection) {
+            return $articles->map($callback);
+        }
+
+        return $articles;
+    }
+
+    /**
+     * Build a consistent cache key for article related queries.
+     */
+    protected function buildCacheKey(string $prefix, array $parameters = []): string
+    {
+        ksort($parameters);
+
+        return sprintf('%s:%s', $prefix, md5(json_encode($parameters)));
     }
 }
