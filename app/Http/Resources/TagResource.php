@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class TagResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'tag_name' => $this->tag_name,
+            'slug' => $this->slug,
+            'articles_count' => $this->when(isset($this->articles_count), $this->articles_count),
+        ];
+    }
+}
