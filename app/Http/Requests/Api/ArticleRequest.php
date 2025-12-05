@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Article;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -9,7 +10,20 @@ class ArticleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        $article = Article::find($this->route('article'));
+
+        return match (true) {
+            $this->isMethod('POST') => $user->can('create', Article::class),
+            $this->isMethod('PUT'), $this->isMethod('PATCH') => $article ? $user->can('update', $article) : false,
+            $this->isMethod('DELETE') => $article ? $user->can('delete', $article) : false,
+            default => false,
+        };
     }
 
     public function rules(): array

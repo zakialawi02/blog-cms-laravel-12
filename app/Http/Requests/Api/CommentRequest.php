@@ -2,13 +2,27 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Comment;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CommentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        $comment = Comment::find($this->route('comment'));
+
+        return match (true) {
+            $this->isMethod('POST') => $user->can('create', Comment::class),
+            $this->isMethod('PUT'), $this->isMethod('PATCH') => $comment ? $user->can('update', $comment) : false,
+            $this->isMethod('DELETE') => $comment ? $user->can('delete', $comment) : false,
+            default => false,
+        };
     }
 
     public function rules(): array
