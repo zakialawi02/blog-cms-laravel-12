@@ -92,6 +92,12 @@ import "./../css/ckeditor.css";
  */
 const LICENSE_KEY = "GPL"; // or <YOUR_LICENSE_KEY>.
 const shouldNotGroup = window.innerWidth <= 768;
+
+const csrfToken =
+    document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content") || "";
+
 const editorConfig = {
     ui: {
         viewportOffset: {
@@ -361,10 +367,7 @@ const editorConfig = {
     simpleUpload: {
         uploadUrl: "/dashboard/upload/image",
         headers: {
-            "X-CSRF-TOKEN":
-                document
-                    .querySelector('meta[name="csrf-token"]')
-                    ?.getAttribute("content") || "",
+            "X-CSRF-TOKEN": csrfToken,
         },
     },
     licenseKey: LICENSE_KEY,
@@ -518,6 +521,18 @@ const editorConfig = {
 };
 
 /**
+ * Simple debounce function.
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+/**
  * Extract all uploaded image URLs from editor content.
  * Only tracks images from our uploads folder (media/uploads/).
  */
@@ -536,10 +551,6 @@ function getUploadedImageUrls(editor) {
  * Delete an image file from storage via the backend endpoint.
  */
 function deleteImageFromStorage(url) {
-    const csrfToken =
-        document
-            .querySelector('meta[name="csrf-token"]')
-            ?.getAttribute("content") || "";
     fetch("/dashboard/upload/image/delete", {
         method: "POST",
         headers: {
@@ -570,18 +581,21 @@ ClassicEditor.create(document.querySelector("#post-content"), editorConfig)
         // Track uploaded images and auto-delete removed ones
         let previousImages = getUploadedImageUrls(editor);
 
-        editor.model.document.on("change:data", () => {
-            const currentImages = getUploadedImageUrls(editor);
+        editor.model.document.on(
+            "change:data",
+            debounce(() => {
+                const currentImages = getUploadedImageUrls(editor);
 
-            // Find images that were removed (in previous but not in current)
-            for (const url of previousImages) {
-                if (!currentImages.has(url)) {
-                    deleteImageFromStorage(url);
+                // Find images that were removed (in previous but not in current)
+                for (const url of previousImages) {
+                    if (!currentImages.has(url)) {
+                        deleteImageFromStorage(url);
+                    }
                 }
-            }
 
-            previousImages = currentImages;
-        });
+                previousImages = currentImages;
+            }, 1000),
+        );
 
         const wordCount = editor.plugins.get("WordCount");
         document
