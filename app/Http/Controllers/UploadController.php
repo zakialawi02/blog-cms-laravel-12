@@ -28,7 +28,7 @@ class UploadController extends Controller
 
         try {
             $file = $request->file('upload');
-            $filename = time() . '_' . Str::random(20) . '.' . $file->getClientOriginalExtension();
+            $filename = time() . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
 
             Storage::disk('public')->putFileAs('media/uploads', $file, $filename);
 
