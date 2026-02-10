@@ -13,7 +13,7 @@ import {
     Autosave,
     BalloonToolbar,
     BlockQuote,
-    Base64UploadAdapter,
+    SimpleUploadAdapter,
     BlockToolbar,
     Bold,
     Code,
@@ -163,7 +163,7 @@ const editorConfig = {
         Autosave,
         BalloonToolbar,
         BlockQuote,
-        Base64UploadAdapter,
+        SimpleUploadAdapter,
         BlockToolbar,
         Bold,
         Code,
@@ -358,6 +358,15 @@ const editorConfig = {
         ],
     },
     initialData: "",
+    simpleUpload: {
+        uploadUrl: "/dashboard/upload/image",
+        headers: {
+            "X-CSRF-TOKEN":
+                document
+                    .querySelector('meta[name="csrf-token"]')
+                    ?.getAttribute("content") || "",
+        },
+    },
     licenseKey: LICENSE_KEY,
     link: {
         addTargetToExternalLinks: true,
@@ -508,12 +517,71 @@ const editorConfig = {
     },
 };
 
+/**
+ * Extract all uploaded image URLs from editor content.
+ * Only tracks images from our uploads folder (media/uploads/).
+ */
+function getUploadedImageUrls(editor) {
+    const urls = new Set();
+    const content = editor.getData();
+    const regex = /src=["']((?:[^"']*\/storage\/media\/uploads\/[^"']+))["']/g;
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+        urls.add(match[1]);
+    }
+    return urls;
+}
+
+/**
+ * Delete an image file from storage via the backend endpoint.
+ */
+function deleteImageFromStorage(url) {
+    const csrfToken =
+        document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute("content") || "";
+    fetch("/dashboard/upload/image/delete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+            Accept: "application/json",
+        },
+        body: JSON.stringify({ url }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                console.log("Deleted image from storage:", url);
+            } else {
+                console.warn("Failed to delete image:", data.message);
+            }
+        })
+        .catch((err) => console.error("Error deleting image:", err));
+}
+
 const rawContent = document.querySelector("#editor-content").innerHTML;
 ClassicEditor.create(document.querySelector("#post-content"), editorConfig)
     .then((editor) => {
         console.log("Editor is ready to use! ✅");
         window.editorInstance = editor;
         editor.setData(rawContent);
+
+        // Track uploaded images and auto-delete removed ones
+        let previousImages = getUploadedImageUrls(editor);
+
+        editor.model.document.on("change:data", () => {
+            const currentImages = getUploadedImageUrls(editor);
+
+            // Find images that were removed (in previous but not in current)
+            for (const url of previousImages) {
+                if (!currentImages.has(url)) {
+                    deleteImageFromStorage(url);
+                }
+            }
+
+            previousImages = currentImages;
+        });
 
         const wordCount = editor.plugins.get("WordCount");
         document

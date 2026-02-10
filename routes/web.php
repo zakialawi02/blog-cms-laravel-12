@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CommentController;
@@ -89,6 +90,10 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
         Route::delete('/posts/{post:slug}/permanent', [PostController::class, 'permanentlyDelete'])->name('posts.destroy-permanent');
         Route::post('/posts/restore/{slug}', [PostController::class, 'restore'])->name('posts.restore');
+
+        // Image upload (CKEditor WYSIWYG)
+        Route::post('/upload/image', [UploadController::class, 'upload'])->name('upload.image');
+        Route::post('/upload/image/delete', [UploadController::class, 'delete'])->name('upload.image.delete');
 
         Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 
