@@ -16,11 +16,11 @@
                 </div>
 
                 <div class="flex flex-wrap justify-end gap-1 space-x-0.5 md:space-x-1.5">
-                    <x-dashboard.primary-button name="publish" type="submit">
+                    <x-dashboard.primary-button name="action" value="publish" type="submit">
                         <i class="ri-save-3-line"></i>
                         <span>Save and Publish</span>
                     </x-dashboard.primary-button>
-                    <x-dashboard.secondary-button name="unpublish" type="submit">
+                    <x-dashboard.secondary-button name="action" value="draft" type="submit">
                         <i class="ri-draft-line"></i>
                         <span>Save As Draft</span>
                     </x-dashboard.secondary-button>
@@ -28,12 +28,16 @@
             </div>
 
             <div class="mb-3 border-b border-gray-200 dark:border-gray-700">
-                <ul class="-mb-px flex flex-wrap text-center text-sm font-medium" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
+                <ul class="-mb-px flex flex-wrap text-center text-sm font-medium" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content"
+                    data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500"
+                    data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
                     <li class="me-2" role="presentation">
-                        <button class="inline-block rounded-t-lg border-b-2 p-4" id="content-styled-tab" data-tabs-target="#styled-content" type="button" role="tab" aria-controls="content" aria-selected="{{ $errors->get('title') || $errors->get('slug') ? 'true' : 'false' }}">content</button>
+                        <button class="inline-block rounded-t-lg border-b-2 p-4" id="content-styled-tab" data-tabs-target="#styled-content" type="button" role="tab" aria-controls="content"
+                            aria-selected="{{ $errors->get('title') || $errors->get('slug') ? 'true' : 'false' }}">content</button>
                     </li>
                     <li class="me-2" role="presentation">
-                        <button class="inline-block rounded-t-lg border-b-2 p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300" id="metadata-styled-tab" data-tabs-target="#styled-metadata" type="button" role="tab" aria-controls="metadata" aria-selected="{{ $errors->get('meta_title') || $errors->get('meta_desc') || $errors->get('meta_keywords') ? 'true' : 'false' }}">metadata</button>
+                        <button class="inline-block rounded-t-lg border-b-2 p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300" id="metadata-styled-tab" data-tabs-target="#styled-metadata" type="button" role="tab"
+                            aria-controls="metadata" aria-selected="{{ $errors->get('meta_title') || $errors->get('meta_desc') || $errors->get('meta_keywords') ? 'true' : 'false' }}">metadata</button>
                     </li>
                 </ul>
             </div>
@@ -52,7 +56,9 @@
 
                                 <div class="mb-3">
                                     <x-dashboard.input-label for="category_id" :value="__('Category')" />
-                                    <select class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500" id="category_id" name="category_id">
+                                    <select
+                                        class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500"
+                                        id="category_id" name="category_id">
                                         <option value="">-- Select Category --</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->category }}</option>
@@ -96,7 +102,9 @@
 
                                 <div class="mb-3">
                                     <x-dashboard.input-label for="user_id" :value="__('Author')" />
-                                    <select class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500" id="user_id" name="user_id">
+                                    <select
+                                        class="focus:ring-back-primary focus:border-back-primary dark:focus:border-back-dark-primary block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500"
+                                        id="user_id" name="user_id">
                                         <option value="">-- Select Author --</option>
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}" {{ old('user_id', Auth::user()->id) == $user->id ? 'selected' : '' }}>{{ $user->username }}</option>
@@ -108,10 +116,13 @@
                                 <div class="mb-3">
                                     <x-dashboard.input-label for="cover" :value="__('Featured Image')" />
                                     <div class="mb-5 flex w-full items-center justify-center">
-                                        <label class="dropzone flex h-24 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600" id="dropzone">
+                                        <label
+                                            class="dropzone flex h-24 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                                            id="dropzone">
                                             <div class="flex flex-col items-center justify-center pb-6 pt-5">
                                                 <svg class="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                                                 </svg>
                                                 <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                                                     <span class="font-semibold">Click to upload</span> or drag and drop
@@ -177,11 +188,11 @@
             </x-card>
 
             <div class="space-x-0.5 md:space-x-1.5">
-                <x-dashboard.primary-button name="publish" type="submit">
+                <x-dashboard.primary-button name="action" value="publish" type="submit">
                     <i class="ri-save-3-line"></i>
                     <span>Save and Publish</span>
                 </x-dashboard.primary-button>
-                <x-dashboard.secondary-button name="unpublish" type="submit">
+                <x-dashboard.secondary-button name="action" value="draft" type="submit">
                     <i class="ri-draft-line"></i>
                     <span>Save As Draft</span>
                 </x-dashboard.secondary-button>

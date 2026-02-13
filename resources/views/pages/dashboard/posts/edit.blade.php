@@ -16,11 +16,11 @@
                 </div>
 
                 <div class="flex flex-wrap justify-end gap-1 space-x-0.5 md:space-x-1.5">
-                    <x-dashboard.primary-button name="publish" type="submit">
+                    <x-dashboard.primary-button name="action" value="publish" type="submit">
                         <i class="ri-save-3-line"></i>
                         <span>Update and {{ Auth::user()->role === 'writer' ? 'Save' : 'Publish' }}</span>
                     </x-dashboard.primary-button>
-                    <x-dashboard.secondary-button name="unpublish" type="submit">
+                    <x-dashboard.secondary-button name="action" value="draft" type="submit">
                         <i class="ri-draft-line"></i>
                         <span>Save As Draft</span>
                     </x-dashboard.secondary-button>
@@ -175,11 +175,11 @@
             </x-card>
 
             <div class="space-x-0.5 md:space-x-1.5">
-                <x-dashboard.primary-button name="publish" type="submit">
+                <x-dashboard.primary-button name="action" value="publish" type="submit">
                     <i class="ri-save-3-line"></i>
                     <span>Save and Publish</span>
                 </x-dashboard.primary-button>
-                <x-dashboard.secondary-button name="unpublish" type="submit">
+                <x-dashboard.secondary-button name="action" value="draft" type="submit">
                     <i class="ri-draft-line"></i>
                     <span>Save As Draft</span>
                 </x-dashboard.secondary-button>

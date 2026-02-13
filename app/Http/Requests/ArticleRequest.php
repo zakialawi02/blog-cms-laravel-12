@@ -19,7 +19,6 @@ class ArticleRequest extends FormRequest
     {
         $this->merge([
             'slug' => (empty($this->slug)) ? Str::slug($this->title) : Str::slug($this->slug),
-            'published_at' => (!empty($this->published_at)) ? $this->published_at : now()
         ]);
     }
 
@@ -32,6 +31,7 @@ class ArticleRequest extends FormRequest
     {
         $post = $this->route('post');
         return [
+            'action' => 'required|in:publish,draft',
             'title' => 'required|min:5',
             'slug' => 'required|unique:articles,slug,' . $post?->id,
             'category_id' => 'nullable|exists:categories,id',

@@ -35,6 +35,36 @@ class PostController extends Controller
         $this->sectionContentService = $sectionContentService;
     }
 
+    private function resolvePublishingData(Request $request, array &$data, ?Article $post = null): void
+    {
+        $isPrivilegedUser = in_array(Auth::user()->role, ['superadmin', 'admin'], true);
+        $action = $request->input('action');
+
+        if ($action === 'draft') {
+            $data['status'] = 'draft';
+            // Keep the original publish date for posts that were already published.
+            $data['published_at'] = ($post && $post->status === 'published' && $post->published_at)
+                ? $post->published_at
+                : null;
+            return;
+        }
+
+        if ($isPrivilegedUser) {
+            $data['status'] = 'published';
+
+            // If the post has ever been published, preserve its original publish date.
+            if ($post && $post->published_at) {
+                $data['published_at'] = $post->published_at;
+            } else {
+                $data['published_at'] = $data['published_at'] ?? now();
+            }
+            return;
+        }
+
+        $data['status'] = 'pending';
+        $data['published_at'] = null;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -242,20 +272,7 @@ class PostController extends Controller
     {
         try {
             $data = $request->validated();
-
-            // Tentukan status publish/unpublish
-            if ($request->has('publish')) {
-                if (Auth::user()->role === 'superadmin' || Auth::user()->role === 'admin') {
-                    $data['status'] = 'published';
-                    $data['published_at'] = $data['published_at'] ?? now();
-                } else {
-                    $data['status'] = 'pending';
-                    $data['published_at'] = null;
-                }
-            } elseif ($request->has('unpublish')) {
-                $data['status'] = 'draft';
-                $data['published_at'] = null;
-            }
+            $this->resolvePublishingData($request, $data);
 
             // Handle upload cover
             $uploader = new UploadCoverImage();
@@ -268,10 +285,12 @@ class PostController extends Controller
             Article::create($data);
 
             $message = 'Post created successfully.';
-            if ($data['status'] == 'pending') {
+            if ($data['status'] === 'pending') {
                 $message .= ' Post is waiting for approval.';
-            } else {
+            } elseif ($data['status'] === 'published') {
                 $message .= ' Post is published.';
+            } else {
+                $message .= ' Post is saved as draft.';
             }
             return redirect()->route('admin.posts.index')->with('success', $message);
         } catch (QueryException $e) {
@@ -358,20 +377,7 @@ class PostController extends Controller
 
             // Validasi request
             $data = $request->validated();
-
-            // Set status publish/unpublish
-            if ($request->has('publish')) {
-                if (Auth::user()->role === 'superadmin' || Auth::user()->role === 'admin') {
-                    $data['status'] = 'published';
-                    $data['published_at'] = $data['published_at'] ?? now();
-                } else {
-                    $data['status'] = 'pending';
-                    $data['published_at'] = null;
-                }
-            } elseif ($request->has('unpublish')) {
-                $data['status'] = 'draft';
-                $data['published_at'] = null;
-            }
+            $this->resolvePublishingData($request, $data, $post);
 
             // Handle upload cover
             $uploader = new UploadCoverImage();
@@ -384,10 +390,12 @@ class PostController extends Controller
             $post->update($data);
 
             $message = 'Post updated successfully.';
-            if ($data['status'] == 'pending') {
+            if ($data['status'] === 'pending') {
                 $message .= ' Post is waiting for approval.';
-            } else {
+            } elseif ($data['status'] === 'published') {
                 $message .= ' Post is published.';
+            } else {
+                $message .= ' Post is saved as draft.';
             }
             return redirect()->route('admin.posts.index')->with('success', $message);
         } catch (QueryException $e) {
