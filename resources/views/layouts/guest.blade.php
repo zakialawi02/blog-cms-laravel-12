@@ -13,7 +13,7 @@
                 }
             })();
         </script>
-        <title>@yield('title') • Auth | {{ $data['web_setting']['web_name'] ?? config('app.name') }}</title>
+        <title>@yield('title') - {{ $data['web_setting']['web_name'] ?? config('app.name') }}</title>
 
         <meta name="description" content="@yield('meta_description', 'Securely access your account. Log in or sign up to manage your profile, settings, and preferences.')">
         <meta name="author" content="@yield('meta_author', 'Zaki Alawi')">

@@ -153,6 +153,8 @@ Route::get('/blog/{year}/{slug}', [ArticleController::class, 'show'])->name('art
 Route::post('/blog/{month}/{year}/{slug}/{token}/record', [ArticleController::class, 'recordVisitor'])->middleware('throttle:10,1')->name('article.record');
 
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
+Route::get('/newsletter/unsubscribe/{newsletter}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe')->middleware('signed');
+Route::get('/newsletter/resubscribe/{newsletter}', [NewsletterController::class, 'resubscribe'])->name('newsletter.resubscribe')->middleware('signed');
 
 Route::get('/dashboard/pages/{id}/load-project', [PageController::class, 'loadProject'])->name('pages.loadproject');
 
