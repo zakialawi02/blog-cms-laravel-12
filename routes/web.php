@@ -90,6 +90,8 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
         Route::delete('/posts/{post:slug}/permanent', [PostController::class, 'permanentlyDelete'])->name('posts.destroy-permanent');
         Route::post('/posts/restore/{slug}', [PostController::class, 'restore'])->name('posts.restore');
+        Route::view('/posts/ai-generator', 'pages.dashboard.posts.ai-generator')->name('posts.ai-generator');
+
 
         // Image upload (CKEditor WYSIWYG)
         Route::post('/upload/image', [UploadController::class, 'upload'])->name('upload.image');
