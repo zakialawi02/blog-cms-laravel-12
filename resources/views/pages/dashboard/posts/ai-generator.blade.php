@@ -16,8 +16,9 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">Create a new article with AI.</p>
                     </div>
 
-                    <form id="ai-generate-form" action="#" method="POST">
+                    <form id="ai-generate-form" action="{{ route('admin.posts.ai-generator.store') }}" method="POST">
                         @csrf
+
                         <!-- Topic -->
                         <div class="mb-4">
                             <x-dashboard.input-label for="topic" :value="__('Topic / Title')" />
@@ -41,18 +42,22 @@
                         <div class="mb-4">
                             <x-dashboard.input-label for="model" :value="__('AI Model')" />
                             <select id="model" name="model" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
-                                <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
-                                <option value="deepseek-v3-2-251201">DeepSeek V3</option>
-                                <option value="glm-4-7-251222">GLM-4</option>
-                                <option value="kimi-k2-250905">Kimi K2</option>
-                                <option value="kimi-k2-thinking-251104">Kimi K2 Thinking</option>
-                                <option value="seed-1-8-251228">Seed 1.8</option>
+                                <optgroup label="Gemini">
+                                    <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
+                                </optgroup>
+                                <optgroup label="Sumopod">
+                                    <option value="deepseek-v3-2-251201">DeepSeek V3</option>
+                                    <option value="glm-4-7-251222">GLM-4</option>
+                                    <option value="kimi-k2-250905">Kimi K2</option>
+                                    <option value="kimi-k2-thinking-251104">Kimi K2 Thinking</option>
+                                    <option value="seed-1-8-251228">Seed 1.8</option>
+                                </optgroup>
                             </select>
                         </div>
 
                         <!-- Submit Button -->
                         <div class="mt-6">
-                            <x-dashboard.primary-button type="submit" class="w-full justify-center">
+                            <x-dashboard.primary-button type="submit" class="w-full justify-center" id="btn-submit">
                                 <i class="ri-sparkling-fill mr-2"></i>
                                 <span>Generate Article</span>
                             </x-dashboard.primary-button>
@@ -69,8 +74,8 @@
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Generation History</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400">Manage your previously generated content.</p>
                         </div>
-                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                            Clear History
+                        <button type="button" onclick="refreshHistory()" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                            <i class="ri-refresh-line mr-1"></i> Refresh
                         </button>
                     </div>
 
@@ -82,124 +87,98 @@
                                     <th scope="col" class="px-4 py-3">Topic</th>
                                     <th scope="col" class="px-4 py-3">Model</th>
                                     <th scope="col" class="px-4 py-3">Status</th>
-                                    <th scope="col" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Mock Data Row 1 -->
-                                <tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                                    <td class="px-4 py-3 text-nowrap">
-                                        {{ now()->format('Y-m-d H:i') }}
-                                    </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
-                                        <div class="line-clamp-1 truncate font-medium">Laravel 12 New Features</div>
-                                    </td>
-                                    <td class="px-4 py-3">Gemini Flash</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-300">
-                                            <span class="mr-1 h-2 w-2 rounded-full bg-green-500"></span>
-                                            Completed
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 text-nowrap">
-                                        <button class="mr-2 rounded p-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors" title="View">
-                                            <i class="ri-eye-line text-lg"></i>
-                                        </button>
-                                        <button class="mr-2 rounded p-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors" title="Use as Draft">
-                                            <i class="ri-file-edit-line text-lg"></i>
-                                        </button>
-                                        <button class="rounded p-1 text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors" title="Delete">
-                                            <i class="ri-delete-bin-line text-lg"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Mock Data Row 2 -->
-                                <tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                                    <td class="px-4 py-3 text-nowrap">
-                                        {{ now()->subHour()->format('Y-m-d H:i') }}
-                                    </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
-                                        <div class="line-clamp-1 truncate font-medium">Sustainable Energy Trends 2025</div>
-                                    </td>
-                                    <td class="px-4 py-3">GPT-4o</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                                            <span class="mr-1 h-2 w-2 animate-pulse rounded-full bg-yellow-500"></span>
-                                            Processing
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 text-nowrap">
-                                        <button class="rounded p-1 text-gray-400 cursor-not-allowed" disabled>
-                                            <i class="ri-eye-off-line text-lg"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Mock Data Row 3 -->
-                                <tr class="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                                    <td class="px-4 py-3 text-nowrap">
-                                        {{ now()->subDays(1)->format('Y-m-d H:i') }}
-                                    </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
-                                        <div class="line-clamp-1 truncate font-medium">How to bake a cake</div>
-                                    </td>
-                                    <td class="px-4 py-3">Gemini Pro</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-300">
-                                            <span class="mr-1 h-2 w-2 rounded-full bg-red-500"></span>
-                                            Failed
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 text-nowrap">
-                                        <button class="mr-2 rounded p-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors" title="Retry">
-                                            <i class="ri-refresh-line text-lg"></i>
-                                        </button>
-                                        <button class="rounded p-1 text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors" title="Delete">
-                                            <i class="ri-delete-bin-line text-lg"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                            <tbody id="history-table-body">
+                                @include('pages.dashboard.posts.partials.ai-generator-table')
                             </tbody>
                         </table>
                     </div>
-                    <!-- Pagination Mock -->
-                    <div class="mt-4 flex items-center justify-between border-t border-gray-200 pt-4 dark:border-gray-700">
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Showing <span class="font-semibold text-gray-900 dark:text-white">1-3</span> of <span class="font-semibold text-gray-900 dark:text-white">12</span></span>
-                        <div class="inline-flex gap-2">
-                            <button class="rounded px-3 py-1 text-sm text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700" disabled>Previous</button>
-                            <button class="rounded px-3 py-1 text-sm text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">Next</button>
-                        </div>
+                    <!-- Pagination -->
+                    <div class="mt-4">
+                        {{ $history->links() }}
                     </div>
                 </x-card>
             </div>
         </div>
     </section>
 
+    <!-- Result Modal (Simple implementation) -->
+    <div id="result-modal" class="fixed inset-0 z-50 flex hidden items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm">
+        <div class="w-full max-w-4xl rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800 h-[80vh] flex flex-col">
+            <div class="mb-4 flex items-center justify-between">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Generated Content</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="ri-close-line text-2xl"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 font-mono text-sm" id="modal-content">
+                <!-- Content goes here -->
+            </div>
+            <div class="mt-4 flex justify-end gap-2">
+                <button onclick="closeModal()" class="rounded-lg bg-gray-200 px-4 py-2 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Close</button>
+                <button onclick="copyModalContent()" class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Copy HTML</button>
+            </div>
+        </div>
+    </div>
+
     @push('javascript')
         <script>
+            // AJAX Removed - Standard Form Submission
             $(document).ready(function() {
-                $('#ai-generate-form').on('submit', function(e) {
-                    e.preventDefault();
-                    // Simple Alert for demonstration since it is frontend only
-                    const topic = $('#topic').val();
-                    const model = $('#model option:selected').text();
-
-                    // Show loading state on button
-                    const btn = $(this).find('button[type="submit"]');
-                    const originalContent = btn.html();
+                // Simple loading state on submit (allow default action)
+                $('#ai-generate-form').on('submit', function() {
+                    const form = $(this);
+                    const btn = form.find('button[type="submit"]');
                     btn.html('<i class="ri-loader-4-line animate-spin mr-2"></i> Generating...');
                     btn.prop('disabled', true);
-
-                    // Simulate API call
-                    setTimeout(() => {
-                        alert(`[MOCK] Generating article about "${topic}" using ${model}...`);
-                        btn.html(originalContent);
-                        btn.prop('disabled', false);
-                        // In a real app, this would refresh the history table or redirect
-                    }, 1500);
+                    // No e.preventDefault() here, let it submit
                 });
             });
+
+            function refreshHistory() {
+                const btn = $('button[onclick="refreshHistory()"]');
+                const originalContent = btn.html();
+                btn.html('<i class="ri-loader-4-line animate-spin mr-1"></i> Refreshing...');
+                btn.prop('disabled', true);
+
+                $.get("{{ route('admin.posts.ai-generator.index') }}", function(data) {
+                        $('#history-table-body').html(data);
+                    })
+                    .always(function() {
+                        btn.html(originalContent);
+                        btn.prop('disabled', false);
+                    });
+            }
+
+            // Modal & Copy Utils
+            function viewResult(id) {
+                const content = $(`#result-${id}`).text(); // plain text to show HTML code
+                // or .html() if we want to render it, but for copy we usually want code
+                // Requirement: "generate article... purely in HTML format". The result IS HTML.
+                // Displaying it: likely user wants to see the code to copy-paste into editor.
+                $('#modal-content').text(content);
+                $('#result-modal').removeClass('hidden');
+            }
+
+            function closeModal() {
+                $('#result-modal').addClass('hidden');
+            }
+
+            function copyToClipboard(elementId) {
+                const content = $(`#${elementId}`).text();
+                navigator.clipboard.writeText(content).then(() => {
+                    // Toast or visual feedback could go here
+                    alert('Copied to clipboard!');
+                });
+            }
+
+            function copyModalContent() {
+                const content = $('#modal-content').text();
+                navigator.clipboard.writeText(content).then(() => {
+                    alert('Copied to clipboard!');
+                });
+            }
         </script>
     @endpush
 </x-app-layout>

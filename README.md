@@ -19,6 +19,7 @@ This Content Management System is packed with features designed to provide a com
 ### Content Management
 
 - **Article Management**: Perform CRUD (Create, Read, Update, Delete) operations on blog articles.
+- **AI Article Generator**: Automatically generate high-quality, SEO-optimized articles using AI (Gemini or Sumopod).
 - **Category and Tag Management**: Easily organize articles by creating and managing categories and tags to improve content discoverability.
 - **Page Management**: Create and manage static pages (like "About Us" or "Contact") to complement your blog articles.
 - **Page Layout Settings**: Customize the layout and content sections of your homepage directly from the dashboard.
@@ -38,6 +39,32 @@ This Content Management System is packed with features designed to provide a com
     - **Category Page**: Filters articles by their assigned categories.
     - **Archive Page**: Offers filtering options based on tags, authors, or dates.
     - **Single Post Page**: Presents individual articles with a dedicated comment section to foster interaction.
+
+---
+
+## AI Configuration
+
+To enable the AI content generation features, you need to configure the API keys in your `.env` file.
+
+### 1. Gemini API (Google)
+
+The system uses Google's Gemini for text and image generation.
+
+- **API Key**: Obtain your key from [Google AI Studio](https://aistudio.google.com/).
+- **Environment Variable**:
+    ```env
+    GEMINI_API_KEY=your_gemini_api_key_here
+    ```
+
+### 2. Sumopod AI
+
+The system also supports Sumopod as an alternative AI provider, [https://sumopod.com/dashboard/ai/keys](https://sumopod.com/dashboard/ai/keys).
+
+- **API Key**: Obtain your key from your Sumopod dashboard.
+- **Environment Variable**:
+    ```env
+    SUMOPOD_API_KEY=your_sumopod_api_key_here
+    ```
 
 ---
 
@@ -126,6 +153,12 @@ After seeding the database, you can log in with the following default accounts:
 API documentation is available through Postman. You can view the collection and test the endpoints here:
 
 [**View API Docs on Postman**](https://documenter.getpostman.com/view/25223819/2sAYkLoHLh)
+
+## Support and Donations
+
+If you find this project useful and would like to support its further development, you can make a donation via the following platforms:
+
+https://ko-fi.com/zakialawi
 
 ---
 
