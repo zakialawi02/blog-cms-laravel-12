@@ -315,4 +315,33 @@ class AiService
             ];
         }
     }
+
+    /**
+     * Generates a list of article topic ideas based on a category.
+     *
+     * @param string $category
+     * @return array
+     */
+    public function generateTopicIdeas(string $category): array
+    {
+        $prompt = "Generate 5 catchy, SEO-friendly article topic titles related to the category '{$category}'. Return ONLY the titles in English, separated by a newline. Do not include numbering or bullet points.";
+
+        try {
+            // Use a lightweight model for this simple task, defaults to Gemini Flash
+            $text = $this->textToText($prompt);
+
+            // Split by newline and filter empty lines
+            $ideas = array_filter(array_map('trim', explode("\n", $text)));
+
+            return [
+                'success' => true,
+                'data' => array_values($ideas)
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
 }

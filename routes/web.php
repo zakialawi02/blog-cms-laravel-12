@@ -94,6 +94,7 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         // AI Generator
         Route::prefix('posts/ai-generator')->name('posts.ai-generator.')->group(function () {
             Route::get('/', [AiGeneratorController::class, 'index'])->name('index');
+            Route::post('/generate-ideas', [AiGeneratorController::class, 'generateIdeas'])->name('generate-ideas');
             Route::post('/', [AiGeneratorController::class, 'store'])->name('store');
         });
 

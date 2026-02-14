@@ -19,6 +19,30 @@
                     <form id="ai-generate-form" action="{{ route('admin.posts.ai-generator.store') }}" method="POST">
                         @csrf
 
+                        <!-- Category & Topic -->
+                        <div class="mb-4">
+                            <x-dashboard.input-label for="category" :value="__('Category')" />
+                            <div class="flex gap-2">
+                                <select id="category" name="category" class="mt-1 block w-1/3 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                                    <option value="" disabled selected>Select Category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->category }}">{{ $category->category }}</option>
+                                    @endforeach
+                                </select>
+                                <button type="button" onclick="generateIdeas()" id="btn-generate-ideas" class="mt-1 flex items-center justify-center rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:bg-purple-500 dark:hover:bg-purple-600">
+                                    <i class="ri-lightbulb-flash-line mr-2"></i> Generate Ideas
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Ideas Result Container -->
+                        <div id="ideas-container" class="mb-4 hidden rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-900 dark:bg-purple-900/20">
+                            <h4 class="mb-2 text-sm font-semibold text-purple-900 dark:text-purple-300">Topic Ideas (Click to select):</h4>
+                            <div id="ideas-list" class="flex flex-col gap-2">
+                                <!-- Ideas will be injected here -->
+                            </div>
+                        </div>
+
                         <!-- Topic -->
                         <div class="mb-4">
                             <x-dashboard.input-label for="topic" :value="__('Topic / Title')" />
@@ -149,6 +173,59 @@
                         btn.html(originalContent);
                         btn.prop('disabled', false);
                     });
+            }
+
+            function generateIdeas() {
+                const category = $('#category').val();
+                if (!category) {
+                    alert('Please select a category first.');
+                    return;
+                }
+
+                const btn = $('#btn-generate-ideas');
+                const originalContent = btn.html();
+                btn.html('<i class="ri-loader-4-line animate-spin mr-2"></i> Generating...');
+                btn.prop('disabled', true);
+                $('#ideas-container').addClass('hidden');
+
+                $.ajax({
+                    url: "{{ route('admin.posts.ai-generator.generate-ideas') }}",
+                    type: 'POST',
+                    data: {
+                        category: category,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            const list = $('#ideas-list');
+                            list.empty();
+                            response.data.forEach(idea => {
+                                const button = $('<button>', {
+                                    type: 'button',
+                                    class: 'text-left text-sm text-gray-700 dark:text-gray-300 hover:text-purple-700 dark:hover:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/40 p-2 rounded transition-colors',
+                                    text: idea,
+                                    click: function() {
+                                        $('#topic').val(idea);
+                                        // Optional: Visual feedback
+                                        $('#ideas-list button').removeClass('bg-purple-200 dark:bg-purple-800');
+                                        $(this).addClass('bg-purple-200 dark:bg-purple-800');
+                                    }
+                                });
+                                list.append(button);
+                            });
+                            $('#ideas-container').removeClass('hidden');
+                        } else {
+                            alert('Failed to generate ideas: ' + response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('An error occurred while generating ideas.');
+                    },
+                    complete: function() {
+                        btn.html(originalContent);
+                        btn.prop('disabled', false);
+                    }
+                });
             }
 
             // Modal & Copy Utils

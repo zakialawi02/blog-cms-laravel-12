@@ -21,7 +21,9 @@ class AiGeneratorController extends Controller
             return view('pages.dashboard.posts.partials.ai-generator-table', compact('history'))->render();
         }
 
-        return view('pages.dashboard.posts.ai-generator', compact('history'));
+        $categories = \App\Models\Category::all();
+
+        return view('pages.dashboard.posts.ai-generator', compact('history', 'categories'));
     }
 
     public function store(Request $request)
@@ -55,5 +57,17 @@ class AiGeneratorController extends Controller
         GenerateAiArticleJob::dispatch($generation->id)->onQueue('generator');
 
         return redirect()->route('admin.posts.ai-generator.index')->with('success', 'Generation started. Please wait for the process to complete.');
+    }
+
+    public function generateIdeas(Request $request, \App\Services\AiService $aiService)
+    {
+        $request->validate([
+            'category' => 'required|string|max:255',
+        ]);
+
+        $category = $request->input('category');
+        $result = $aiService->generateTopicIdeas($category);
+
+        return response()->json($result);
     }
 }
