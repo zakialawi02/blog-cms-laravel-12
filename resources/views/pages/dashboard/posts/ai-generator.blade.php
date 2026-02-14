@@ -66,16 +66,13 @@
                         <div class="mb-4">
                             <x-dashboard.input-label for="model" :value="__('AI Model')" />
                             <select id="model" name="model" class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
-                                <optgroup label="Gemini">
-                                    <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
-                                </optgroup>
-                                <optgroup label="Sumopod">
-                                    <option value="deepseek-v3-2-251201">DeepSeek V3</option>
-                                    <option value="glm-4-7-251222">GLM-4</option>
-                                    <option value="kimi-k2-250905">Kimi K2</option>
-                                    <option value="kimi-k2-thinking-251104">Kimi K2 Thinking</option>
-                                    <option value="seed-1-8-251228">Seed 1.8</option>
-                                </optgroup>
+                                @foreach (config('ai.models') as $provider => $models)
+                                    <optgroup label="{{ ucfirst($provider) }}">
+                                        @foreach ($models as $key => $name)
+                                            <option value="{{ $key }}">{{ $name }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                @endforeach
                             </select>
                         </div>
 

@@ -60,7 +60,7 @@ class GenerateAiArticleJob implements ShouldQueue
                 // Parse the content
                 $rawContent = $result['data'];
                 $title = $generation->topic; // Default
-                $slug = \Illuminate\Support\Str::slug($generation->topic) . '-' . \Illuminate\Support\Str::random(6);
+
                 $content = $rawContent; // Default to raw if parsing fails
                 $metaKeywords = '';
                 $metaDesc = '';
@@ -73,7 +73,6 @@ class GenerateAiArticleJob implements ShouldQueue
                 // Parser for custom tags
                 if (preg_match('/<AiTitle>(.*?)<\/AiTitle>/s', $rawContent, $match)) {
                     $title = trim($match[1]);
-                    $slug = \Illuminate\Support\Str::slug($title) . '-' . \Illuminate\Support\Str::random(6);
                 }
 
                 if (preg_match('/<AiSEOKeyword>(.*?)<\/AiSEOKeyword>/s', $rawContent, $match)) {
@@ -92,6 +91,14 @@ class GenerateAiArticleJob implements ShouldQueue
                     $content = preg_replace('/<AiSEOKeyword>.*?<\/AiSEOKeyword>/s', '', $content);
                     $content = preg_replace('/<AiMetaDescription>.*?<\/AiMetaDescription>/s', '', $content);
                     $content = trim($content);
+                }
+
+                // Generate unique slug
+                $slug = \Illuminate\Support\Str::slug($title);
+                $originalSlug = $slug;
+                $count = 1;
+                while (\App\Models\Article::withTrashed()->where('slug', $slug)->exists()) {
+                    $slug = $originalSlug . '-' . $count++;
                 }
 
                 // Create Article

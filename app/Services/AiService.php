@@ -16,6 +16,14 @@ class AiService
     protected $geminiApiKey;
     protected $sumopodApiKey;
     protected $timeout = 600;
+    protected $allowedModels = [
+        'gemini-3-flash-preview',
+        'deepseek-v3-2-251201',
+        'glm-4-7-251222',
+        'kimi-k2-250905',
+        'kimi-k2-thinking-251104',
+        'seed-1-8-251228',
+    ];
 
     public function __construct()
     {
@@ -70,8 +78,7 @@ class AiService
         ];
 
         try {
-            $response = Http::withoutVerifying()
-                ->timeout($this->timeout)
+            $response = Http::timeout($this->timeout)
                 ->post($url, $payload);
 
             if ($response->failed()) {
@@ -100,8 +107,7 @@ class AiService
         }
 
         try {
-            $response = Http::withoutVerifying()
-                ->timeout($this->timeout)
+            $response = Http::timeout($this->timeout)
                 ->withHeaders([
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $this->sumopodApiKey,
@@ -160,7 +166,7 @@ class AiService
         ];
 
         try {
-            $response = Http::withoutVerifying()->post($fullUrl, $payload);
+            $response = Http::post($fullUrl, $payload);
 
             if ($response->failed()) {
                 $errorDetails = $response->json() ?? ['error' => ['message' => $response->body()]];
@@ -218,15 +224,6 @@ class AiService
             ], $statusCode);
         }
     }
-
-    protected $allowedModels = [
-        'gemini-3-flash-preview',
-        'deepseek-v3-2-251201',
-        'glm-4-7-251222',
-        'kimi-k2-250905',
-        'kimi-k2-thinking-251104',
-        'seed-1-8-251228',
-    ];
 
     /**
      * Public method to be called by the Controller, returning a JsonResponse.
@@ -293,8 +290,8 @@ class AiService
         5.  **<AiSEOKeyword>:** Place 5-10 SEO keywords that you have created here. Keywords must be separated by commas.
         6.  **<AiMetaDescription>:** Write a concise and compelling meta description (150-160 characters) that summarizes the article and includes the main keyword.
         7.  **<AiMain>:** Must contain the full article content in valid, clean HTML.
-        7.  **NO MARKDOWN:** All content inside this tag must be pure HTML.
-        8.  **CODE SNIPPETS:** If the article requires code examples, they MUST be wrapped in `<pre><code class=\"language-xxx\">` tags.
+        8.  **NO MARKDOWN:** All content inside this tag must be pure HTML.
+        9.  **CODE SNIPPETS:** If the article requires code examples, they MUST be wrapped in `<pre><code class=\"language-xxx\">` tags.
 
         ## TOPIC INPUT ##
         Create an article about the following topic. Remember to first analyze it for keywords and to write the entire output in clean HTML without any Markdown elements, following all code snippet formatting rules if applicable.

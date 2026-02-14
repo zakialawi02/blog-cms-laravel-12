@@ -38,10 +38,12 @@ class AiGeneratorController extends Controller
         $model = $request->input('model');
         $provider = 'gemini'; // Default
 
-        // Simple logic to detect provider.
-        // Adjust this logic if you have more specific rules or if the frontend sends the provider.
-        if (in_array($model, ['deepseek-v3-2-251201', 'glm-4-7-251222', 'kimi-k2-250905', 'kimi-k2-thinking-251104', 'seed-1-8-251228'])) {
-            $provider = 'sumopod';
+        // Detect provider from config
+        foreach (config('ai.models') as $providerKey => $models) {
+            if (array_key_exists($model, $models)) {
+                $provider = $providerKey;
+                break;
+            }
         }
 
         $generation = AiArticleGeneration::create([
