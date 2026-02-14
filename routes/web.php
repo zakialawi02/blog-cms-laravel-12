@@ -18,6 +18,7 @@ use App\Http\Controllers\WebSettingController;
 use App\Http\Controllers\ArticleViewController;
 use App\Http\Controllers\Socialite\ProviderCallbackController;
 use App\Http\Controllers\Socialite\ProviderRedirectController;
+use App\Http\Controllers\AiGeneratorController;
 
 Route::get('/auth/{provider}/redirect', ProviderRedirectController::class)->name('auth.redirect');
 Route::get('/auth/{provider}/callback', ProviderCallbackController::class)->name('auth.callback');
@@ -90,6 +91,13 @@ Route::prefix('dashboard')->name('admin.')->group(function () {
         Route::delete('/posts/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
         Route::delete('/posts/{post:slug}/permanent', [PostController::class, 'permanentlyDelete'])->name('posts.destroy-permanent');
         Route::post('/posts/restore/{slug}', [PostController::class, 'restore'])->name('posts.restore');
+        // AI Generator
+        Route::prefix('posts/ai-generator')->name('posts.ai-generator.')->group(function () {
+            Route::get('/', [AiGeneratorController::class, 'index'])->name('index');
+            Route::post('/generate-ideas', [AiGeneratorController::class, 'generateIdeas'])->name('generate-ideas');
+            Route::post('/', [AiGeneratorController::class, 'store'])->name('store');
+        });
+
 
         // Image upload (CKEditor WYSIWYG)
         Route::post('/upload/image', [UploadController::class, 'upload'])->name('upload.image');

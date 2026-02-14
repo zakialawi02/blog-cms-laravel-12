@@ -188,8 +188,6 @@
 
     </section>
 
-    <x-dashboard.ai-panel />
-
     @push('css')
         <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
         <link type="text/css" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" />

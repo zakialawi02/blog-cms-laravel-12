@@ -10,30 +10,54 @@ use Illuminate\Http\JsonResponse;
 
 class AiService
 {
-    protected $geminiTextApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent';
+    protected $sumopodApiUrl = 'https://ai.sumopod.com/v1/chat/completions';
+    protected $geminiTextApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
     protected $geminiImageApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict';
-    // protected $geminiImageApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
-    protected $apiKey;
+    protected $geminiApiKey;
+    protected $sumopodApiKey;
+    protected $timeout = 600;
 
     public function __construct()
     {
-        $this->apiKey = env('GEMINI_API_KEY');
+        $this->geminiApiKey = env('GEMINI_API_KEY');
+        $this->sumopodApiKey = env('SUMOPOD_API_KEY');
 
-        if (empty($this->apiKey)) {
-            Log::error('GEMINI_API_KEY is not set in the .env file.');
+        if (empty($this->geminiApiKey)) {
+            Log::warning('GEMINI_API_KEY is not set in the .env file.');
+        }
+        if (empty($this->sumopodApiKey)) {
+            Log::warning('SUMOPOD_API_KEY is not set in the .env file.');
         }
     }
 
     /**
-     * Generates text based on the prompt.
+     * Generates text based on the prompt using specified provider and model.
      *
      * @param string $prompt
+     * @param string $model
+     * @param string $provider
      * @return string
      * @throws Exception
      */
-    public function textToText($prompt): string
+    public function textToText($prompt, $model = 'gemini-3-flash-preview', $provider = 'gemini'): string
     {
-        // Payload structure for Gemini API
+        if ($provider === 'sumopod') {
+            return $this->generateWithSumopod($prompt, $model);
+        }
+
+        return $this->generateWithGemini($prompt, $model);
+    }
+
+    protected function generateWithGemini($prompt, $model)
+    {
+        // Ensure model name is correct for Gemini URL
+        // Default to a known model if generic "gemini" is passed or if empty
+        if (empty($model) || $model === 'gemini') {
+            $model = 'gemini-3-flash-preview';
+        }
+
+        $url = $this->geminiTextApiUrl . $model . ':generateContent?key=' . $this->geminiApiKey;
+
         $payload = [
             'contents' => [
                 [
@@ -46,25 +70,68 @@ class AiService
         ];
 
         try {
-            $response = Http::post($this->geminiTextApiUrl . '?key=' . $this->apiKey, $payload);
+            $response = Http::withoutVerifying()
+                ->timeout($this->timeout)
+                ->post($url, $payload);
 
             if ($response->failed()) {
-                Log::error('AI Service API Error', ['response' => $response->json()]);
-                throw new Exception('Failed to get a valid response from the AI service.', $response->status());
+                Log::error('Gemini API Error', ['response' => $response->json(), 'url' => $url]);
+                throw new Exception('Failed to get a valid response from Gemini: ' . $response->body(), $response->status());
             }
 
             $text = $response->json('candidates.0.content.parts.0.text');
 
             if (is_null($text)) {
-                Log::warning('AI Service returned empty content', ['response' => $response->json()]);
-                throw new Exception('The AI service returned an empty response.');
+                Log::warning('Gemini returned empty content', ['response' => $response->json()]);
+                throw new Exception('Gemini returned an empty response.');
             }
 
             return $text;
         } catch (ConnectionException $e) {
-            // Menangani error koneksi (misal: DNS, timeout)
-            Log::critical('AI Service Connection Failed', ['error' => $e->getMessage()]);
-            throw new Exception('Could not connect to the AI service.', 503, $e);
+            Log::critical('Gemini Connection Failed', ['error' => $e->getMessage()]);
+            throw new Exception('Could not connect to Gemini service.', 503, $e);
+        }
+    }
+
+    protected function generateWithSumopod($prompt, $model)
+    {
+        if (empty($model)) {
+            $model = 'gpt-4o-mini'; // Default fallback
+        }
+
+        try {
+            $response = Http::withoutVerifying()
+                ->timeout($this->timeout)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->sumopodApiKey,
+                ])->post($this->sumopodApiUrl, [
+                    'model' => $model,
+                    'messages' => [
+                        [
+                            'role' => 'user',
+                            'content' => $prompt
+                        ]
+                    ],
+                    'temperature' => 0.7,
+                ]);
+
+            if ($response->failed()) {
+                Log::error('Sumopod API Error', ['response' => $response->json()]);
+                throw new Exception('Failed to get a valid response from Sumopod: ' . $response->body(), $response->status());
+            }
+
+            $text = $response->json('choices.0.message.content');
+
+            if (is_null($text)) {
+                Log::warning('Sumopod returned empty content', ['response' => $response->json()]);
+                throw new Exception('Sumopod returned an empty response.');
+            }
+
+            return $text;
+        } catch (ConnectionException $e) {
+            Log::critical('Sumopod Connection Failed', ['error' => $e->getMessage()]);
+            throw new Exception('Could not connect to Sumopod service.', 503, $e);
         }
     }
 
@@ -78,7 +145,7 @@ class AiService
     public function textToImage(string $prompt): array
     {
         // Buat URL lengkap dengan API Key
-        $fullUrl = $this->geminiImageApiUrl . '?key=' . $this->apiKey;
+        $fullUrl = $this->geminiImageApiUrl . '?key=' . $this->geminiApiKey;
 
         // Struktur payload untuk model image generation Gemini
         $payload = [
@@ -93,7 +160,7 @@ class AiService
         ];
 
         try {
-            $response = Http::post($fullUrl, $payload);
+            $response = Http::withoutVerifying()->post($fullUrl, $payload);
 
             if ($response->failed()) {
                 $errorDetails = $response->json() ?? ['error' => ['message' => $response->body()]];
@@ -152,7 +219,14 @@ class AiService
         }
     }
 
-
+    protected $allowedModels = [
+        'gemini-3-flash-preview',
+        'deepseek-v3-2-251201',
+        'glm-4-7-251222',
+        'kimi-k2-250905',
+        'kimi-k2-thinking-251104',
+        'seed-1-8-251228',
+    ];
 
     /**
      * Public method to be called by the Controller, returning a JsonResponse.
@@ -161,18 +235,36 @@ class AiService
      * It internally calls the `textToText` method and handles any potential exceptions.
      *
      * @param string $prompt The topic to generate the article about.
+     * @param string $language The language to generate the article in.
+     * @param string $model The model to use.
+     * @param string $provider The provider to use.
      * @param mixed|null $exsistData Existing article data to be used as an additional reference source.
-     * @return JsonResponse A successful response contains the generated article in HTML format.
+     * @return array Returns array with success boolean and data/message.
      */
-    public function generateArticle($prompt, $exsistData = null): JsonResponse
+    public function generateArticle($prompt, $language = 'en', $model = 'gemini-3-flash-preview', $provider = 'gemini', $exsistData = null): array
     {
+        if (!in_array($model, $this->allowedModels)) {
+            return [
+                'success' => false,
+                'message' => "Invalid model selected: {$model}",
+            ];
+        }
+
+        $languageName = match ($language) {
+            'id' => 'Indonesian (Bahasa Indonesia)',
+            'es' => 'Spanish',
+            'fr' => 'French',
+            'de' => 'German',
+            default => 'English',
+        };
+
         $promptTextOutput = "## AI ROLE ##
         You are an expert SEO Content Writer and a professional keyword analyst. You are skilled in writing technical articles. Your task is to analyze the given topic, generate relevant SEO keywords, and then write a high-quality, comprehensive article purely in HTML format. You must strictly adhere to all instructions, especially the output format, the prohibition of Markdown, and the formatting for code snippets.
 
         ## PRIMARY TASK ##
         1.  **Analyze the Topic:** First, analyze the topic from the '## TOPIC INPUT ##' section to identify the core subject, user intent, and main keywords.
         2.  **Generate Keywords:** Based on your analysis, generate a list of 5-10 relevant SEO keywords.
-        3.  **Write the Article:** Write a long, comprehensive article in English (800-1800 words or more) using the keywords you identified, following all content and formatting guidelines.
+        3.  **Write the Article:** Write a long, comprehensive article in {$languageName} (minimal 2000 words or more) using the keywords you identified, following all content and formatting guidelines. If you are below minimal words, continue by adding more relevant subheadings, examples, or deeper explanations until the minimum is reached.
 
         ## CONTENT GUIDELINES ##
         1.  **Target Audience:**
@@ -183,28 +275,26 @@ class AiService
 
         - The article must start with an engaging introduction that explains the importance of the topic and includes the most important keyword you identified.
         - The content should flow logically. Use the keywords you generated naturally in `<h2>` or `<h3>` headings and throughout the article body.
-        - Include a specific heading: `<h2>Common Challenges and How to Overcome Them</h2>`.
+        - Include a specific heading: `<h2>Common Challenges and How to Overcome Them</h2>` (Translated to {$languageName}).
         - Incorporate practical tips or examples. If the topic is technical, include relevant code snippets using the correct format specified in the output rules.
         - End with a strong concluding paragraph that summarizes the main points and includes a call to action.
 
         4.  **Call to Action (CTA):**
-        Include a call to action (CTA) such as \"Share your own tips in the comments section below!\" or \"Start your journey today by trying one of these tips.\" or any other phrase you like. The CTA should be placed at the end of the article.
+        Include a call to action (CTA) at the end of the article.
 
         ## EXISTING DATA INSTRUCTION ##
         If there is an existing article data available in the variable named `$exsistData`, you must carefully review it and, if the content is relevant and aligned with the current topic, use it as an additional reference source while writing your new article. You are encouraged to paraphrase, extract facts, or repurpose key points from this existing data where appropriate to enhance and enrich the new article, while still following all guidelines and ensuring originality and freshness of the content.
 
         ## STRICT OUTPUT FORMATTING ##
         1.  The entire output must be a single, continuous block of text. Do not use Markdown anywhere.
-        2.  Use the exact custom structure: <AiTitle>Your Title Here</AiTitle><AiSEOKeyword>Your Keywords Here</AiSEOKeyword><AiMain>Your HTML content here</AiMain>.
+        2.  Use the exact custom structure: <AiTitle>Your Title Here</AiTitle><AiSEOKeyword>Your Keywords Here</AiSEOKeyword><AiMetaDescription>Your Meta Description Here</AiMetaDescription><AiMain>Your HTML content here</AiMain>.
         3.  Do not include `<html>`, `<head>`, `<body>`, or `<article>` tags.
         4.  **<AiTitle>:** Must be a catchy, SEO-friendly title that uses the primary keyword you identified from the topic. Do not use a colon ':'.
-        5.  **<AiSEOKeyword>:** Place 5-20 SEO keywords that you have created here. Keywords must be separated by commas (e.g., keyword 1, keyword 2, keyword tiga). Keywords should be words, not phrases.
-        6.  **<AiMain>:** Must contain the full article content in valid, clean HTML.
-
-        - It must start with an introductory paragraph inside `<p>` tags.
-        - The largest heading used must be `<h2>`.
-        - **NO MARKDOWN:** All content inside this tag must be pure HTML. clear \n \n\n .
-        - **CODE SNIPPETS:** If the article requires code examples, they MUST be wrapped in `<pre><code class=\"language-xxx\">` tags, where `xxx` is the specific language name (e.g., `language-html`, `language-javascript`, `language-css`, `language-python`). This is mandatory for all code blocks.
+        5.  **<AiSEOKeyword>:** Place 5-10 SEO keywords that you have created here. Keywords must be separated by commas.
+        6.  **<AiMetaDescription>:** Write a concise and compelling meta description (150-160 characters) that summarizes the article and includes the main keyword.
+        7.  **<AiMain>:** Must contain the full article content in valid, clean HTML.
+        7.  **NO MARKDOWN:** All content inside this tag must be pure HTML.
+        8.  **CODE SNIPPETS:** If the article requires code examples, they MUST be wrapped in `<pre><code class=\"language-xxx\">` tags.
 
         ## TOPIC INPUT ##
         Create an article about the following topic. Remember to first analyze it for keywords and to write the entire output in clean HTML without any Markdown elements, following all code snippet formatting rules if applicable.
@@ -212,18 +302,47 @@ class AiService
 
 
         try {
-            $result = $this->textToText($promptTextOutput);
+            $result = $this->textToText($promptTextOutput, $model, $provider);
 
-            return response()->json([
+            return [
                 'success' => true,
                 'message' => 'Text generated successfully',
                 'data' => $result,
-            ], 200);
+            ];
         } catch (Exception $e) {
-            return response()->json([
+            return [
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], $e->getCode());
+            ];
+        }
+    }
+
+    /**
+     * Generates a list of article topic ideas based on a category.
+     *
+     * @param string $category
+     * @return array
+     */
+    public function generateTopicIdeas(string $category): array
+    {
+        $prompt = "Generate 5 catchy, SEO-friendly article topic titles related to the category '{$category}'. Return ONLY the titles in English, separated by a newline. Do not include numbering or bullet points.";
+
+        try {
+            // Use a lightweight model for this simple task, defaults to Gemini Flash
+            $text = $this->textToText($prompt);
+
+            // Split by newline and filter empty lines
+            $ideas = array_filter(array_map('trim', explode("\n", $text)));
+
+            return [
+                'success' => true,
+                'data' => array_values($ideas)
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
     }
 }
