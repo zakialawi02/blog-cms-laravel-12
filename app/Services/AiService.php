@@ -15,6 +15,7 @@ class AiService
     protected $geminiImageApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict';
     protected $geminiApiKey;
     protected $sumopodApiKey;
+    protected $timeout = 600;
 
     public function __construct()
     {
@@ -70,7 +71,7 @@ class AiService
 
         try {
             $response = Http::withoutVerifying()
-                ->timeout(120) // Set timeout to 120 seconds
+                ->timeout($this->timeout)
                 ->post($url, $payload);
 
             if ($response->failed()) {
@@ -100,7 +101,7 @@ class AiService
 
         try {
             $response = Http::withoutVerifying()
-                ->timeout(120) // Set timeout to 120 seconds
+                ->timeout($this->timeout)
                 ->withHeaders([
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $this->sumopodApiKey,
