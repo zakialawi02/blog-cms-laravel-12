@@ -10,8 +10,9 @@ use Illuminate\Http\JsonResponse;
 
 class AiService
 {
-    protected $geminiTextApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent';
-    protected $geminiImageApiUrl = 'https://generativelanguage.googleapis.com/v1beta/imagen-3.0-generate-002:predict';
+    protected $geminiTextApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent';
+    protected $geminiImageApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict';
+    // protected $geminiImageApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
     protected $apiKey;
 
     public function __construct()
