@@ -14,14 +14,16 @@ class WeeklyNewsletter extends Mailable
     use Queueable, SerializesModels;
 
     public $articles;
+    public $randomPosts;
     public $subscriber;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($articles, $subscriber)
+    public function __construct($articles, $randomPosts, $subscriber)
     {
         $this->articles = $articles;
+        $this->randomPosts = $randomPosts;
         $this->subscriber = $subscriber;
     }
 

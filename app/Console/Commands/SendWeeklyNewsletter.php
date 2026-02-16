@@ -39,6 +39,12 @@ class SendWeeklyNewsletter extends Command
             ->take(3)
             ->get();
 
+        $randomPosts = Article::where('status', 'published')
+            ->whereNotIn('id', $articles->pluck('id'))
+            ->inRandomOrder()
+            ->take(2)
+            ->get();
+
         if ($articles->isEmpty()) {
             $this->info('No articles published in the last week. Newsletter skipped.');
             return;
@@ -55,7 +61,7 @@ class SendWeeklyNewsletter extends Command
 
         foreach ($subscribers as $subscriber) {
             Mail::to($subscriber->email)
-                ->queue((new WeeklyNewsletter($articles, $subscriber))->onQueue('emails'));
+                ->queue((new WeeklyNewsletter($articles, $randomPosts, $subscriber))->onQueue('emails'));
         }
 
         $this->info('All newsletters have been queued.');

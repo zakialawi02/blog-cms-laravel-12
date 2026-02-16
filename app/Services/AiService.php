@@ -325,8 +325,11 @@ class AiService
         $prompt = "Generate 5 catchy, SEO-friendly article topic titles related to the category '{$category}'. Return ONLY the titles in English, separated by a newline. Do not include numbering or bullet points.";
 
         try {
-            // Use a lightweight model for this simple task, defaults to Gemini Flash
-            $text = $this->textToText($prompt);
+            // Use a random model and provider for this task
+            $randomModel = $this->allowedModels[array_rand($this->allowedModels)];
+            $provider = str_contains($randomModel, 'gemini') ? 'gemini' : 'sumopod';
+
+            $text = $this->textToText($prompt, $randomModel, $provider);
 
             // Split by newline and filter empty lines
             $ideas = array_filter(array_map('trim', explode("\n", $text)));
