@@ -13,28 +13,39 @@ class AiService
     protected $sumopodApiUrl = 'https://ai.sumopod.com/v1/chat/completions';
     protected $geminiTextApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
     protected $geminiImageApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict';
+    protected $qwenApiUrl = 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions';
     protected $geminiApiKey;
     protected $sumopodApiKey;
+    protected $qwenApiKey;
+    protected $cloudflareApiToken;
+    protected $cloudflareAccountId;
     protected $timeout = 600;
-    protected $allowedModels = [
-        'gemini-3-flash-preview',
-        'deepseek-v3-2-251201',
-        'glm-4-7-251222',
-        'kimi-k2-250905',
-        'kimi-k2-thinking-251104',
-        'seed-1-8-251228',
-    ];
+    protected $allowedModels = [];
 
     public function __construct()
     {
         $this->geminiApiKey = env('GEMINI_API_KEY');
         $this->sumopodApiKey = env('SUMOPOD_API_KEY');
+        $this->qwenApiKey = env('DASHSCOPE_API_KEY');
+        $this->cloudflareApiToken = env('CLOUDFLARE_AI_API_TOKEN');
+        $this->cloudflareAccountId = env('CLOUDFLARE_ACCOUNT_ID');
+
+        // Build allowed models dynamically from config
+        foreach (config('ai.models', []) as $models) {
+            $this->allowedModels = array_merge($this->allowedModels, array_keys($models));
+        }
 
         if (empty($this->geminiApiKey)) {
             Log::warning('GEMINI_API_KEY is not set in the .env file.');
         }
         if (empty($this->sumopodApiKey)) {
             Log::warning('SUMOPOD_API_KEY is not set in the .env file.');
+        }
+        if (empty($this->qwenApiKey)) {
+            Log::warning('DASHSCOPE_API_KEY is not set in the .env file.');
+        }
+        if (empty($this->cloudflareApiToken) || empty($this->cloudflareAccountId)) {
+            Log::warning('CLOUDFLARE_AI_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is not set in the .env file.');
         }
     }
 
@@ -51,6 +62,14 @@ class AiService
     {
         if ($provider === 'sumopod') {
             return $this->generateWithSumopod($prompt, $model);
+        }
+
+        if ($provider === 'qwen') {
+            return $this->generateWithQwen($prompt, $model);
+        }
+
+        if ($provider === 'cloudflare') {
+            return $this->generateWithCloudflare($prompt, $model);
         }
 
         return $this->generateWithGemini($prompt, $model);
@@ -138,6 +157,88 @@ class AiService
         } catch (ConnectionException $e) {
             Log::critical('Sumopod Connection Failed', ['error' => $e->getMessage()]);
             throw new Exception('Could not connect to Sumopod service.', 503, $e);
+        }
+    }
+
+    protected function generateWithQwen($prompt, $model)
+    {
+        if (empty($model)) {
+            $model = 'qwen3.5-plus';
+        }
+
+        try {
+            $response = Http::timeout($this->timeout)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->qwenApiKey,
+                ])->post($this->qwenApiUrl, [
+                    'model' => $model,
+                    'messages' => [
+                        [
+                            'role' => 'user',
+                            'content' => $prompt
+                        ]
+                    ],
+                    'stream' => false,
+                    'enable_thinking' => true,
+                ]);
+
+            if ($response->failed()) {
+                Log::error('Qwen API Error', ['response' => $response->json()]);
+                throw new Exception('Failed to get a valid response from Qwen: ' . $response->body(), $response->status());
+            }
+
+            $text = $response->json('choices.0.message.content');
+
+            if (is_null($text)) {
+                Log::warning('Qwen returned empty content', ['response' => $response->json()]);
+                throw new Exception('Qwen returned an empty response.');
+            }
+
+            return $text;
+        } catch (ConnectionException $e) {
+            Log::critical('Qwen Connection Failed', ['error' => $e->getMessage()]);
+            throw new Exception('Could not connect to Qwen service.', 503, $e);
+        }
+    }
+
+    protected function generateWithCloudflare($prompt, $model)
+    {
+        if (empty($model)) {
+            $model = '@cf/zai-org/glm-4.7-flash';
+        }
+
+        $url = 'https://api.cloudflare.com/client/v4/accounts/' . $this->cloudflareAccountId . '/ai/run/' . $model;
+
+        try {
+            $response = Http::withoutVerifying()->timeout($this->timeout)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->cloudflareApiToken,
+                ])->post($url, [
+                    'messages' => [
+                        [
+                            'role' => 'user',
+                            'content' => $prompt
+                        ]
+                    ],
+                ]);
+
+            if ($response->failed()) {
+                Log::error('Cloudflare AI API Error', ['response' => $response->json()]);
+                throw new Exception('Failed to get a valid response from Cloudflare AI: ' . $response->body(), $response->status());
+            }
+            $text = $response->json('result.choices.0.message.content');
+
+            if (is_null($text)) {
+                Log::warning('Cloudflare AI returned empty content', ['response' => $response->json()]);
+                throw new Exception('Cloudflare AI returned an empty response.');
+            }
+
+            return $text;
+        } catch (ConnectionException $e) {
+            Log::critical('Cloudflare AI Connection Failed', ['error' => $e->getMessage()]);
+            throw new Exception('Could not connect to Cloudflare AI service.', 503, $e);
         }
     }
 
@@ -256,7 +357,7 @@ class AiService
         };
 
         $promptTextOutput = "## AI ROLE ##
-        You are an expert SEO Content Writer and a professional keyword analyst. You are skilled in writing technical articles. Your task is to analyze the given topic, generate relevant SEO keywords, and then write a high-quality, comprehensive article purely in HTML format. You must strictly adhere to all instructions, especially the output format, the prohibition of Markdown, and the formatting for code snippets.
+        You are an expert SEO Content Writer and a professional keyword analyst. You are skilled in writing technical articles. Your task is to analyze the given topic, generate relevant SEO keywords, and then write a high-quality, comprehensive article purely in HTML format. You must strictly adhere to all instructions, especially the output format, the prohibition of Markdown, and the formatting for code snippets. Make the writing slightly informal in some places, as human writers naturally do.
 
         ## PRIMARY TASK ##
         1.  **Analyze the Topic:** First, analyze the topic from the '## TOPIC INPUT ##' section to identify the core subject, user intent, and main keywords.
@@ -291,10 +392,22 @@ class AiService
         6.  **<AiMetaDescription>:** Write a concise and compelling meta description (150-160 characters) that summarizes the article and includes the main keyword.
         7.  **<AiMain>:** Must contain the full article content in valid, clean HTML.
         8.  **NO MARKDOWN:** All content inside this tag must be pure HTML.
-        9.  **CODE SNIPPETS:** If the article requires code examples, they MUST be wrapped in `<pre><code class=\"language-xxx\">` tags.
+        9.  **CODE SNIPPETS (If any):** If the article has code examples, they MUST be wrapped in `<pre><code class=\"language-xxx\">` tags.
+
+        ## HUMAN WRITING EMULATION MODE ##
+        You must write in a completely human-like style.
+        The article must:
+        - Feel natural and organic
+        - Avoid robotic or generic phrasing
+        - Use varied sentence lengths
+        - Include realistic explanations and examples
+        - Include subtle opinions and natural commentary
+        - Avoid repetitive structure
+
+        The reader must not be able to tell this was generated by AI.
 
         ## TOPIC INPUT ##
-        Create an article about the following topic. Remember to first analyze it for keywords and to write the entire output in clean HTML without any Markdown elements, following all code snippet formatting rules if applicable.
+        Create an article about the following topic and language. Remember to first analyze it for keywords and to write the entire output in clean HTML without any Markdown elements, following all code snippet formatting rules if applicable.
         Topic or command: $prompt";
 
 

@@ -18,11 +18,17 @@ return [
             'gemini-3-flash-preview' => 'Gemini 3 Flash Preview',
         ],
         'sumopod' => [
-            'deepseek-v3-2-251201' => 'DeepSeek V3',
-            'glm-4-7-251222' => 'GLM-4',
-            'kimi-k2-250905' => 'Kimi K2',
-            'kimi-k2-thinking-251104' => 'Kimi K2 Thinking',
-            'seed-1-8-251228' => 'Seed 1.8',
+            'deepseek-v3-2-free' => 'DeepSeek V3',
+            'seed-1-8-free' => 'Seed 1.8',
+        ],
+        'qwen' => [
+            'qwen3.5-plus' => 'Qwen 3.5 Plus',
+            'qwen3-max' => 'Qwen 3 Max',
+        ],
+        'cloudflare' => [
+            '@cf/zai-org/glm-4.7-flash' => 'GLM-4 9B',
+            '@cf/openai/gpt-oss-20b' => 'GPT-OSS 20B',
+            '@cf/meta/llama-3.2-3b-instruct' => 'Llama 3.2 3B',
         ],
     ],
 

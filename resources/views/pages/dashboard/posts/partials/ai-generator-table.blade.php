@@ -4,7 +4,7 @@
             {{ $item->created_at->format('Y-m-d H:i') }}
         </td>
         <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
-            <div class="line-clamp-1 truncate font-medium">{{ $item->topic }}</div>
+            <div class="max-w-xs break-words font-medium">{{ $item->topic }}</div>
         </td>
         <td class="px-4 py-3">{{ $item->model }}</td>
         <td class="px-4 py-3 status-cell">
