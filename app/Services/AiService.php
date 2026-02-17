@@ -440,7 +440,7 @@ class AiService
         try {
             // Use a random model and provider for this task
             $randomModel = $this->allowedModels[array_rand($this->allowedModels)];
-            $provider = str_contains($randomModel, 'gemini') ? 'gemini' : 'sumopod';
+            $provider = $this->resolveProvider($randomModel);
 
             $text = $this->textToText($prompt, $randomModel, $provider);
 
@@ -457,5 +457,23 @@ class AiService
                 'message' => $e->getMessage()
             ];
         }
+    }
+
+    /**
+     * Resolves the provider name for a given model by looking it up in the config.
+     *
+     * @param string $model
+     * @return string
+     */
+    protected function resolveProvider(string $model): string
+    {
+        foreach (config('ai.models', []) as $provider => $models) {
+            if (array_key_exists($model, $models)) {
+                return $provider;
+            }
+        }
+
+        // Default fallback to gemini if model not found in config
+        return 'gemini';
     }
 }
