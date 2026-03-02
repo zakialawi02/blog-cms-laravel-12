@@ -4,7 +4,8 @@
     <!-- Search Overlay -->
     <div class="fixed left-0 top-0 z-[100] hidden h-screen w-full bg-black/90 backdrop-blur-md" id="search-overlay">
         <div class="absolute right-0 top-0 p-4">
-            <button class="hover:text-primary dark:hover:text-primary text-2xl text-white" id="close-search-overlay" type="button">
+            <button class="hover:text-primary dark:hover:text-primary text-2xl text-white" id="close-search-overlay"
+                type="button">
                 <i class="ri-close-circle-line"></i>
                 <span class="sr-only">Close</span>
             </button>
@@ -13,8 +14,12 @@
             <div class="rounded-lg p-4 shadow-xl">
                 <form id="search-blog" action="/blog">
                     <div class="flex items-center overflow-hidden rounded-md bg-white px-1 shadow">
-                        <input class="text-dark bg-light w-full border-0 px-3 py-3.5 text-base outline-none ring-0 focus:ring-0" id="search" name="search" type="search" value="" placeholder="Search">
-                        <button class="text-light bg-secondary dark:bg-dark-primary hover:bg-primary dark:hover:bg-dark-secondary rounded px-3 py-2 font-semibold transition-all duration-500" type="submit">
+                        <input
+                            class="text-dark bg-light w-full border-0 px-3 py-3.5 text-base outline-none ring-0 focus:ring-0"
+                            id="search" name="search" type="search" value="" placeholder="Search">
+                        <button
+                            class="text-light bg-secondary dark:bg-dark-primary hover:bg-primary dark:hover:bg-dark-secondary rounded px-3 py-2 font-semibold transition-all duration-500"
+                            type="submit">
                             <i class="ri-search-line"></i>
                             <span class="sr-only">Search</span>
                         </button>
@@ -24,12 +29,13 @@
         </div>
     </div>
 
-    <div class="bg-base-100 dark:bg-dark-base-300 border-dark text-dark dark:text-dark-light z-10 flex min-h-20 w-full items-center justify-between border-b border-opacity-50 px-6 md:bg-transparent md:px-14">
+    <div
+        class="bg-base-100 dark:bg-dark-base-300 border-dark text-dark dark:text-dark-light z-10 flex min-h-20 w-full items-center justify-between border-b border-opacity-50 px-6 md:bg-transparent md:px-14">
         <div class="max-w-[20rem] font-bold uppercase" id="logo-nav">
             @if ($data['web_setting']['web_name_variant'] == '1')
                 <a class="inline-flex max-w-80 items-center text-xl" href="/">
                     <x-application-logo class="h-auto max-h-12 max-w-14" />
-                    <span class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</span>
+                    <h1 class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</h1>
                 </a>
             @elseif ($data['web_setting']['web_name_variant'] == '2')
                 <a class="inline-flex max-w-80 items-center" href="/">
@@ -38,12 +44,12 @@
             @elseif ($data['web_setting']['web_name_variant'] == '3')
                 <a class="block max-w-80 items-center text-xs font-medium capitalize" href="/">
                     <x-application-logo class="mb-0 h-auto max-h-12 max-w-14" />
-                    <span class="px-2" id="web_name">{{ $data['web_setting']['tagline'] ?? config('app.name') }}</span>
+                    <h1 class="px-2" id="web_name">{{ $data['web_setting']['tagline'] ?? config('app.name') }}</h1>
                 </a>
             @else
                 <a class="inline-flex max-w-80 items-center text-xl" href="/">
                     <x-application-logo class="h-auto max-h-12 max-w-14" />
-                    <span class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</span>
+                    <h1 class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</h1>
                 </a>
             @endif
         </div>
@@ -66,8 +72,10 @@
         </div>
     </div>
 
-    <div class="md:border-dark text-dark dark:text-dark-light flex-none items-center px-6 md:flex md:justify-between md:border-b md:border-opacity-50 md:px-14 md:py-1">
-        <nav class="bg-base-100 dark:bg-dark-base-200 container absolute left-0 right-0 z-10 hidden flex-col items-start p-3 text-[1.1rem] font-semibold uppercase shadow-[0_14px_9px_-4px_rgba(0,0,0,0.6)] transition-all duration-300 ease-in-out md:relative md:top-0 md:flex md:w-[50rem] md:flex-row md:flex-wrap md:items-center md:bg-transparent md:p-0 md:opacity-100 md:shadow-none lg:w-full md:dark:bg-transparent" id="nav-menu">
+    <div
+        class="md:border-dark text-dark dark:text-dark-light flex-none items-center px-6 md:flex md:justify-between md:border-b md:border-opacity-50 md:px-14 md:py-1">
+        <nav class="bg-base-100 dark:bg-dark-base-200 container absolute left-0 right-0 z-10 hidden flex-col items-start p-3 text-[1.1rem] font-semibold uppercase shadow-[0_14px_9px_-4px_rgba(0,0,0,0.6)] transition-all duration-300 ease-in-out md:relative md:top-0 md:flex md:w-[50rem] md:flex-row md:flex-wrap md:items-center md:bg-transparent md:p-0 md:opacity-100 md:shadow-none lg:w-full md:dark:bg-transparent"
+            id="nav-menu">
             @forelse ($data['menu']['header']['items'] ?? [] as $menu)
                 <a class="hover:text-accent dark:hover:text-accent block p-2 duration-300" href={{ $menu['link'] }}>{{ $menu['label'] }}</a>
             @empty
@@ -85,8 +93,8 @@
 
 @push('javascript')
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            $(".search-btn, #close-search-overlay").click(function(e) {
+        document.addEventListener("DOMContentLoaded", function () {
+            $(".search-btn, #close-search-overlay").click(function (e) {
                 e.preventDefault();
                 $("#search-overlay").toggleClass('hidden');
             });
@@ -96,7 +104,7 @@
             const hamIcon = document.getElementById("ham-icon");
 
             // Toggle when hamburger is clicked
-            hamBtn.addEventListener("click", function(e) {
+            hamBtn.addEventListener("click", function (e) {
                 e.stopPropagation(); // biar nggak trigger close langsung
                 navMenu.classList.toggle("hidden");
                 hamIcon.classList.toggle("ri-menu-line");
@@ -104,12 +112,12 @@
             });
 
             // Click inside the menu so it doesn't close.
-            navMenu.addEventListener("click", function(e) {
+            navMenu.addEventListener("click", function (e) {
                 e.stopPropagation();
             });
 
             // Click outside the nav & hamburger → close menu
-            document.addEventListener("click", function() {
+            document.addEventListener("click", function () {
                 if (!navMenu.classList.contains("hidden")) {
                     navMenu.classList.add("hidden");
                     hamIcon.classList.add("ri-menu-line");
