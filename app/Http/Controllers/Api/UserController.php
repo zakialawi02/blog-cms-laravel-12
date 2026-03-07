@@ -25,16 +25,44 @@ class UserController extends Controller
         $this->roles = implode(',', User::getRoleOptions());
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $users = User::all();
-
         try {
-            return response()->json([
+            $query = User::query();
+
+            // 1. Search / Filtering
+            if ($request->has('search')) {
+                $search = $request->query('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('username', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+
+            // 2. Sorting
+            $sort = $request->query('sort', 'created_at');
+            $direction = $request->query('direction', 'asc');
+
+            $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'asc';
+            $allowedSorts = ['id', 'name', 'username', 'email', 'role', 'created_at', 'updated_at'];
+
+            if (in_array($sort, $allowedSorts)) {
+                $query->orderBy($sort, $direction);
+            }
+
+            // 3. Pagination Limit
+            $limit = $request->query('limit', 10);
+            $limit = (is_numeric($limit) && $limit > 0) ? (int) $limit : 10;
+
+            // Execute Paginated Query Appending Query Strings
+            $users = $query->paginate($limit)->appends($request->query());
+
+            return UserResource::collection($users)->additional([
                 'success' => true,
                 'message' => 'List of all users',
-                'data' => UserResource::collection($users),
-            ], 200);
+            ])->response()->setStatusCode(200);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
