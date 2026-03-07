@@ -95,15 +95,17 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(StoreUserRequest $request): JsonResponse
     {
         try {
-            $user = User::create($request->all());
-            return response()->json([
+            $user = User::create($request->validated());
+            return (new UserResource($user))->additional([
                 'success' => true,
                 'message' => 'User created successfully.',
-                'data' => new UserResource($user),
-            ], Response::HTTP_CREATED);
+            ])->response()->setStatusCode(Response::HTTP_CREATED);
         } catch (QueryException $e) {
             return response()->json([
                 'success' => false,
@@ -119,13 +121,15 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(UpdateUserRequest $request, $id): JsonResponse
     {
         try {
-            if (empty($request['password'])) {
-                unset($request['password']);
-            } else {
-                $request['password'] = bcrypt($request['password']);
+            $data = $request->validated();
+            if (empty($data['password'])) {
+                unset($data['password']);
             }
             $user = User::findOrFail($id);
             // Cek jika username adalah admin atau superadmin dan mencoba mengubah role
@@ -137,28 +141,29 @@ class UserController extends Controller
                 ], 403);
             }
             // Cek jika username adalah admin atau superadmin dan mencoba mengubah email_verified_at selain ke true
-            if (in_array($user->username, ['admin', 'superadmin']) && isset($request['email_verified_at']) && $request['email_verified_at'] != 1) {
+            if (in_array($user->username, ['admin', 'superadmin']) && isset($data['email_verified_at']) && $data['email_verified_at'] != 1) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Forbidden: Email verification status cannot be changed.',
                     'errors' => 'Email verification status cannot be changed for admin or superadmin users unless setting to verified.',
                 ], 403);
             }
-            if ($request['email_verified_at'] == "1") {
-                if (is_null($user->email_verified_at)) {
-                    $request['email_verified_at'] = now();
-                } else {
-                    unset($request['email_verified_at']);
+            if (isset($data['email_verified_at'])) {
+                if ($data['email_verified_at'] == "1" || $data['email_verified_at'] === true) {
+                    if (is_null($user->email_verified_at)) {
+                        $data['email_verified_at'] = now();
+                    } else {
+                        unset($data['email_verified_at']);
+                    }
+                } elseif ($data['email_verified_at'] == "0" || $data['email_verified_at'] === false) {
+                    $data['email_verified_at'] = null;
                 }
-            } elseif ($request['email_verified_at'] == "0") {
-                $request['email_verified_at'] = null;
             }
-            $user->update($request->all());
-            return response()->json([
+            $user->update($data);
+            return (new UserResource($user))->additional([
                 'success' => true,
                 'message' => 'User updated successfully.',
-                'data' => new UserResource($user),
-            ], Response::HTTP_OK);
+            ])->response()->setStatusCode(Response::HTTP_OK);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'success' => false,
@@ -174,10 +179,19 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id): JsonResponse
     {
         try {
             $user = User::findOrFail($id);
+            if (in_array($user->username, ['admin', 'superadmin'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Forbidden: Cannot delete admin or superadmin users.',
+                ], Response::HTTP_FORBIDDEN);
+            }
             $user->delete();
             return response()->json([
                 'success' => true,
@@ -233,18 +247,14 @@ class UserController extends Controller
             $request->user()->save();
             return response()->json([
                 'success' => true,
-                'message' => [
-                    'status' => 'profile-updated',
-                    'text' => 'Profile updated successfully.',
-                    'message' => 'Please verify your email address.',
-                ],
+                'message' => 'Profile updated successfully.',
                 'data' => new UserResource($request->user()),
             ], Response::HTTP_OK);
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Password does not match.',
-                'error' => $e->getMessage(),
+                'message' => 'Validation error.',
+                'errors' => $e->errors(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Throwable $th) {
             return response()->json([
@@ -270,7 +280,7 @@ class UserController extends Controller
 
             // Cek jika pengguna sudah memiliki foto profil yang lama
             $user = $request->user();
-            if ($user->profile_photo_path && $user->profile_photo_path != '/assets/img/profile/user.png' && $user->profile_photo_path != '/assets/img/profile/admin.png') {
+            if ($user->profile_photo_path && !$user->hasDefaultProfilePhoto()) {
                 // Cek apakah file foto lama ada di direktori penyimpanan publik dan hapus
                 $oldPhotoPath = public_path($user->profile_photo_path);
                 if (file_exists($oldPhotoPath)) {
@@ -313,7 +323,10 @@ class UserController extends Controller
 
             $id = $request->user()->id;
             $user = User::findOrFail($id);
-            $request->user()->currentAccessToken()->delete();
+            $token = $request->user()->currentAccessToken();
+            if ($token && method_exists($token, 'delete')) {
+                $token->delete();
+            }
             $user->delete();
             return response()->json([
                 'success' => true,
@@ -329,8 +342,69 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Password does not match.',
+                'errors' => $e->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An unexpected error occurred.',
+                'error' => $th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Restore the specified soft-deleted resource.
+     */
+    public function restore($id): JsonResponse
+    {
+        try {
+            $user = User::onlyTrashed()->findOrFail($id);
+            $user->restore();
+            return (new UserResource($user))->additional([
+                'success' => true,
+                'message' => 'User restored successfully.',
+            ])->response()->setStatusCode(Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found or is not deleted.',
                 'error' => $e->getMessage(),
+            ], Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An unexpected error occurred.',
+                'error' => $th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Update the authenticated user's password.
+     */
+    public function updateMyPassword(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'current_password' => ['required', 'current_password'],
+                'password' => ['required', 'string', 'min:6', 'confirmed'],
             ]);
+
+            $request->user()->update([
+                'password' => $request->password,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Password updated successfully.',
+            ], Response::HTTP_OK);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error.',
+                'errors' => $e->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,

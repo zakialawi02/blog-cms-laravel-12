@@ -296,7 +296,7 @@ paths:
     parameters:
       - description: required
         in: path
-        name: user_id
+        name: id
         required: true
         type: string
       - description: required
@@ -385,7 +385,7 @@ paths:
       summary: Socialite Login via Provider Token
       tags:
         - Auth
-  /api/v1/user:
+  /api/v1/user/me:
     get:
       produces:
         - application/json
@@ -505,7 +505,6 @@ paths:
         - User
       security:
         - bearerAuth: []
-  /api/v1/user/destroy/me:
     delete:
       consumes:
         - application/json
@@ -540,6 +539,50 @@ paths:
       description: Delete my account
       operationId: deleteMyAccount
       summary: Delete my account
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+  /api/v1/user/password:
+    patch:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              current_password:
+                example: "oldpassword123"
+                type: string
+              password:
+                example: "newpassword123"
+                type: string
+              password_confirmation:
+                example: "newpassword123"
+                type: string
+            type: object
+      responses:
+        "200":
+          description: Success
+          schema:
+            properties:
+              message:
+                example: Password updated successfully.
+                type: string
+              success:
+                example: true
+                type: boolean
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "422":
+          $ref: "#/responses/ValidationError"
+      description: Update my password
+      operationId: updateMyPassword
+      summary: Update my password
       tags:
         - User
       security:
@@ -789,9 +832,9 @@ paths:
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
-      description: Get Users
+      description: Get Users (Admin Only)
       operationId: getUsers
-      summary: Get Users
+      summary: Get Users (Admin Only)
       tags:
         - User
       security:
@@ -863,17 +906,17 @@ paths:
           $ref: "#/responses/Unauthorized"
         "422":
           $ref: "#/responses/ValidationError"
-      description: Store users
+      description: Store users (Admin Only)
       operationId: storeUsers
-      summary: Store users
+      summary: Store users (Admin Only)
       tags:
         - User
       security:
         - bearerAuth: []
-  /api/v1/users/{userIDd}:
+  /api/v1/users/{id}:
     parameters:
       - in: path
-        name: userIDd
+        name: id
         required: true
         type: string
     delete:
@@ -903,19 +946,14 @@ paths:
           $ref: "#/responses/Unauthorized"
         "404":
           $ref: "#/responses/NotFound"
-      description: Delete users
+      description: Delete users (Admin Only)
       operationId: deleteUsers
-      summary: Delete users
+      summary: Delete users (Admin Only)
       tags:
         - User
       security:
         - bearerAuth: []
-  /api/v1/users/{userId}:
-    parameters:
-      - in: path
-        name: userId
-        required: true
-        type: string
+
     patch:
       consumes:
         - application/json
@@ -981,20 +1019,14 @@ paths:
           $ref: "#/responses/NotFound"
         "422":
           $ref: "#/responses/ValidationError"
-      description: Update users
+      description: Update users (Admin Only)
       operationId: updateUsers
-      summary: Update users
+      summary: Update users (Admin Only)
       tags:
         - User
       security:
         - bearerAuth: []
-  /api/v1/users/{user_id}:
-    parameters:
-      - description: required
-        in: path
-        name: user_id
-        required: true
-        type: string
+
     get:
       consumes:
         - multipart/form-data
@@ -1035,9 +1067,43 @@ paths:
           $ref: "#/responses/Unauthorized"
         "404":
           $ref: "#/responses/NotFound"
-      description: Get Users Detail
+      description: Get Users (Admin Only) Detail
       operationId: getUsersDetail
-      summary: Get Users Detail
+      summary: Get Users (Admin Only) Detail
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+  /api/v1/users/{id}/restore:
+    parameters:
+      - description: "User ID"
+        in: path
+        name: id
+        required: true
+        type: string
+    post:
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success
+          schema:
+            properties:
+              message:
+                example: User restored successfully.
+                type: string
+              success:
+                example: true
+                type: boolean
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "404":
+          $ref: "#/responses/NotFound"
+      description: Restore soft-deleted user (Admin Only)
+      operationId: restoreUser
+      summary: Restore User (Admin Only)
       tags:
         - User
       security:

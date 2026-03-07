@@ -16,6 +16,11 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable, HasUuids, SoftDeletes;
 
+    const DEFAULT_PHOTO_PATHS = [
+        '/assets/img/profile/user.png',
+        '/assets/img/profile/admin.png',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -58,6 +63,11 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function hasDefaultProfilePhoto(): bool
+    {
+        return in_array($this->profile_photo_path, self::DEFAULT_PHOTO_PATHS);
     }
 
     public static function getRoleOptions()

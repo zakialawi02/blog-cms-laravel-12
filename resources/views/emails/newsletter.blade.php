@@ -144,7 +144,7 @@
 
 <body>
     @php
-        $siteName = \App\Models\WebSetting::getSetting('site_name', 'Our Blog');
+        $siteName = \App\Models\WebSetting::getSetting('site_name', 'Zakialawi Blog');
         $siteUrl = config('app.url');
         $currentYear = date('Y');
     @endphp
@@ -166,18 +166,22 @@
                 @foreach ($articles as $article)
                     <div class="article-card">
                         @if ($article->cover)
-                            <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
-                                <img src="{{ asset($article->cover) }}" alt="{{ $article->title }}" style="width: 100%; height: 200px; object-fit: cover;">
+                            <a
+                                href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
+                                <img src="{{ asset($article->cover) }}" alt="{{ $article->title }}"
+                                    style="width: 100%; height: 200px; object-fit: cover;">
                             </a>
                         @endif
                         <div class="article-body">
                             <h3 class="article-title">
-                                <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
+                                <a
+                                    href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}">
                                     {{ $article->title }}
                                 </a>
                             </h3>
                             <p class="article-excerpt">{{ Str::limit($article->excerpt, 120) }}</p>
-                            <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}" class="read-more-btn" style="color: #ffffff;">
+                            <a href="{{ route('article.show', ['year' => $article->published_at->format('Y'), 'slug' => $article->slug]) }}"
+                                class="read-more-btn" style="color: #ffffff;">
                                 Read Article
                             </a>
                         </div>
@@ -186,25 +190,31 @@
 
                 @if (isset($randomPosts) && count($randomPosts) > 0)
                     <div style="border-top: 1px solid #e5e7eb; margin: 40px 0 30px; position: relative;">
-                        <span style="background: #fff; padding: 0 15px; color: #6b7280; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: 500;">You might also like</span>
+                        <span
+                            style="background: #fff; padding: 0 15px; color: #6b7280; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: 500;">You
+                            might also like</span>
                     </div>
 
                     @foreach ($randomPosts as $post)
                         <div style="margin-bottom: 20px; display: flex; align-items: start;">
                             @if ($post->cover)
                                 <div style="flex-shrink: 0; width: 80px; height: 80px; margin-right: 15px;">
-                                    <a href="{{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}">
-                                        <img src="{{ asset($post->cover) }}" alt="{{ $post->title }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                                    <a
+                                        href="{{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}">
+                                        <img src="{{ asset($post->cover) }}" alt="{{ $post->title }}"
+                                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
                                     </a>
                                 </div>
                             @endif
                             <div>
                                 <h4 style="margin: 0 0 5px; font-size: 16px;">
-                                    <a href="{{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}" style="color: #2d3748; text-decoration: none;">
+                                    <a href="{{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}"
+                                        style="color: #2d3748; text-decoration: none;">
                                         {{ $post->title }}
                                     </a>
                                 </h4>
-                                <a href="{{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}" style="font-size: 13px; color: #3b82f6; text-decoration: none;">Read more</a>
+                                <a href="{{ route('article.show', ['year' => $post->published_at->format('Y'), 'slug' => $post->slug]) }}"
+                                    style="font-size: 13px; color: #3b82f6; text-decoration: none;">Read more</a>
                             </div>
                         </div>
                     @endforeach
@@ -216,7 +226,7 @@
             <div class="footer">
                 <p>&copy; {{ $currentYear }} {{ $siteName }}. All rights reserved.</p>
                 <p>
-                    You are receiving this email because you subscribed to our newsletter.<br>
+                    You are receiving this email because you subscribed to zakialawi blog newsletter.<br>
                     <a href="{{ $siteUrl }}">Visit our website</a>
                 </p>
                 <p style="margin-top: 15px;">
