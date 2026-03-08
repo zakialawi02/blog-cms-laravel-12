@@ -48,6 +48,8 @@ paths:
               email:
                 example: john_doe@mail.com
                 type: string
+            required:
+              - email
             type: object
       responses:
         "200":
@@ -90,6 +92,9 @@ paths:
               password:
                 example: "12345678"
                 type: string
+            required:
+              - id_user
+              - password
             type: object
       responses:
         "200":
@@ -191,6 +196,12 @@ paths:
               username:
                 example: johndoe123
                 type: string
+            required:
+              - name
+              - username
+              - email
+              - password
+              - password_confirmation
             type: object
       responses:
         "201":
@@ -261,6 +272,11 @@ paths:
               token:
                 example: KVQyh3lKRUSfOUITkI0vilIBxiReTueesFhQjAVloFOJebOfQKBDb3uYU2i2
                 type: string
+            required:
+              - email
+              - password
+              - password_confirmation
+              - token
             type: object
       responses:
         "201":
@@ -362,6 +378,8 @@ paths:
               provider_token:
                 example: ya29.a0AfB_byC...
                 type: string
+            required:
+              - provider_token
             type: object
       responses:
         "200":
@@ -451,6 +469,9 @@ paths:
               name:
                 example: John doe
                 type: string
+            required:
+              - email
+              - name
             type: object
       responses:
         "200":
@@ -518,6 +539,8 @@ paths:
               password:
                 example: "12345678"
                 type: string
+            required:
+              - password
             type: object
       responses:
         "200":
@@ -563,6 +586,10 @@ paths:
               password_confirmation:
                 example: "newpassword123"
                 type: string
+            required:
+              - current_password
+              - password
+              - password_confirmation
             type: object
       responses:
         "200":
@@ -597,10 +624,12 @@ paths:
         - in: formData
           name: _method
           type: string
+          required: true
         - format: binary
           in: formData
           name: photo_profile
           type: string
+          required: true
       responses:
         "201":
           description: Success
@@ -832,9 +861,11 @@ paths:
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
-      description: Get Users (Admin Only)
+        "403":
+          $ref: "#/responses/Forbidden"
+      description: Get Users (Admin & Superadmin Only)
       operationId: getUsers
-      summary: Get Users (Admin Only)
+      summary: Get Users (Admin & Superadmin Only)
       tags:
         - User
       security:
@@ -904,11 +935,13 @@ paths:
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "422":
           $ref: "#/responses/ValidationError"
-      description: Store users (Admin Only)
+      description: Store users (Admin & Superadmin Only)
       operationId: storeUsers
-      summary: Store users (Admin Only)
+      summary: Store users (Admin & Superadmin Only)
       tags:
         - User
       security:
@@ -944,11 +977,13 @@ paths:
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "404":
           $ref: "#/responses/NotFound"
-      description: Delete users (Admin Only)
+      description: Delete users (Admin & Superadmin Only)
       operationId: deleteUsers
-      summary: Delete users (Admin Only)
+      summary: Delete users (Admin & Superadmin Only)
       tags:
         - User
       security:
@@ -1015,13 +1050,15 @@ paths:
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "404":
           $ref: "#/responses/NotFound"
         "422":
           $ref: "#/responses/ValidationError"
-      description: Update users (Admin Only)
+      description: Update users (Admin & Superadmin Only)
       operationId: updateUsers
-      summary: Update users (Admin Only)
+      summary: Update users (Admin & Superadmin Only)
       tags:
         - User
       security:
@@ -1065,11 +1102,13 @@ paths:
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "404":
           $ref: "#/responses/NotFound"
-      description: Get Users (Admin Only) Detail
+      description: Get Users (Admin & Superadmin Only) Detail
       operationId: getUsersDetail
-      summary: Get Users (Admin Only) Detail
+      summary: Get Users (Admin & Superadmin Only) Detail
       tags:
         - User
       security:
@@ -1099,11 +1138,13 @@ paths:
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "404":
           $ref: "#/responses/NotFound"
-      description: Restore soft-deleted user (Admin Only)
+      description: Restore soft-deleted user (Admin & Superadmin Only)
       operationId: restoreUser
-      summary: Restore User (Admin Only)
+      summary: Restore User (Admin & Superadmin Only)
       tags:
         - User
       security:
@@ -1211,10 +1252,10 @@ paths:
               links:
                 properties:
                   first:
-                    example: "http://127.0.0.1:8000/api/v1/categories?page=1"
+                    example: "http://localhost:8000/api/v1/categories?page=1"
                     type: string
                   last:
-                    example: "http://127.0.0.1:8000/api/v1/categories?page=1"
+                    example: "http://localhost:8000/api/v1/categories?page=1"
                     type: string
                   prev:
                     example: null
@@ -1224,61 +1265,22 @@ paths:
                     type: string
                 type: object
               meta:
-                properties:
-                  current_page:
-                    example: 1
-                    type: integer
-                  from:
-                    example: 1
-                    type: integer
-                  last_page:
-                    example: 1
-                    type: integer
-                  links:
-                    type: array
-                    items:
-                      properties:
-                        url:
-                          example: null
-                          type: string
-                        label:
-                          example: "&laquo; Previous"
-                          type: string
-                        page:
-                          example: null
-                          type: integer
-                        active:
-                          example: false
-                          type: boolean
-                  path:
-                    example: "http://127.0.0.1:8000/api/v1/categories"
-                    type: string
-                  per_page:
-                    example: 10
-                    type: integer
-                  to:
-                    example: 7
-                    type: integer
-                  total:
-                    example: 7
-                    type: integer
-                type: object
+                $ref: "#/definitions/PaginationMeta"
               success:
-                example: true
                 type: boolean
+                example: true
               message:
-                example: Categories retrieved successfully
                 type: string
+                example: "Categories retrieved successfully"
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
-      description: Get all categories list
+      description: Get all categories list (Public)
       operationId: getCategories
-      summary: Get all categories list
+      summary: Get all categories list (Public)
       tags:
         - Category
-      security:
-        - bearerAuth: []
+      security: []
     post:
       consumes:
         - application/json
@@ -1295,6 +1297,9 @@ paths:
               slug:
                 example: technology
                 type: string
+            required:
+              - category
+              - slug
             type: object
       responses:
         "201":
@@ -1312,6 +1317,8 @@ paths:
             type: object
         "401":
           $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "422":
           description: "Validation error"
           schema:
@@ -1336,9 +1343,9 @@ paths:
                       type: string
                     example: ["The slug has already been taken."]
             type: object
-      description: Create new category
+      description: Create new category (Admin & Superadmin Only)
       operationId: createCategory
-      summary: Create new category
+      summary: Create new category (Admin & Superadmin Only)
       tags:
         - Category
       security:
@@ -1369,22 +1376,17 @@ paths:
                 type: string
                 example: "Category retrieved successfully"
             type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "404":
-          description: "Category not found"
-          schema:
-            properties:
-              success:
-                type: boolean
-                example: false
-              message:
-                type: string
-                example: "Category not found"
-            type: object
+          $ref: "#/responses/NotFound"
         "500":
           description: "Server error"
-      description: "Get category details (Supports ID or Slug)"
+      description: "Get category details (Supports ID or Slug) (Admin & Superadmin Only)"
       operationId: "getCategory"
-      summary: "Get category details"
+      summary: "Get category details (Admin & Superadmin Only)"
       tags:
         - Category
       security:
@@ -1410,6 +1412,9 @@ paths:
               slug:
                 example: "updated-tech"
                 type: string
+            required:
+              - category
+              - slug
             type: object
       responses:
         "200":
@@ -1425,6 +1430,10 @@ paths:
                 type: string
                 example: "Category updated successfully"
             type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "404":
           description: "Category not found"
           schema:
@@ -1462,9 +1471,9 @@ paths:
             type: object
         "500":
           description: "Server error"
-      description: "Update category (Supports ID or Slug)"
+      description: "Update category (Supports ID or Slug) (Admin & Superadmin Only)"
       operationId: "updateCategory"
-      summary: "Update category"
+      summary: "Update category (Admin & Superadmin Only)"
       tags:
         - Category
       security:
@@ -1492,6 +1501,10 @@ paths:
                 type: string
                 example: "Category deleted successfully"
             type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
         "404":
           description: "Category not found"
           schema:
@@ -1505,11 +1518,333 @@ paths:
             type: object
         "500":
           description: "Server error"
-      description: "Delete category (Supports ID or Slug)"
+      description: "Delete category (Supports ID or Slug) (Admin & Superadmin Only)"
       operationId: "deleteCategory"
-      summary: "Delete category"
+      summary: "Delete category (Admin & Superadmin Only)"
       tags:
         - Category
+      security:
+        - bearerAuth: []
+  /api/v1/tags:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Page number for pagination (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Search keyword"
+          in: query
+          name: search
+          required: false
+          type: string
+        - description: "Sort column (id, tag_name, slug, created_at, updated_at)"
+          in: query
+          name: sort
+          required: false
+          type: string
+        - description: "Sort direction (asc, desc)"
+          in: query
+          name: direction
+          required: false
+          type: string
+        - description: "Pagination limit"
+          in: query
+          name: limit
+          required: false
+          type: integer
+      responses:
+        "200":
+          description: "Success retrieve tags list"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Tag"
+                example:
+                  - id: 1
+                    tag_name: "Introduction"
+                    slug: "introduction"
+                    created_at: "2024-08-17T12:14:31.000000Z"
+                    updated_at: "2024-08-17T12:14:31.000000Z"
+                  - id: 2
+                    tag_name: "Code"
+                    slug: "code"
+                    created_at: "2024-08-17T12:14:31.000000Z"
+                    updated_at: "2024-08-17T12:14:31.000000Z"
+              links:
+                properties:
+                  first:
+                    example: "http://localhost:8000/api/v1/tags?page=1"
+                    type: string
+                  last:
+                    example: "http://localhost:8000/api/v1/tags?page=6"
+                    type: string
+                  prev:
+                    example: null
+                    type: string
+                  next:
+                    example: "http://localhost:8000/api/v1/tags?page=2"
+                    type: string
+                type: object
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Tags retrieved successfully"
+            type: object
+        "500":
+          description: "Server error"
+      description: Get all tags list (Public)
+      operationId: getTags
+      summary: Get all tags list (Public)
+      tags:
+        - Tag
+      security: []
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              tag_name:
+                example: "VueJS"
+                type: string
+              slug:
+                example: "vuejs"
+                type: string
+            required:
+              - tag_name
+              - slug
+            type: object
+      responses:
+        "201":
+          description: "Success create tag"
+          schema:
+            properties:
+              data:
+                $ref: "#/definitions/Tag"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Tag created successfully"
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
+        "422":
+          description: "Validation error"
+          schema:
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Validation error."
+              errors:
+                type: object
+                properties:
+                  tag_name:
+                    type: array
+                    items:
+                      type: string
+                    example: ["The tag_name field is required."]
+                  slug:
+                    type: array
+                    items:
+                      type: string
+                    example: ["The slug has already been taken."]
+            type: object
+        "500":
+          description: "Server error"
+      description: Create new tag (Admin, Superadmin & Writer)
+      operationId: createTag
+      summary: Create new tag (Admin, Superadmin & Writer)
+      tags:
+        - Tag
+      security:
+        - bearerAuth: []
+  /api/v1/tags/{tag}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Tag ID or Slug"
+          in: path
+          name: tag
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Success retrieve tag"
+          schema:
+            properties:
+              data:
+                $ref: "#/definitions/Tag"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Tag retrieved successfully"
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
+        "404":
+          $ref: "#/responses/NotFound"
+        "500":
+          description: "Server error"
+      description: "Get tag details (Supports ID or Slug) (Admin & Superadmin Only)"
+      operationId: "getTag"
+      summary: "Get tag details (Admin & Superadmin Only)"
+      tags:
+        - Tag
+      security:
+        - bearerAuth: []
+    put:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Tag ID or Slug"
+          in: path
+          name: tag
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            properties:
+              tag_name:
+                example: "Updated Tech"
+                type: string
+              slug:
+                example: "updated-tech"
+                type: string
+            required:
+              - tag_name
+              - slug
+            type: object
+      responses:
+        "200":
+          description: "Success update tag"
+          schema:
+            properties:
+              data:
+                $ref: "#/definitions/Tag"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Tag updated successfully"
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
+        "404":
+          $ref: "#/responses/NotFound"
+        "422":
+          description: "Validation error"
+          schema:
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Validation error."
+              errors:
+                type: object
+                properties:
+                  tag_name:
+                    type: array
+                    items:
+                      type: string
+                    example: ["The tag_name field is required."]
+                  slug:
+                    type: array
+                    items:
+                      type: string
+                    example: ["The slug has already been taken."]
+            type: object
+        "500":
+          description: "Server error"
+      description: "Update tag (Supports ID or Slug) (Admin & Superadmin Only)"
+      operationId: "updateTag"
+      summary: "Update tag (Admin & Superadmin Only)"
+      tags:
+        - Tag
+      security:
+        - bearerAuth: []
+    delete:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Tag ID or Slug"
+          in: path
+          name: tag
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Success delete tag"
+          schema:
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Tag deleted successfully"
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
+        "404":
+          description: "Tag not found"
+          schema:
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Tag not found"
+            type: object
+        "500":
+          description: "Server error"
+      description: "Delete tag (Supports ID or Slug) (Admin & Superadmin Only)"
+      operationId: "deleteTag"
+      summary: "Delete tag (Admin & Superadmin Only)"
+      tags:
+        - Tag
       security:
         - bearerAuth: []
 tags:
@@ -1519,6 +1854,8 @@ tags:
     description: User Profile Management endpoints
   - name: Category
     description: Category Master Data endpoints
+  - name: Tag
+    description: Tag Master Data endpoints
 definitions:
   ErrorUnauthorized:
     type: object
@@ -1553,6 +1890,15 @@ definitions:
           type: array
           items:
             type: string
+  ErrorForbidden:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      message:
+        type: string
+        example: "Forbidden: You do not have the required permission."
   PaginationMeta:
     type: object
     properties:
@@ -1564,10 +1910,29 @@ definitions:
         example: 1
       last_page:
         type: integer
-        example: 1
+        example: 6
+      links:
+        type: array
+        items:
+          type: object
+          properties:
+            url:
+              type: string
+              x-nullable: true
+              example: null
+            label:
+              type: string
+              example: "&laquo; Previous"
+            page:
+              type: integer
+              x-nullable: true
+              example: null
+            active:
+              type: boolean
+              example: false
       path:
         type: string
-        example: http://example.com/api/...
+        example: http://localhost:8000/api/v1/tags
       per_page:
         type: integer
         example: 10
@@ -1576,7 +1941,7 @@ definitions:
         example: 10
       total:
         type: integer
-        example: 10
+        example: 52
   User:
     type: object
     properties:
@@ -1622,6 +1987,27 @@ definitions:
       updated_at:
         type: string
         example: "2024-10-13T14:12:08.000000Z"
+  Tag:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      tag_name:
+        type: string
+        example: "Introduction"
+      slug:
+        type: string
+        example: "introduction"
+      created_at:
+        type: string
+        format: date-time
+        example: "2024-08-17T12:14:31.000000Z"
+      updated_at:
+        type: string
+        format: date-time
+        example: "2024-08-17T12:14:31.000000Z"
+
 responses:
   Unauthorized:
     description: Unauthorized access
@@ -1635,6 +2021,10 @@ responses:
     description: Resource not found
     schema:
       $ref: "#/definitions/ErrorNotFound"
+  Forbidden:
+    description: Forbidden access
+    schema:
+      $ref: "#/definitions/ErrorForbidden"
 securityDefinitions:
   bearerAuth:
     type: apiKey

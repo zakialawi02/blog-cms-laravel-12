@@ -17,8 +17,8 @@ class TagFactory extends Factory
     public function definition(): array
     {
         return [
-            'tag_name' => fake()->word(),
-            'slug' => fake()->slug(),
+            'tag_name' => fake()->unique()->word(),
+            'slug' => fake()->unique()->slug(),
             'created_at' => fake()->dateTimeBetween('-6 months', 'now'),
             'updated_at' => function (array $attributes) {
                 return $attributes['created_at'];

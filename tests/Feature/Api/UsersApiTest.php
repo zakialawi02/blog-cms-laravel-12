@@ -1,13 +1,14 @@
 <?php
 
 use App\Models\User;
+use App\Enums\TokenAbility;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 function usersAuthHeader(): array
 {
-    $user = User::factory()->create();
-    $token = $user->createToken('authToken')->plainTextToken;
+    $user = User::factory()->create(['role' => 'admin']);
+    $token = $user->createToken('authToken', TokenAbility::abilitiesForRole('admin'))->plainTextToken;
 
     return ['Authorization' => 'Bearer ' . $token];
 }
@@ -245,4 +246,44 @@ it('rejects unauthenticated access to users endpoints', function () {
     $response = $this->getJson('/api/v1/users');
 
     $response->assertUnauthorized();
+});
+
+it('rejects non-admin user from accessing users endpoint', function () {
+    $user = User::factory()->create(['role' => 'user']);
+    $token = $user->createToken('authToken', TokenAbility::abilitiesForRole('user'))->plainTextToken;
+
+    $response = $this
+        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->getJson('/api/v1/users');
+
+    $response
+        ->assertForbidden()
+        ->assertJsonPath('success', false)
+        ->assertJsonPath('message', 'Forbidden: You do not have the required permission.');
+});
+
+it('allows admin user to access users endpoint', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $token = $admin->createToken('authToken', TokenAbility::abilitiesForRole('admin'))->plainTextToken;
+
+    $response = $this
+        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->getJson('/api/v1/users');
+
+    $response
+        ->assertOk()
+        ->assertJsonPath('success', true);
+});
+
+it('allows superadmin user to access users endpoint', function () {
+    $superadmin = User::factory()->create(['role' => 'superadmin']);
+    $token = $superadmin->createToken('authToken', TokenAbility::abilitiesForRole('superadmin'))->plainTextToken;
+
+    $response = $this
+        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->getJson('/api/v1/users');
+
+    $response
+        ->assertOk()
+        ->assertJsonPath('success', true);
 });

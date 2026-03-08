@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Enums\TokenAbility;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +41,7 @@ class RegisterController extends Controller
         ]);
 
         event(new Registered($user));
-        $token = $user->createToken('authToken')->plainTextToken;
+        $token = $user->createToken('authToken', TokenAbility::abilitiesForRole($user->role ?? 'user'))->plainTextToken;
 
         return response()->json([
             'success' => true,

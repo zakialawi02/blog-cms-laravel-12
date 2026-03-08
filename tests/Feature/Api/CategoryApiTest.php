@@ -2,11 +2,12 @@
 
 use App\Models\Category;
 use App\Models\User;
+use App\Enums\TokenAbility;
 
 function categoryAuthHeader(): array
 {
-    $user = User::factory()->create();
-    $token = $user->createToken('authToken')->plainTextToken;
+    $user = User::factory()->create(['role' => 'admin']);
+    $token = $user->createToken('authToken', TokenAbility::abilitiesForRole('admin'))->plainTextToken;
 
     return ['Authorization' => 'Bearer ' . $token];
 }
@@ -113,8 +114,92 @@ it('deletes a category by slug', function () {
     ]);
 });
 
-it('rejects unauthenticated access to categories endpoints', function () {
+it('allows public access to categories list', function () {
     $response = $this->getJson('/api/v1/categories');
 
+    $response->assertOk();
+});
+
+it('rejects public access to category detail', function () {
+    $category = Category::factory()->create();
+    $response = $this->getJson('/api/v1/categories/' . $category->slug);
+
     $response->assertUnauthorized();
+});
+
+it('allows non-admin logged-in user to access list categories endpoint', function () {
+    $user = User::factory()->create(['role' => 'user']);
+    $token = $user->createToken('authToken', TokenAbility::abilitiesForRole('user'))->plainTextToken;
+
+    $response = $this
+        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->getJson('/api/v1/categories');
+
+    $response
+        ->assertOk()
+        ->assertJsonPath('success', true);
+});
+
+it('rejects non-admin user from accessing restricted categories endpoint (GET Detail)', function () {
+    $user = User::factory()->create(['role' => 'user']);
+    $token = $user->createToken('authToken', TokenAbility::abilitiesForRole('user'))->plainTextToken;
+    $category = Category::factory()->create();
+
+    $response = $this
+        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->getJson('/api/v1/categories/' . $category->slug);
+
+    $response
+        ->assertForbidden()
+        ->assertJsonPath('success', false)
+        ->assertJsonPath('message', 'Forbidden: You do not have the required permission.');
+});
+
+it('rejects non-admin user from accessing restricted categories endpoint (POST)', function () {
+    $user = User::factory()->create(['role' => 'user']);
+    $token = $user->createToken('authToken', TokenAbility::abilitiesForRole('user'))->plainTextToken;
+
+    $response = $this
+        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->postJson('/api/v1/categories', [
+            'category' => 'Forbidden Create',
+            'slug' => 'forbidden-create',
+        ]);
+
+    $response
+        ->assertForbidden()
+        ->assertJsonPath('success', false)
+        ->assertJsonPath('message', 'Forbidden: You do not have the required permission.');
+});
+
+it('allows admin user to access restricted categories endpoint (POST)', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $token = $admin->createToken('authToken', TokenAbility::abilitiesForRole('admin'))->plainTextToken;
+
+    $response = $this
+        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->postJson('/api/v1/categories', [
+            'category' => 'Admin Create',
+            'slug' => 'admin-create',
+        ]);
+
+    $response
+        ->assertCreated()
+        ->assertJsonPath('success', true);
+});
+
+it('allows superadmin user to access restricted categories endpoint (POST)', function () {
+    $superadmin = User::factory()->create(['role' => 'superadmin']);
+    $token = $superadmin->createToken('authToken', TokenAbility::abilitiesForRole('superadmin'))->plainTextToken;
+
+    $response = $this
+        ->withHeaders(['Authorization' => 'Bearer ' . $token])
+        ->postJson('/api/v1/categories', [
+            'category' => 'Superadmin Create',
+            'slug' => 'superadmin-create',
+        ]);
+
+    $response
+        ->assertCreated()
+        ->assertJsonPath('success', true);
 });

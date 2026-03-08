@@ -7,8 +7,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-class StoreCategoryRequest extends FormRequest
+class StoreTagRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -19,9 +20,10 @@ class StoreCategoryRequest extends FormRequest
 
     public function prepareForValidation()
     {
+
         $this->merge([
-            'category' => ucwords($this->category),
-            'slug' => (empty($this->slug)) ? Str::slug($this->category) : Str::slug($this->slug)
+            'tag_name' => ucwords($this->tag_name),
+            'slug' => (empty($this->slug)) ? Str::slug($this->tag_name) : Str::slug($this->slug)
         ]);
     }
 
@@ -33,8 +35,8 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => 'required|min:3|unique:categories,category',
-            'slug' => 'nullable|unique:categories,slug',
+            'tag_name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:tags,slug',
         ];
     }
 

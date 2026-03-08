@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Article;
 use App\Models\User;
 use App\Models\Category;
 
@@ -20,7 +19,7 @@ class ArticleFactory extends Factory
      */
     public function definition(): array
     {
-        $title = $this->faker->sentence;
+        $title = $this->faker->unique()->sentence;
         return [
             'user_id' => User::factory(),
             'category_id' => Category::factory(), // Assuming CategoryFactory exists

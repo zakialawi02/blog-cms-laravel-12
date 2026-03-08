@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Enums\TokenAbility;
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -47,7 +48,7 @@ class SocialiteController extends Controller
                 'provider_refresh_token' => $socialUser->refreshToken ?? null,
             ]);
 
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken('auth_token', TokenAbility::abilitiesForRole($user->role ?? 'user'))->plainTextToken;
 
             return response()->json([
                 'success' => true,
