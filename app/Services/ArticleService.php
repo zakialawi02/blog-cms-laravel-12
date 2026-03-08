@@ -21,8 +21,11 @@ class ArticleService
     public function fetchArticles(array $filters = [])
     {
         $query = Article::with(['user', 'category', 'tags'])
-            ->published()
-            ->orderBy('published_at', 'desc');
+            ->published();
+
+        $sort = $filters['sort'] ?? 'published_at';
+        $direction = $filters['direction'] ?? 'desc';
+        $query->orderBy($sort, $direction);
 
         if (!empty($filters['category'])) {
             if ($filters['category'] === 'uncategorized') {
@@ -50,6 +53,10 @@ class ArticleService
 
         if (!empty($filters['search'])) {
             $query->search($filters['search']);
+        }
+
+        if (isset($filters['is_featured']) && $filters['is_featured'] !== '') {
+            $query->where('is_featured', filter_var($filters['is_featured'], FILTER_VALIDATE_BOOLEAN));
         }
 
         return $query->paginate($filters['per_page'] ?? 9)->withQueryString();
@@ -137,7 +144,7 @@ class ArticleService
         return $articles->map(function ($article) {
             $placeholder = asset("assets/img/image-placeholder.png");
             if (empty($article->excerpt)) {
-                $article->excerpt = strip_tags((string)$article->content);
+                $article->excerpt = strip_tags((string) $article->content);
             }
             $article->excerpt = Str::limit($article->excerpt, 160);
             if (!empty($article->cover) && !filter_var($article->cover, FILTER_VALIDATE_URL)) {

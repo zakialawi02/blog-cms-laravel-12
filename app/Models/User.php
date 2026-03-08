@@ -101,4 +101,22 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Comment::class);
     }
+
+    /**
+     * Get the URL to the user's profile photo.
+     *
+     * @return string
+     */
+    public function getProfilePhotoUrlAttribute(): string
+    {
+        if ($this->profile_photo_path) {
+            return asset($this->profile_photo_path);
+        }
+
+        $default = $this->role === 'admin' || $this->role === 'superadmin'
+            ? self::DEFAULT_PHOTO_PATHS[1]
+            : self::DEFAULT_PHOTO_PATHS[0];
+
+        return asset($default);
+    }
 }
