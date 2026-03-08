@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Enums\TokenAbility;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -29,7 +30,7 @@ class LoginController extends Controller
 
         $user = Auth::user();
         $user->tokens()->delete();
-        $token = $user->createToken('authToken')->plainTextToken;
+        $token = $user->createToken('authToken', TokenAbility::abilitiesForRole($user->role ?? 'user'))->plainTextToken;
 
         return response()->json([
             'success' => true,

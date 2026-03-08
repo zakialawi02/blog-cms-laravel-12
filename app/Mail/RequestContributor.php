@@ -39,7 +39,7 @@ class RequestContributor extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.requestContributor',
+            view: 'emails.requestContributor',
         );
     }
 

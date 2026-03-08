@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Auth\SocialiteController;
 
 
 Route::prefix('auth')->as('api.auth.')->group(function () {
@@ -15,6 +16,7 @@ Route::prefix('auth')->as('api.auth.')->group(function () {
         ], 401);
     });
     Route::post('login', [LoginController::class, 'login'])->name('login');
+    Route::post('{provider}/login', [SocialiteController::class, 'login'])->name('socialite.login');
     Route::post('register', [RegisterController::class, 'register'])->name('register');
     Route::post('/forgot-password', [AuthController::class, 'passwordResetLink'])->middleware(['throttle:6,1'])->name('password.email');
     Route::get('reset-password/{token}', fn() => [

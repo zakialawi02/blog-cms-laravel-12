@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class TagResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,8 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'username' => $this->username,
-            'email' => $this->email,
-            'role' => $this->role,
-            'email_verified_at' => $this->email_verified_at,
-            'profile_photo_path' => $this->profile_photo_path ? config('app.url') . $this->profile_photo_path : null,
+            'tag_name' => $this->tag_name,
+            'slug' => $this->slug,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -43,11 +43,12 @@ class UpdateUserRequest extends FormRequest
     {
         $userId = $this->route('user'); // Ambil ID user dari URL
         return [
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|min:4|max:25|alpha_dash|unique:users,username,' . $userId,
-            'role' => 'required|in:' . $this->roles,
-            'email' => 'required|string|email|max:255|unique:users,email,' . $userId,
+            'name' => 'sometimes|required|string|max:255',
+            'username' => 'sometimes|required|string|min:4|max:25|alpha_dash|unique:users,username,' . $userId,
+            'role' => 'sometimes|required|in:' . $this->roles,
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $userId,
             'password' => 'nullable|string|min:6', // Password tidak wajib diupdate
+            'email_verified_at' => 'sometimes|boolean',
         ];
     }
 

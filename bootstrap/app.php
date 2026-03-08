@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Sentry\Laravel\Integration;
 use Illuminate\Foundation\Application;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -23,11 +24,11 @@ return Application::configure(basePath: dirname(__DIR__))
         //this is new middleware that i created it
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleCheck::class,
-
+            'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+            'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        Integration::handles($exceptions);
         $exceptions->render(function (AuthenticationException $e, Request $request) {
             if ($request->is('api/*')) {
                 return response()->json([
@@ -36,4 +37,13 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 401);
             }
         });
+        $exceptions->render(function (AccessDeniedHttpException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Forbidden: You do not have the required permission.',
+                ], 403);
+            }
+        });
+        Integration::handles($exceptions);
     })->create();
