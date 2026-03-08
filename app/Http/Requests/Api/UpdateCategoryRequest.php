@@ -27,8 +27,8 @@ class UpdateCategoryRequest extends FormRequest
         $categoryParam = $this->route('category'); // get parameter from URL
 
         // Find the category to get its ID, as the param could be an ID or Slug
-        $category = Category::where('id', $categoryParam)->orWhere('slug', $categoryParam)->first();
-        $id = $category ? $category->id : null;
+        $category = Category::where('id', $categoryParam)->orWhere('slug', $categoryParam)->firstOrFail();
+        $id = $category->id;
 
         return [
             'category' => 'required|min:3|unique:categories,category,' . $id,

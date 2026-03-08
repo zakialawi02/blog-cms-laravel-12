@@ -66,6 +66,22 @@ Route::prefix('v1')->as('api.')->group(function () {
     Route::middleware(['auth:sanctum', 'ability:tag.manage'])->group(function () {
         Route::apiResource('tags', TagController::class)->except(['index', 'store']);
     });
+    /*
+    |----------------------------------------------------------------------
+    | Public Articles
+    |----------------------------------------------------------------------
+    */
+    Route::prefix('articles')->name('articles.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Api\PublicArticleController::class, 'index'])->name('index');
+        Route::get('/popular', [\App\Http\Controllers\Api\PublicArticleController::class, 'popularPost'])->name('popular');
+        Route::get('/category/{slug?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByCategory'])->name('category');
+        Route::get('/tag/{slug?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByTag'])->name('tag');
+        Route::get('/user/{username?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByUser'])->name('user');
+        Route::get('/archive/{year?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByYear'])->name('year');
+        Route::get('/archive/{year}/{month?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByMonth'])->name('month');
+        Route::get('/{slug}', [\App\Http\Controllers\Api\PublicArticleController::class, 'show'])->name('show');
+    });
+
 });
 
 /*
