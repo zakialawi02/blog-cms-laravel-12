@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ArticleResource;
+use App\Http\Resources\ArticleSummaryResource;
 use App\Services\ArticleService;
 
 class PublicArticleController extends Controller
@@ -20,7 +21,7 @@ class PublicArticleController extends Controller
     }
 
     /**
-     * Display a listing of the public articles.
+     * Display a listing of the public articles (with content).
      */
     public function index(Request $request): JsonResponse
     {
@@ -38,6 +39,30 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve articles',
+                'error' => $th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Display a listing of the public articles summary (without content).
+     */
+    public function summary(Request $request): JsonResponse
+    {
+        try {
+            $filters = $request->only(['search', 'sort', 'direction', 'is_featured']);
+            $filters['per_page'] = $request->query('limit');
+
+            $articles = $this->articleService->fetchArticles($filters);
+
+            return ArticleSummaryResource::collection($articles)->additional([
+                'success' => true,
+                'message' => 'Articles summary retrieved successfully',
+            ])->response()->setStatusCode(Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve articles summary',
                 'error' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
