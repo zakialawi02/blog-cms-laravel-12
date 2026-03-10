@@ -54,6 +54,43 @@ class PublicArticleApiTest extends TestCase
         $this->assertEquals(15, $response->json('meta.total'));
     }
 
+    public function test_can_list_articles_summary_without_content()
+    {
+        Article::factory()->count(3)->create(['status' => 'published', 'published_at' => now()->subDay()]);
+
+        $response = $this->getJson('/api/v1/articles/summary');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'title',
+                        'slug',
+                        'excerpt',
+                        'cover',
+                        'cover_large',
+                        'category',
+                        'author',
+                        'tags',
+                        'meta_title',
+                        'meta_desc',
+                        'meta_keywords',
+                        'published_at',
+                        'created_at',
+                        'updated_at'
+                    ]
+                ],
+                'meta',
+                'success',
+                'message'
+            ]);
+
+        // Ensure 'content' is NOT present in the response data
+        $response->assertJsonMissing(['content']);
+        $this->assertArrayNotHasKey('content', $response->json('data.0'));
+    }
+
     public function test_can_get_popular_articles()
     {
         $articles = Article::factory()->count(5)->create(['status' => 'published', 'published_at' => now()->subDay()]);

@@ -5,10 +5,11 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ArticleResource extends JsonResource
+class ArticleSummaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
+     * Same as ArticleResource but WITHOUT the 'content' property.
      *
      * @return array<string, mixed>
      */
@@ -19,7 +20,6 @@ class ArticleResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'excerpt' => $this->excerpt ?: \Illuminate\Support\Str::words(strip_tags($this->content), 150),
-            'content' => $this->content,
             'cover' => $this->cover ? asset($this->cover) : null,
             'cover_large' => $this->cover_large ? asset($this->cover_large) : null,
             'category' => $this->whenLoaded('category', function () {

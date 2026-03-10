@@ -73,6 +73,7 @@ Route::prefix('v1')->as('api.')->group(function () {
     */
     Route::prefix('articles')->name('articles.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Api\PublicArticleController::class, 'index'])->name('index');
+        Route::get('/summary', [\App\Http\Controllers\Api\PublicArticleController::class, 'summary'])->name('summary');
         Route::get('/popular', [\App\Http\Controllers\Api\PublicArticleController::class, 'popularPost'])->name('popular');
         Route::get('/category/{slug?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByCategory'])->name('category');
         Route::get('/tag/{slug?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByTag'])->name('tag');

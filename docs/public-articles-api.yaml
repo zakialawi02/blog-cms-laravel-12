@@ -1,0 +1,857 @@
+swagger: "2.0"
+info:
+  contact: {}
+  title: Public Articles API
+  version: 1.0.0
+host: 127.0.0.1:8000
+basePath: /
+schemes:
+  - http
+paths:
+  /api/v1/articles:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Page number for pagination (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Pagination limit (Optional, default: 9)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+        - description: "Search keyword"
+          in: query
+          name: search
+          required: false
+          type: string
+        - description: "Sort column (e.g., published_at, title, created_at)"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "published_at"
+        - description: "Sort direction (asc, desc)"
+          in: query
+          name: direction
+          required: false
+          type: string
+          default: "desc"
+        - description: "Filter by featured status (true/false)"
+          in: query
+          name: is_featured
+          required: false
+          type: boolean
+      responses:
+        "200":
+          description: "Success retrieve articles list"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Article"
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Articles retrieved successfully"
+            type: object
+        "500":
+          description: "Server error"
+      description: Get all public articles list
+      operationId: getPublicArticles
+      summary: Get all public articles list
+      tags:
+        - Public Articles
+  /api/v1/articles/summary:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Page number for pagination (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Pagination limit (Optional, default: 9)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+        - description: "Search keyword"
+          in: query
+          name: search
+          required: false
+          type: string
+        - description: "Sort column (e.g., published_at, title, created_at)"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "published_at"
+        - description: "Sort direction (asc, desc)"
+          in: query
+          name: direction
+          required: false
+          type: string
+          default: "desc"
+        - description: "Filter by featured status (true/false)"
+          in: query
+          name: is_featured
+          required: false
+          type: boolean
+      responses:
+        "200":
+          description: "Success retrieve articles summary list"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/ArticleSummary"
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Articles summary retrieved successfully"
+            type: object
+        "500":
+          description: "Server error"
+      description: Get all public articles summary list (without content)
+      operationId: getPublicArticlesSummary
+      summary: Get all public articles summary list
+      tags:
+        - Public Articles
+  /api/v1/articles/popular:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Page number (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Total items per page / limit (Optional, default: 9)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+      responses:
+        "200":
+          description: "Success retrieve popular articles"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Article"
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Popular articles retrieved successfully"
+            type: object
+        "500":
+          description: "Server error"
+      description: Get popular articles
+      operationId: getPopularArticles
+      summary: Get popular articles
+      tags:
+        - Public Articles
+  /api/v1/articles/category/{slug}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Category slug"
+          in: path
+          name: slug
+          required: true
+          type: string
+        - description: "Page number (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Total items per page / limit (Optional, default: 9)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+        - description: "Search keyword"
+          in: query
+          name: search
+          required: false
+          type: string
+        - description: "Sort column (e.g., published_at, title, created_at)"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "published_at"
+        - description: "Sort direction (asc, desc)"
+          in: query
+          name: direction
+          required: false
+          type: string
+          default: "desc"
+      responses:
+        "200":
+          description: "Success retrieve category articles"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Article"
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Category articles retrieved successfully"
+            type: object
+        "400":
+          description: "Bad Request: Path variable missing or empty"
+        "500":
+          description: "Server error"
+      description: Get public articles by category slug
+      operationId: getPublicArticlesByCategory
+      summary: Get public articles by category slug
+      tags:
+        - Public Articles
+  /api/v1/articles/tag/{slug}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Tag slug"
+          in: path
+          name: slug
+          required: true
+          type: string
+        - description: "Page number (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Total items per page / limit (Optional, default: 9)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+        - description: "Search keyword"
+          in: query
+          name: search
+          required: false
+          type: string
+        - description: "Sort column (e.g., published_at, title, created_at)"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "published_at"
+        - description: "Sort direction (asc, desc)"
+          in: query
+          name: direction
+          required: false
+          type: string
+          default: "desc"
+      responses:
+        "200":
+          description: "Success retrieve tag articles"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Article"
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Tag articles retrieved successfully"
+            type: object
+        "400":
+          description: "Bad Request: Path variable missing or empty"
+        "500":
+          description: "Server error"
+      description: Get public articles by tag slug
+      operationId: getPublicArticlesByTag
+      summary: Get public articles by tag slug
+      tags:
+        - Public Articles
+  /api/v1/articles/user/{username}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Author username"
+          in: path
+          name: username
+          required: true
+          type: string
+        - description: "Page number (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Total items per page / limit (Optional, default: 9)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+        - description: "Search keyword"
+          in: query
+          name: search
+          required: false
+          type: string
+        - description: "Sort column (e.g., published_at, title, created_at)"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "published_at"
+        - description: "Sort direction (asc, desc)"
+          in: query
+          name: direction
+          required: false
+          type: string
+          default: "desc"
+      responses:
+        "200":
+          description: "Success retrieve user articles"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Article"
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "User articles retrieved successfully"
+            type: object
+        "400":
+          description: "Bad Request: Path variable missing or empty"
+        "500":
+          description: "Server error"
+      description: Get public articles by author username
+      operationId: getPublicArticlesByAuthor
+      summary: Get public articles by author username
+      tags:
+        - Public Articles
+  /api/v1/articles/archive/{year}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Archive year (e.g., 2026)"
+          in: path
+          name: year
+          required: true
+          type: integer
+        - description: "Page number (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Total items per page / limit (Optional, default: 9)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+        - description: "Search keyword"
+          in: query
+          name: search
+          required: false
+          type: string
+        - description: "Sort column (e.g., published_at, title, created_at)"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "published_at"
+        - description: "Sort direction (asc, desc)"
+          in: query
+          name: direction
+          required: false
+          type: string
+          default: "desc"
+      responses:
+        "200":
+          description: "Success retrieve archive articles by year"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Article"
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Archive articles by year retrieved successfully"
+            type: object
+        "400":
+          description: "Bad Request: Invalid year format or missing path variable"
+        "500":
+          description: "Server error"
+      description: Get public articles by archive year
+      operationId: getPublicArticlesByYear
+      summary: Get public articles by archive year
+      tags:
+        - Public Articles
+  /api/v1/articles/archive/{year}/{month}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Archive year (e.g., 2026)"
+          in: path
+          name: year
+          required: true
+          type: integer
+        - description: "Archive month (1-12)"
+          in: path
+          name: month
+          required: true
+          type: integer
+        - description: "Page number (Optional, default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Total items per page / limit (Optional, default: 9)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+        - description: "Search keyword"
+          in: query
+          name: search
+          required: false
+          type: string
+        - description: "Sort column (e.g., published_at, title, created_at)"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "published_at"
+        - description: "Sort direction (asc, desc)"
+          in: query
+          name: direction
+          required: false
+          type: string
+          default: "desc"
+      responses:
+        "200":
+          description: "Success retrieve archive articles by month"
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Article"
+              meta:
+                $ref: "#/definitions/PaginationMeta"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Archive articles by month retrieved successfully"
+            type: object
+        "400":
+          description: "Bad Request: Invalid format or missing path variable"
+        "500":
+          description: "Server error"
+      description: Get public articles by archive year and month
+      operationId: getPublicArticlesByMonth
+      summary: Get public articles by archive year and month
+      tags:
+        - Public Articles
+  /api/v1/articles/{slug}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Article slug"
+          in: path
+          name: slug
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Success retrieve article"
+          schema:
+            properties:
+              data:
+                $ref: "#/definitions/Article"
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Article retrieved successfully"
+            type: object
+        "404":
+          $ref: "#/responses/NotFound"
+        "500":
+          description: "Server error"
+      description: Get public article details by slug
+      operationId: getPublicArticle
+      summary: Get public article details by slug
+      tags:
+        - Public Articles
+tags:
+  - name: Public Articles
+    description: Public Articles endpoints for visitors
+definitions:
+  ErrorUnauthorized:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      message:
+        type: string
+        example: Unauthenticated or Invalid Token
+  ErrorNotFound:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      message:
+        type: string
+        example: Resource not found
+  ErrorValidation:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      message:
+        type: string
+        example: Validation Error
+      errors:
+        type: object
+        additionalProperties:
+          type: array
+          items:
+            type: string
+  ErrorForbidden:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      message:
+        type: string
+        example: "Forbidden: You do not have the required permission."
+  PaginationMeta:
+    type: object
+    properties:
+      current_page:
+        type: integer
+        example: 1
+      from:
+        type: integer
+        example: 1
+      last_page:
+        type: integer
+        example: 6
+      links:
+        type: array
+        items:
+          type: object
+          properties:
+            url:
+              type: string
+              x-nullable: true
+              example: null
+            label:
+              type: string
+              example: "&laquo; Previous"
+            page:
+              type: integer
+              x-nullable: true
+              example: null
+            active:
+              type: boolean
+              example: false
+      path:
+        type: string
+        example: http://localhost:8000/api/v1/articles
+      per_page:
+        type: integer
+        example: 10
+      to:
+        type: integer
+        example: 10
+      total:
+        type: integer
+        example: 52
+  Category:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      category:
+        type: string
+        example: Technology
+      slug:
+        type: string
+        example: technology
+      created_at:
+        type: string
+        example: "2024-10-13T13:40:19.000000Z"
+      updated_at:
+        type: string
+        example: "2024-10-13T14:12:08.000000Z"
+  Tag:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      tag_name:
+        type: string
+        example: "Introduction"
+      slug:
+        type: string
+        example: "introduction"
+      created_at:
+        type: string
+        format: date-time
+        example: "2024-08-17T12:14:31.000000Z"
+      updated_at:
+        type: string
+        format: date-time
+        example: "2024-08-17T12:14:31.000000Z"
+  Article:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      title:
+        type: string
+        example: "Getting Started with Laravel"
+      slug:
+        type: string
+        example: "getting-started-with-laravel"
+      excerpt:
+        type: string
+        example: "A brief introduction to Laravel framework."
+      content:
+        type: string
+        example: "<p>Laravel is a web application framework...</p>"
+      cover:
+        type: string
+        x-nullable: true
+        example: "http://localhost:8000/storage/covers/1.jpg"
+      cover_large:
+        type: string
+        x-nullable: true
+        example: "http://localhost:8000/storage/covers/1-large.jpg"
+      category:
+        properties:
+          id:
+            type: integer
+            example: 1
+          category:
+            type: string
+            example: "Technology"
+          slug:
+            type: string
+            example: "technology"
+        type: object
+      author:
+        properties:
+          id:
+            type: string
+            example: "9d3c62d8-f9a7-4f57-99a2-ee3f480b3be4"
+          name:
+            type: string
+            example: "John Doe"
+          username:
+            type: string
+            example: "johndoe123"
+          avatar:
+            type: string
+            x-nullable: true
+            example: "http://localhost:8000/storage/avatars/1.png"
+        type: object
+      tags:
+        type: array
+        items:
+          $ref: "#/definitions/Tag"
+      meta_title:
+        type: string
+        example: "Getting Started with Laravel - SEO Title"
+      meta_desc:
+        type: string
+        example: "Learn how to build powerful web applications with Laravel in this comprehensive guide."
+      meta_keywords:
+        type: string
+        example: "laravel, php, framework, web development"
+      published_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T13:40:19.000000Z"
+      created_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T13:40:19.000000Z"
+      updated_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T14:12:08.000000Z"
+  ArticleSummary:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      title:
+        type: string
+        example: "Getting Started with Laravel"
+      slug:
+        type: string
+        example: "getting-started-with-laravel"
+      excerpt:
+        type: string
+        example: "A brief introduction to Laravel framework."
+      cover:
+        type: string
+        x-nullable: true
+        example: "http://localhost:8000/storage/covers/1.jpg"
+      cover_large:
+        type: string
+        x-nullable: true
+        example: "http://localhost:8000/storage/covers/1-large.jpg"
+      category:
+        properties:
+          id:
+            type: integer
+            example: 1
+          category:
+            type: string
+            example: "Technology"
+          slug:
+            type: string
+            example: "technology"
+        type: object
+      author:
+        properties:
+          id:
+            type: string
+            example: "9d3c62d8-f9a7-4f57-99a2-ee3f480b3be4"
+          name:
+            type: string
+            example: "John Doe"
+          username:
+            type: string
+            example: "johndoe123"
+          avatar:
+            type: string
+            x-nullable: true
+            example: "http://localhost:8000/storage/avatars/1.png"
+        type: object
+      tags:
+        type: array
+        items:
+          $ref: "#/definitions/Tag"
+      meta_title:
+        type: string
+        example: "Getting Started with Laravel - SEO Title"
+      meta_desc:
+        type: string
+        example: "Learn how to build powerful web applications with Laravel in this comprehensive guide."
+      meta_keywords:
+        type: string
+        example: "laravel, php, framework, web development"
+      published_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T13:40:19.000000Z"
+      created_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T13:40:19.000000Z"
+      updated_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T14:12:08.000000Z"
+responses:
+  Unauthorized:
+    description: Unauthorized access
+    schema:
+      $ref: "#/definitions/ErrorUnauthorized"
+  ValidationError:
+    description: Validation error
+    schema:
+      $ref: "#/definitions/ErrorValidation"
+  NotFound:
+    description: Resource not found
+    schema:
+      $ref: "#/definitions/ErrorNotFound"
+  Forbidden:
+    description: Forbidden access
+    schema:
+      $ref: "#/definitions/ErrorForbidden"
