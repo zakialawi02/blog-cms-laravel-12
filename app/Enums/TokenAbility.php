@@ -12,6 +12,7 @@ class TokenAbility
     const CATEGORY_MANAGE = 'category.manage'; // CRUD categories
     const TAG_MANAGE = 'tag.manage';          // CRUD tags
     const TAG_CREATE = 'tag.create';          // Create tags
+    const MENU_MANAGE = 'menu.manage';        // CRUD menus
 
     /**
      * Get abilities by role.
@@ -25,6 +26,7 @@ class TokenAbility
                 self::CATEGORY_MANAGE,
                 self::TAG_MANAGE,
                 self::TAG_CREATE,
+                self::MENU_MANAGE,
             ],
             'writer' => [
                 self::PROFILE_MANAGE,

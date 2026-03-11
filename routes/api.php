@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\MenuController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,6 +67,22 @@ Route::prefix('v1')->as('api.')->group(function () {
     Route::middleware(['auth:sanctum', 'ability:tag.manage'])->group(function () {
         Route::apiResource('tags', TagController::class)->except(['index', 'store']);
     });
+
+    /*
+    |----------------------------------------------------------------------
+    | Menus
+    |----------------------------------------------------------------------
+    */
+    // Public — list and show
+    Route::apiResource('menus', MenuController::class)->only(['index', 'show']);
+    Route::get('menus/location/{location}', [MenuController::class, 'showByLocation'])->name('menus.location');
+
+    // Protected — store, update, destroy, and sync items (requires: ability:menu.manage)
+    Route::middleware(['auth:sanctum', 'ability:menu.manage'])->group(function () {
+        Route::apiResource('menus', MenuController::class)->except(['index', 'show']);
+        Route::post('menus/{menu}/items', [MenuController::class, 'syncItems'])->name('menus.syncItems');
+    });
+
     /*
     |----------------------------------------------------------------------
     | Public Articles
