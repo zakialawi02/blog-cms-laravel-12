@@ -6073,6 +6073,287 @@
       ]
     },
     {
+      "name": "Get all articles without content (Public)",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/articles/summary?page=&limit=&search=&sort=&direction=&is_featured=",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "articles",
+            "summary"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "",
+              "description": "default:1"
+            },
+            {
+              "key": "limit",
+              "value": "",
+              "description": "default:9"
+            },
+            {
+              "key": "search",
+              "value": "",
+              "description": "Optional [title, content, excerpt, user, username]"
+            },
+            {
+              "key": "sort",
+              "value": "",
+              "description": "default:created_at [id, published_at, title, created_at]"
+            },
+            {
+              "key": "direction",
+              "value": "",
+              "description": "Optional. default: desc  (asc or desc)"
+            },
+            {
+              "key": "is_featured",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success: get all articles without content",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/articles/summary?page=&limit=&search=&sort=&direction=&is_featured=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "articles",
+                "summary"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "",
+                  "description": "default:1"
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "default:9"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Optional [title, content, excerpt, user, username]"
+                },
+                {
+                  "key": "sort",
+                  "value": "",
+                  "description": "default:created_at [id, published_at, title, created_at]"
+                },
+                {
+                  "key": "direction",
+                  "value": "",
+                  "description": "Optional. default: desc  (asc or desc)"
+                },
+                {
+                  "key": "is_featured",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "",
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 10 Mar 2026 14:31:28 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKC2HWNQPF770HFBAVT9GAWX"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\n    \"data\": [\n        {\n            \"id\": 92,\n            \"title\": \"JavaScript vs Python Which Programming Language Should You Learn\",\n            \"slug\": \"javascript-vs-python-which-programming-language-should-you-learn\",\n            \"excerpt\": \"Compare JavaScript vs Python to decide which language fits your goals. Explore performance, web development, ease of learning, and career opportunities.\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1771237454_uUCgdi3cuTfgoadVk11O_small.jpg\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1771237454_uUCgdi3cuTfgoadVk11O_large.jpg\",\n            \"category\": {\n                \"id\": 6,\n                \"category\": \"Programming\",\n                \"slug\": \"programming\"\n            },\n            \"author\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"tags\": [\n                {\n                    \"id\": 2,\n                    \"tag_name\": \"Code\",\n                    \"slug\": \"code\",\n                    \"created_at\": \"2024-08-17T12:14:31.000000Z\",\n                    \"updated_at\": \"2024-08-17T12:14:31.000000Z\"\n                },\n                {\n                    \"id\": 3,\n                    \"tag_name\": \"Tips\",\n                    \"slug\": \"tips\",\n                    \"created_at\": \"2024-08-17T12:14:31.000000Z\",\n                    \"updated_at\": \"2024-08-17T12:14:31.000000Z\"\n                },\n                {\n                    \"id\": 5,\n                    \"tag_name\": \"Programming\",\n                    \"slug\": \"programming\",\n                    \"created_at\": \"2024-08-17T15:38:57.000000Z\",\n                    \"updated_at\": \"2024-08-17T15:38:57.000000Z\"\n                },\n                {\n                    \"id\": 15,\n                    \"tag_name\": \"Javascript\",\n                    \"slug\": \"javascript\",\n                    \"created_at\": \"2024-08-19T13:13:31.000000Z\",\n                    \"updated_at\": \"2024-08-19T13:13:31.000000Z\"\n                },\n                {\n                    \"id\": 95,\n                    \"tag_name\": \"Python\",\n                    \"slug\": \"python\",\n                    \"created_at\": \"2026-02-16T10:03:22.000000Z\",\n                    \"updated_at\": \"2026-02-16T10:03:22.000000Z\"\n                }\n            ],\n            \"meta_title\": \"JavaScript vs Python Which Programming Language Should You Learn\",\n            \"meta_desc\": \"Compare JavaScript vs Python to decide which language fits your goals. Explore performance, web development, ease of learning, and career opportunities.\",\n            \"meta_keywords\": \"JavaScript vs Python, Python vs JavaScript, JavaScript Python comparison, which programming language to learn, JavaScript vs Python performance, Python vs JavaScript for beginners, JavaScript and Python differences\",\n            \"published_at\": \"2026-02-23T09:00:00.000000Z\",\n            \"created_at\": \"2026-02-16T10:14:08.000000Z\",\n            \"updated_at\": \"2026-02-16T10:33:48.000000Z\"\n        },\n        {\n            \"id\": 88,\n            \"title\": \"Learn to Code in 3 Months A Realistic Roadmap for Beginners\",\n            \"slug\": \"learn-to-code-in-3-months-a-realistic-roadmap-for-beginners\",\n            \"excerpt\": \"Is it possible to learn to code in 3 months? This realistic guide provides a step-by-step roadmap, essential skills, and practical tips to go from beginner to building real projects in 90 days.\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1771236468_KpfYCiAF2OYIfk8d3iav_small.jpg\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1771236468_KpfYCiAF2OYIfk8d3iav_large.jpg\",\n            \"category\": {\n                \"id\": 6,\n                \"category\": \"Programming\",\n                \"slug\": \"programming\"\n            },\n            \"author\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"tags\": [\n                {\n                    \"id\": 2,\n                    \"tag_name\": \"Code\",\n                    \"slug\": \"code\",\n                    \"created_at\": \"2024-08-17T12:14:31.000000Z\",\n                    \"updated_at\": \"2024-08-17T12:14:31.000000Z\"\n                },\n                {\n                    \"id\": 3,\n                    \"tag_name\": \"Tips\",\n                    \"slug\": \"tips\",\n                    \"created_at\": \"2024-08-17T12:14:31.000000Z\",\n                    \"updated_at\": \"2024-08-17T12:14:31.000000Z\"\n                },\n                {\n                    \"id\": 5,\n                    \"tag_name\": \"Programming\",\n                    \"slug\": \"programming\",\n                    \"created_at\": \"2024-08-17T15:38:57.000000Z\",\n                    \"updated_at\": \"2024-08-17T15:38:57.000000Z\"\n                }\n            ],\n            \"meta_title\": \"Learn to Code in 3 Months A Realistic Roadmap for Beginners\",\n            \"meta_desc\": \"This realistic guide provides a step-by-step roadmap, essential skills, and practical tips to go from beginner to building real projects in 90 days.\",\n            \"meta_keywords\": \"learn to code in 3 months, coding bootcamp, programming for beginners, web development roadmap, coding skills, become a programmer, self-taught developer, coding challenges, JavaScript tutorial, Python for beginners\",\n            \"published_at\": \"2026-02-21T11:00:00.000000Z\",\n            \"created_at\": \"2026-02-16T08:09:42.000000Z\",\n            \"updated_at\": \"2026-02-16T10:07:48.000000Z\"\n        },\n        {\n            \"id\": 91,\n            \"title\": \"Learn Python in 30 Days: A Step-by-Step Guide for Absolute Beginners\",\n            \"slug\": \"learn-python-in-30-days-a-step-by-step-guide-for-absolute-beginners-1\",\n            \"excerpt\": \"Master Python programming in just 30 days with this comprehensive step-by-step guide for absolute beginners. Includes daily lessons, practical examples, and coding projects.\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1771236202_JllU6unNC8D73gt26IuC_small.jpg\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1771236202_JllU6unNC8D73gt26IuC_large.jpg\",\n            \"category\": {\n                \"id\": 6,\n                \"category\": \"Programming\",\n                \"slug\": \"programming\"\n            },\n            \"author\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"tags\": [\n                {\n                    \"id\": 2,\n                    \"tag_name\": \"Code\",\n                    \"slug\": \"code\",\n                    \"created_at\": \"2024-08-17T12:14:31.000000Z\",\n                    \"updated_at\": \"2024-08-17T12:14:31.000000Z\"\n                },\n                {\n                    \"id\": 3,\n                    \"tag_name\": \"Tips\",\n                    \"slug\": \"tips\",\n                    \"created_at\": \"2024-08-17T12:14:31.000000Z\",\n                    \"updated_at\": \"2024-08-17T12:14:31.000000Z\"\n                },\n                {\n                    \"id\": 5,\n                    \"tag_name\": \"Programming\",\n                    \"slug\": \"programming\",\n                    \"created_at\": \"2024-08-17T15:38:57.000000Z\",\n                    \"updated_at\": \"2024-08-17T15:38:57.000000Z\"\n                },\n                {\n                    \"id\": 95,\n                    \"tag_name\": \"Python\",\n                    \"slug\": \"python\",\n                    \"created_at\": \"2026-02-16T10:03:22.000000Z\",\n                    \"updated_at\": \"2026-02-16T10:03:22.000000Z\"\n                }\n            ],\n            \"meta_title\": \"Learn Python in 30 Days: A Step-by-Step Guide for Absolute Beginners\",\n            \"meta_desc\": \"Master Python programming in just 30 days with this comprehensive step-by-step guide for absolute beginners. Includes daily lessons, practical examples, and coding projects.\",\n            \"meta_keywords\": \"learn python in 30 days, python for beginners, python programming tutorial, python crash course, python coding for beginners, python step by step guide, python basics for beginners, python learning roadmap\",\n            \"published_at\": \"2026-02-19T09:00:00.000000Z\",\n            \"created_at\": \"2026-02-16T09:34:25.000000Z\",\n            \"updated_at\": \"2026-02-16T10:09:28.000000Z\"\n        },\n        {\n            \"id\": 85,\n            \"title\": \"Best AI Apps to Automate Your Daily Life Right Now\",\n            \"slug\": \"best-ai-apps-to-automate-your-daily-life-right-now\",\n            \"excerpt\": \"Discover the best AI apps to automate your daily tasks, boost productivity, and simplify your life. From smart assistants to content creation, this guide covers top tools for 2024.\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1771138120_u7pnEwO6pHAv62yaRZJa_small.jpg\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1771138120_u7pnEwO6pHAv62yaRZJa_large.jpg\",\n            \"category\": {\n                \"id\": 7,\n                \"category\": \"Apps\",\n                \"slug\": \"application\"\n            },\n            \"author\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"tags\": [],\n            \"meta_title\": \"Best AI Apps to Automate Your Daily Life Right Now\",\n            \"meta_desc\": \"Discover the best AI apps to automate your daily tasks, boost productivity, and simplify your life. From smart assistants to content creation, this guide covers top tools for 2024.\",\n            \"meta_keywords\": \"AI automation apps, best AI apps for daily life, AI productivity tools, AI personal assistant apps, automate tasks with AI, AI apps for efficiency, top AI tools 2024, AI for scheduling, AI for content creation, smart AI applications\",\n            \"published_at\": \"2026-02-16T05:00:00.000000Z\",\n            \"created_at\": \"2026-02-14T15:19:08.000000Z\",\n            \"updated_at\": \"2026-02-15T06:48:40.000000Z\"\n        },\n        {\n            \"id\": 76,\n            \"title\": \"10 Best AI Productivity Tools to Transform Your Daily Workflow\",\n            \"slug\": \"10-best-ai-productivity-tools-to-transform-your-daily-workflow-dspbly\",\n            \"excerpt\": \"Discover the top 10 AI productivity tools that can revolutionize your work. Learn how to automate tasks and boost efficiency with the latest AI technology.\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1771137947_xt3dmBuvELMZrTQi4PDv_small.jpg\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1771137947_xt3dmBuvELMZrTQi4PDv_large.jpg\",\n            \"category\": {\n                \"id\": 7,\n                \"category\": \"Apps\",\n                \"slug\": \"application\"\n            },\n            \"author\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"tags\": [],\n            \"meta_title\": \"10 Best AI Productivity Tools to Transform Your Daily Workflow\",\n            \"meta_desc\": \"Discover the top 10 AI productivity tools that can revolutionize your work. Learn how to automate tasks and boost efficiency with the latest AI technology.\",\n            \"meta_keywords\": \"AI productivity tools, best AI tools for efficiency, automate your workflow, generative AI for work, AI-powered task management, artificial intelligence for personal growth, improve productivity with AI,\",\n            \"published_at\": \"2026-02-15T06:45:47.000000Z\",\n            \"created_at\": \"2026-02-14T14:38:50.000000Z\",\n            \"updated_at\": \"2026-02-15T06:45:47.000000Z\"\n        },\n        {\n            \"id\": 73,\n            \"title\": \"How Green Technology is Shaping a Sustainable Future\",\n            \"slug\": \"how-green-technology-is-shaping-a-sustainable-future-allz2p\",\n            \"excerpt\": \"Explore how green technology is shaping a sustainable future through renewable energy, eco-friendly innovations, and climate solutions. Learn about challenges, opportunities\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1771082038_nArMhLvh9aWAwJHJxK61_small.jpg\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1771082038_nArMhLvh9aWAwJHJxK61_large.jpg\",\n            \"category\": {\n                \"id\": 1,\n                \"category\": \"Technology\",\n                \"slug\": \"technology\"\n            },\n            \"author\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"tags\": [],\n            \"meta_title\": \"How Green Technology is Shaping a Sustainable Future\",\n            \"meta_desc\": \"Explore how green technology is shaping a sustainable future through renewable energy, eco-friendly innovations, and climate solutions.\",\n            \"meta_keywords\": \"green technology, sustainable future, renewable energy, clean technology, eco-friendly innovation, climate change solutions, sustainable development, environmental technology, green energy, circular economy\",\n            \"published_at\": \"2026-02-14T15:13:58.000000Z\",\n            \"created_at\": \"2026-02-14T14:22:59.000000Z\",\n            \"updated_at\": \"2026-02-14T15:13:58.000000Z\"\n        },\n        {\n            \"id\": 69,\n            \"title\": \"Protect Your Personal Data Online The Ultimate Security Guide\",\n            \"slug\": \"protect-your-personal-data-online-the-ultimate-security-guide\",\n            \"excerpt\": \"Learn how to protect your personal data online with our ultimate guide. Get actionable tips on passwords, privacy settings, VPNs, and more to secure your digital life from hackers and scams.\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1771081783_g219I3WRAVl0DKLbKXxS_small.jpg\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1771081783_g219I3WRAVl0DKLbKXxS_large.jpg\",\n            \"category\": {\n                \"id\": 1,\n                \"category\": \"Technology\",\n                \"slug\": \"technology\"\n            },\n            \"author\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"tags\": [\n                {\n                    \"id\": 3,\n                    \"tag_name\": \"Tips\",\n                    \"slug\": \"tips\",\n                    \"created_at\": \"2024-08-17T12:14:31.000000Z\",\n                    \"updated_at\": \"2024-08-17T12:14:31.000000Z\"\n                },\n                {\n                    \"id\": 94,\n                    \"tag_name\": \"Cybersecurity\",\n                    \"slug\": \"cybersecurity\",\n                    \"created_at\": \"2026-02-14T14:10:34.000000Z\",\n                    \"updated_at\": \"2026-02-14T14:10:34.000000Z\"\n                },\n                {\n                    \"id\": 13,\n                    \"tag_name\": \"Data\",\n                    \"slug\": \"data\",\n                    \"created_at\": \"2024-08-17T22:43:06.000000Z\",\n                    \"updated_at\": \"2024-08-17T22:43:06.000000Z\"\n                }\n            ],\n            \"meta_title\": \"Protect Your Personal Data Online The Ultimate Security Guide\",\n            \"meta_desc\": \"Learn how to protect your personal data online with our ultimate guide. Get actionable tips on passwords, privacy settings, VPNs, and more to secure your digital life\",\n            \"meta_keywords\": \"protect personal data online, online privacy tips, data security guide, prevent identity theft, secure passwords, VPN for privacy, two-factor authentication, phishing scam protection, social media privacy settings, data breach protection\",\n            \"published_at\": \"2026-02-14T15:09:43.000000Z\",\n            \"created_at\": \"2026-02-14T14:07:55.000000Z\",\n            \"updated_at\": \"2026-02-14T15:10:01.000000Z\"\n        },\n        {\n            \"id\": 67,\n            \"title\": \"Digital Applications That Revolutionize Time Management\",\n            \"slug\": \"master-your-day-digital-applications-that-revolutionize-time-management\",\n            \"excerpt\": \"Ever feel like there just aren't enough hours in the day? You're not alone! In today's fast-paced world, juggling work, personal life, and everything in between can feel like a constant battle against the clock. The good news? We've got a whole arsenal of digital tools at our fingertips that can seriously level up your time management game. Forget scattered sticky notes and overwhelming to-do lists; these applications are designed to bring order to the chaos, boost your focus, and ultimately help you reclaim your precious time. Whether you're a student drowning in assignments, a professional managing multiple projects, or just someone trying to find a better balance, there's a digital solution out there for you. Let's dive into how these handy apps can transform your approach to daily tasks and help you make the most of every minute.Why Embrace Digital Tools for Time Management?Thinking about switching from your trusty...\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1766103555_xAZ4rbYAJWAWqFlVJhLg_small.webp\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1766103555_xAZ4rbYAJWAWqFlVJhLg_large.webp\",\n            \"category\": {\n                \"id\": 7,\n                \"category\": \"Apps\",\n                \"slug\": \"application\"\n            },\n            \"author\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"tags\": [\n                {\n                    \"id\": 12,\n                    \"tag_name\": \"Digital\",\n                    \"slug\": \"digital\",\n                    \"created_at\": \"2024-08-17T22:26:13.000000Z\",\n                    \"updated_at\": \"2024-08-17T22:26:13.000000Z\"\n                },\n                {\n                    \"id\": 3,\n                    \"tag_name\": \"Tips\",\n                    \"slug\": \"tips\",\n                    \"created_at\": \"2024-08-17T12:14:31.000000Z\",\n                    \"updated_at\": \"2024-08-17T12:14:31.000000Z\"\n                }\n            ],\n            \"meta_title\": null,\n            \"meta_desc\": null,\n            \"meta_keywords\": null,\n            \"published_at\": \"2025-12-19T15:00:00.000000Z\",\n            \"created_at\": \"2025-12-19T00:19:16.000000Z\",\n            \"updated_at\": \"2026-02-16T05:34:30.000000Z\"\n        },\n        {\n            \"id\": 66,\n            \"title\": \"Technology's Role in Safeguarding Our Planet: From Satellites to Smart Solutions\",\n            \"slug\": \"the-role-of-technology-in-protecting-the-environment-and-the-earth\",\n            \"excerpt\": \"In our increasingly interconnected world, the health of our planet, the earth, is a topic that weighs heavily on everyone’s minds. From dramatic shifts in weather patterns to the delicate balance of ecosystems, the signs of environmental change are undeniable. Thankfully, alongside these challenges, a powerful ally has emerged: technology. Far from being solely a source of environmental strain, innovative tech is becoming an indispensable tool in understanding, protecting, and restoring our natural world.This isn't about distant, abstract concepts anymore. It's about practical, groundbreaking solutions that allow us to see our planet in unprecedented detail, monitor its vital signs with incredible precision, and implement targeted actions for a more sustainable future. Let's dive into how various technological advancements are revolutionizing environmental protection.Unveiling Earth's Secrets from Above: The Power of SatellitesWhen we talk about understanding our planet on a global scale, the first technology that springs to mind is undoubtedly the...\",\n            \"cover\": \"http://localhost:8000/storage/media/img/1766103568_kWZ6sm44fIDlDwmcsOAj_small.webp\",\n            \"cover_large\": \"http://localhost:8000/storage/media/img/1766103568_kWZ6sm44fIDlDwmcsOAj_large.webp\",\n            \"category\": {\n                \"id\": 4,\n                \"category\": \"Earth\",\n                \"slug\": \"geography-geodesy\"\n            },\n            \"author\": {\n                \"id\": \"9ccb1ca4-20ab-41f3-a27a-d268057ca23c\",\n                \"name\": \"Ahmad Zaki Alawi\",\n                \"username\": \"zakialawi\",\n                \"avatar\": \"http://localhost:8000/assets/img/profile/user.png\"\n            },\n            \"tags\": [\n                {\n                    \"id\": 32,\n                    \"tag_name\": \"Satellite\",\n                    \"slug\": \"satellite\",\n                    \"created_at\": \"2024-10-23T06:14:34.000000Z\",\n                    \"updated_at\": \"2024-10-23T06:14:34.000000Z\"\n                },\n                {\n                    \"id\": 30,\n                    \"tag_name\": \"Geodesy\",\n                    \"slug\": \"geodesy\",\n                    \"created_at\": \"2024-10-05T08:23:15.000000Z\",\n                    \"updated_at\": \"2024-10-05T08:23:15.000000Z\"\n                }\n            ],\n            \"meta_title\": null,\n            \"meta_desc\": null,\n            \"meta_keywords\": \"earth, satellite, geomatics, geodetic, climate, environmental monitoring, conservation technology, GIS, remote sensing, climate change mitigation, sustainability\",\n            \"published_at\": \"2025-12-19T00:08:00.000000Z\",\n            \"created_at\": \"2025-12-19T00:00:26.000000Z\",\n            \"updated_at\": \"2025-12-19T00:19:28.000000Z\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/v1/articles/summary?page=1\",\n        \"last\": \"http://localhost:8000/api/v1/articles/summary?page=8\",\n        \"prev\": null,\n        \"next\": \"http://localhost:8000/api/v1/articles/summary?page=2\"\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 8,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=2\",\n                \"label\": \"2\",\n                \"page\": 2,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=3\",\n                \"label\": \"3\",\n                \"page\": 3,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=4\",\n                \"label\": \"4\",\n                \"page\": 4,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=5\",\n                \"label\": \"5\",\n                \"page\": 5,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=6\",\n                \"label\": \"6\",\n                \"page\": 6,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=7\",\n                \"label\": \"7\",\n                \"page\": 7,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=8\",\n                \"label\": \"8\",\n                \"page\": 8,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles/summary?page=2\",\n                \"label\": \"Next &raquo;\",\n                \"page\": 2,\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://localhost:8000/api/v1/articles/summary\",\n        \"per_page\": 9,\n        \"to\": 9,\n        \"total\": 64\n    },\n    \"success\": true,\n    \"message\": \"Articles summary retrieved successfully\"\n}"
+        },
+        {
+          "name": "Success: get featured articles",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/articles?page=1&limit=&search=&sort=&direction=&is_featured=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "articles"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "default:1"
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "default:9"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Optional [title, content, excerpt, user, username]"
+                },
+                {
+                  "key": "sort",
+                  "value": "",
+                  "description": "default:created_at [id, published_at, title, created_at]"
+                },
+                {
+                  "key": "direction",
+                  "value": "",
+                  "description": "Optional. default: asc  (asc or desc)"
+                },
+                {
+                  "key": "is_featured",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 08 Mar 2026 14:36:58 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KK6Y2HM2BJBBMNR7NT8S0FPQ"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": [],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/v1/articles?is_featured=true&page=1\",\n        \"last\": \"http://localhost:8000/api/v1/articles?is_featured=true&page=1\",\n        \"prev\": null,\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": null,\n        \"last_page\": 1,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/articles?is_featured=true&page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"page\": null,\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://localhost:8000/api/v1/articles\",\n        \"per_page\": 9,\n        \"to\": null,\n        \"total\": 0\n    },\n    \"success\": true,\n    \"message\": \"Articles retrieved successfully\"\n}"
+        }
+      ]
+    },
+    {
       "name": "Get articles show details (Public)",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
@@ -8076,6 +8357,525 @@
             }
           ],
           "body": "{\n    \"success\": false,\n    \"message\": \"Archive year and month are required\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get menus list (public)",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/menus",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "menus"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Get menus list",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/menus",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "menus"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 11 Mar 2026 14:51:42 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKEP3NYRP1AE9FEFFHGRPPXG"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Main Header\",\n            \"location\": \"header\",\n            \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n            \"updated_at\": \"2025-06-03T02:06:18.000000Z\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Header Top\",\n            \"location\": \"header-top\",\n            \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n            \"updated_at\": \"2025-06-03T02:06:18.000000Z\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Footer Menu 1\",\n            \"location\": \"footer-a\",\n            \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n            \"updated_at\": \"2025-06-03T02:06:18.000000Z\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Footer Menu 2\",\n            \"location\": \"footer-b\",\n            \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n            \"updated_at\": \"2025-06-03T02:06:18.000000Z\"\n        }\n    ],\n    \"success\": true,\n    \"message\": \"List of all menus\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get menu detail section (public)",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/menus/:id_menu",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "menus",
+            ":id_menu"
+          ],
+          "variable": [
+            {
+              "key": "id_menu",
+              "value": "1",
+              "description": "lihat/dapatkan id_menu di '/api/v1/menus'"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Get menu detail section (id:1)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/menus/:id_menu",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "menus",
+                ":id_menu"
+              ],
+              "variable": [
+                {
+                  "key": "id_menu",
+                  "value": "1",
+                  "description": "lihat/dapatkan id_menu di '/api/v1/menus'"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "",
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 11 Mar 2026 14:51:01 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKEP2DBGXXZQ08W4HMF5R9GN"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\n    \"success\": true,\n    \"message\": \"Menu details retrieved successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Main Header\",\n        \"location\": \"header\",\n        \"items\": [\n            {\n                \"id\": 1,\n                \"label\": \"Home\",\n                \"link\": \"/\",\n                \"parent\": null,\n                \"sort\": 0,\n                \"class\": null,\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            },\n            {\n                \"id\": 2,\n                \"label\": \"Programming\",\n                \"link\": \"/blog/categories/programming\",\n                \"parent\": null,\n                \"sort\": 1,\n                \"class\": null,\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            },\n            {\n                \"id\": 3,\n                \"label\": \"Technology\",\n                \"link\": \"/blog/categories/technology\",\n                \"parent\": null,\n                \"sort\": 2,\n                \"class\": null,\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            },\n            {\n                \"id\": 11,\n                \"label\": \"Tutorial\",\n                \"link\": \"/blog/categories/tutorial\",\n                \"parent\": null,\n                \"sort\": 3,\n                \"class\": \"\",\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T06:22:50.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            },\n            {\n                \"id\": 12,\n                \"label\": \"Earth\",\n                \"link\": \"/blog/categories/geography-geodesy\",\n                \"parent\": null,\n                \"sort\": 4,\n                \"class\": \"\",\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T06:23:09.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            }\n        ],\n        \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n        \"updated_at\": \"2025-06-03T02:06:18.000000Z\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Sync all items for a menu",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"items\": [\r\n    {\r\n      \"id\": 1,\r\n      \"label\": \"Home\",\r\n      \"link\": \"/\",\r\n      \"class\": \"nav-link\",\r\n      \"children\": [\r\n        {}\r\n      ]\r\n    }\r\n  ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/menus/:menu/items",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "menus",
+            ":menu",
+            "items"
+          ],
+          "variable": [
+            {
+              "key": "menu",
+              "value": "1",
+              "description": "lihat/dapatkan id_menu di '/api/v1/menus'"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Get menu detail section (id:1)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/menus/:id_menu",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "menus",
+                ":id_menu"
+              ],
+              "variable": [
+                {
+                  "key": "id_menu",
+                  "value": "1",
+                  "description": "lihat/dapatkan id_menu di '/api/v1/menus'"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "",
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 11 Mar 2026 14:51:01 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKEP2DBGXXZQ08W4HMF5R9GN"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\n    \"success\": true,\n    \"message\": \"Menu details retrieved successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Main Header\",\n        \"location\": \"header\",\n        \"items\": [\n            {\n                \"id\": 1,\n                \"label\": \"Home\",\n                \"link\": \"/\",\n                \"parent\": null,\n                \"sort\": 0,\n                \"class\": null,\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            },\n            {\n                \"id\": 2,\n                \"label\": \"Programming\",\n                \"link\": \"/blog/categories/programming\",\n                \"parent\": null,\n                \"sort\": 1,\n                \"class\": null,\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            },\n            {\n                \"id\": 3,\n                \"label\": \"Technology\",\n                \"link\": \"/blog/categories/technology\",\n                \"parent\": null,\n                \"sort\": 2,\n                \"class\": null,\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            },\n            {\n                \"id\": 11,\n                \"label\": \"Tutorial\",\n                \"link\": \"/blog/categories/tutorial\",\n                \"parent\": null,\n                \"sort\": 3,\n                \"class\": \"\",\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T06:22:50.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            },\n            {\n                \"id\": 12,\n                \"label\": \"Earth\",\n                \"link\": \"/blog/categories/geography-geodesy\",\n                \"parent\": null,\n                \"sort\": 4,\n                \"class\": \"\",\n                \"menu\": 1,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T06:23:09.000000Z\",\n                \"updated_at\": \"2025-06-03T06:23:11.000000Z\"\n            }\n        ],\n        \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n        \"updated_at\": \"2025-06-03T02:06:18.000000Z\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get menu details and nested items by location (public)",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/menus/location/:id_menu",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "menus",
+            "location",
+            ":id_menu"
+          ],
+          "variable": [
+            {
+              "key": "id_menu",
+              "value": "header",
+              "description": "lihat/dapatkan 'location' menu di '/api/v1/menus'"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success: example for 'header-top'",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/menus/location/:id_menu",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "menus",
+                "location",
+                ":id_menu"
+              ],
+              "variable": [
+                {
+                  "key": "id_menu",
+                  "value": "header",
+                  "description": "lihat/dapatkan 'location' menu di '/api/v1/menus'"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "",
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 11 Mar 2026 15:12:52 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKEQADSWEXA71EDHK88A9PMH"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\n    \"success\": true,\n    \"message\": \"Menu details for location retrieved successfully\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"Header Top\",\n        \"location\": \"header-top\",\n        \"items\": [\n            {\n                \"id\": 4,\n                \"label\": \"Home\",\n                \"link\": \"/\",\n                \"parent\": null,\n                \"sort\": 0,\n                \"class\": null,\n                \"menu\": 2,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n                \"updated_at\": \"2025-06-11T07:52:33.000000Z\"\n            },\n            {\n                \"id\": 19,\n                \"label\": \"About\",\n                \"link\": \"https://zakialawi.my.id/\",\n                \"parent\": null,\n                \"sort\": 1,\n                \"class\": \"\",\n                \"menu\": 2,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-11T07:52:25.000000Z\",\n                \"updated_at\": \"2025-06-11T07:52:33.000000Z\"\n            },\n            {\n                \"id\": 18,\n                \"label\": \"Contact\",\n                \"link\": \"/p/contact\",\n                \"parent\": null,\n                \"sort\": 2,\n                \"class\": \"\",\n                \"menu\": 2,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-11T07:51:44.000000Z\",\n                \"updated_at\": \"2025-06-11T07:52:33.000000Z\"\n            }\n        ],\n        \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n        \"updated_at\": \"2025-06-03T02:06:18.000000Z\"\n    }\n}"
         }
       ]
     }

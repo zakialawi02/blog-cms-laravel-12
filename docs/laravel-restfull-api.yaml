@@ -1525,6 +1525,298 @@ paths:
         - Category
       security:
         - bearerAuth: []
+  /api/v1/menus:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: "Success retrieve menus"
+          schema:
+            example:
+              data:
+                - id: 1
+                  name: "Main Header"
+                  location: "header"
+                  created_at: "2025-06-03T02:06:18.000000Z"
+                  updated_at: "2025-06-03T02:06:18.000000Z"
+                - id: 2
+                  name: "Header Top"
+                  location: "header-top"
+                  created_at: "2025-06-03T02:06:18.000000Z"
+                  updated_at: "2025-06-03T02:06:18.000000Z"
+                - id: 3
+                  name: "Footer Menu 1"
+                  location: "footer-a"
+                  created_at: "2025-06-03T02:06:18.000000Z"
+                  updated_at: "2025-06-03T02:06:18.000000Z"
+                - id: 4
+                  name: "Footer Menu 2"
+                  location: "footer-b"
+                  created_at: "2025-06-03T02:06:18.000000Z"
+                  updated_at: "2025-06-03T02:06:18.000000Z"
+              success: true
+              message: "List of all menus"
+        "500":
+          description: "Server error"
+      description: "Get all menus list"
+      operationId: "getMenus"
+      summary: "Get all menus list"
+      tags:
+        - Menu
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              name:
+                example: "Main Menu"
+                type: string
+              location:
+                example: "header"
+                type: string
+            type: object
+            required:
+              - name
+      responses:
+        "201":
+          description: "Success create menu"
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: "Server error"
+      description: "Create new menu"
+      operationId: "createMenu"
+      summary: "Create new menu"
+      tags:
+        - Menu
+      security:
+        - bearerAuth: []
+  /api/v1/menus/{menu}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Menu ID"
+          in: path
+          name: menu
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: "Success retrieve menu details including items"
+        "404":
+          $ref: "#/responses/NotFound"
+        "500":
+          description: "Server error"
+      description: "Get menu details and nested items"
+      operationId: "getMenu"
+      summary: "Get menu details"
+      tags:
+        - Menu
+    put:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Menu ID"
+          in: path
+          name: menu
+          required: true
+          type: integer
+        - in: body
+          name: body
+          schema:
+            properties:
+              name:
+                example: "Updated Main Menu"
+                type: string
+              location:
+                example: "footer"
+                type: string
+            type: object
+            required:
+              - name
+      responses:
+        "200":
+          description: "Success update menu"
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "404":
+          $ref: "#/responses/NotFound"
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: "Server error"
+      description: "Update menu"
+      operationId: "updateMenu"
+      summary: "Update menu"
+      tags:
+        - Menu
+      security:
+        - bearerAuth: []
+    delete:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Menu ID"
+          in: path
+          name: menu
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: "Success delete menu"
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "404":
+          $ref: "#/responses/NotFound"
+        "500":
+          description: "Server error"
+      description: "Delete menu"
+      operationId: "deleteMenu"
+      summary: "Delete menu"
+      tags:
+        - Menu
+      security:
+        - bearerAuth: []
+  /api/v1/menus/location/{location}:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Menu location slug (e.g. header, footer-a)"
+          in: path
+          name: location
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Success retrieve menu details for location"
+          schema:
+            example:
+              success: true
+              message: "Menu details for location retrieved successfully"
+              data:
+                id: 2
+                name: "Header Top"
+                location: "header-top"
+                items:
+                  - id: 4
+                    label: "Home"
+                    link: "/"
+                    parent: null
+                    sort: 0
+                    class: null
+                    menu: 2
+                    depth: 0
+                    created_at: "2025-06-03T02:06:18.000000Z"
+                    updated_at: "2025-06-11T07:52:33.000000Z"
+                  - id: 19
+                    label: "About"
+                    link: "https://zakialawi.my.id/"
+                    parent: null
+                    sort: 1
+                    class: ""
+                    menu: 2
+                    depth: 0
+                    created_at: "2025-06-11T07:52:25.000000Z"
+                    updated_at: "2025-06-11T07:52:33.000000Z"
+                  - id: 18
+                    label: "Contact"
+                    link: "/p/contact"
+                    parent: null
+                    sort: 2
+                    class: ""
+                    menu: 2
+                    depth: 0
+                    created_at: "2025-06-11T07:51:44.000000Z"
+                    updated_at: "2025-06-11T07:52:33.000000Z"
+                created_at: "2025-06-03T02:06:18.000000Z"
+                updated_at: "2025-06-03T02:06:18.000000Z"
+        "404":
+          $ref: "#/responses/NotFound"
+        "500":
+          description: "Server error"
+      description: "Get menu details and nested items by location"
+      operationId: "getMenuByLocation"
+      summary: "Get menu by location"
+      tags:
+        - Menu
+  /api/v1/menus/{menu}/items:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Menu ID"
+          in: path
+          name: menu
+          required: true
+          type: integer
+        - in: body
+          name: body
+          schema:
+            properties:
+              items:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    label:
+                      type: string
+                      example: "Home"
+                    link:
+                      type: string
+                      example: "/"
+                    class:
+                      type: string
+                      example: "nav-link"
+                    children:
+                      type: array
+                      items:
+                        type: object
+            type: object
+            required:
+              - items
+      responses:
+        "200":
+          description: "Success sync menu items tree"
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "404":
+          $ref: "#/responses/NotFound"
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: "Server error"
+      description: "Sync all items for a menu (supports JSON tree format)"
+      operationId: "syncMenuItems"
+      summary: "Sync menu items"
+      tags:
+        - Menu
+      security:
+        - bearerAuth: []
   /api/v1/tags:
     get:
       consumes:
