@@ -2742,6 +2742,24 @@ definitions:
       message:
         type: string
         example: "Forbidden: You do not have the required permission."
+  ErrorApiKeyMissing:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      message:
+        type: string
+        example: "Invalid or missing API Key"
+      hint:
+        type: string
+        example: "Please include X-API-Key in your request headers"
+      example:
+        type: string
+        example: "X-API-Key: your-api-key-here"
+      support:
+        type: string
+        example: "Contact administrator for further assistance"
   PaginationMeta:
     type: object
     properties:
@@ -3023,9 +3041,18 @@ responses:
     description: Forbidden access
     schema:
       $ref: "#/definitions/ErrorForbidden"
+  ApiKeyMissing:
+    description: API Key missing or invalid
+    schema:
+      $ref: "#/definitions/ErrorApiKeyMissing"
 securityDefinitions:
   bearerAuth:
     type: apiKey
     name: Authorization
     in: header
     description: Enter token in format (Bearer <token>)
+  apiKey:
+    type: apiKey
+    name: X-API-Key
+    in: header
+    description: API Key for accessing the API. Contact administrator to obtain your API key.

@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
+        $middleware->api([\App\Http\Middleware\ApiKeyMiddleware::class]);
         $middleware->web([
             \App\Http\Middleware\LoadWebSettings::class
         ]);
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleCheck::class,
             'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
             'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+            'api.key' => \App\Http\Middleware\ApiKeyMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
