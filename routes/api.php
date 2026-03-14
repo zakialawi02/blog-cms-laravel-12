@@ -4,7 +4,15 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\WelcomeController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Welcome Route
+|--------------------------------------------------------------------------
+*/
+Route::get('/', WelcomeController::class)->name('api.welcome');
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +21,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->as('api.')->group(function () {
+
+    /*
+    |----------------------------------------------------------------------
+    | API v1 Welcome
+    |----------------------------------------------------------------------
+    */
+    Route::get('/', WelcomeController::class)->name('v1.welcome');
 
     /*
     |----------------------------------------------------------------------
