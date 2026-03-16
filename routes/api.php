@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleCommentController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\UserController;
@@ -91,6 +92,10 @@ Route::prefix('v1')->as('api.')->group(function () {
     // Public — list and show
     Route::apiResource('menus', MenuController::class)->only(['index', 'show']);
     Route::get('menus/location/{location}', [MenuController::class, 'showByLocation'])->name('menus.location');
+
+    // Article Comments
+    Route::get('articles/{slug}/comments', [ArticleCommentController::class, 'index'])->name('articles.comments.index');
+    Route::post('articles/{slug}/comments', [ArticleCommentController::class, 'store'])->middleware('auth:sanctum')->name('articles.comments.store');
 
     // Protected — store, update, destroy, and sync items (requires: ability:menu.manage)
     Route::middleware(['auth:sanctum', 'ability:menu.manage'])->group(function () {
