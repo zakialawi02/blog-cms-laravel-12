@@ -23,9 +23,15 @@ class ArticleService
         $query = Article::with(['user', 'category', 'tags'])
             ->published();
 
-        $sort = $filters['sort'] ?? 'published_at';
-        $direction = $filters['direction'] ?? 'desc';
-        $query->orderBy($sort, $direction);
+        $random = filter_var($filters['random'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+        if ($random) {
+            $query->inRandomOrder();
+        } else {
+            $sort = $filters['sort'] ?? 'published_at';
+            $direction = $filters['direction'] ?? 'desc';
+            $query->orderBy($sort, $direction);
+        }
 
         if (!empty($filters['category'])) {
             if ($filters['category'] === 'uncategorized') {

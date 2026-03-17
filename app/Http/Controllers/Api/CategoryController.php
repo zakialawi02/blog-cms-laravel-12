@@ -31,14 +31,20 @@ class CategoryController extends Controller
             }
 
             // 2. Sorting
-            $sort = $request->query('sort', 'created_at'); // default sort column
-            $direction = $request->query('direction', 'asc'); // default sort direction
+            $random = filter_var($request->query('random', false), FILTER_VALIDATE_BOOLEAN);
 
-            $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'asc';
-            $allowedSorts = ['id', 'category', 'slug', 'created_at', 'updated_at'];
+            if ($random) {
+                $query->inRandomOrder();
+            } else {
+                $sort = $request->query('sort', 'created_at'); // default sort column
+                $direction = $request->query('direction', 'asc'); // default sort direction
 
-            if (in_array($sort, $allowedSorts)) {
-                $query->orderBy($sort, $direction);
+                $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'asc';
+                $allowedSorts = ['id', 'category', 'slug', 'created_at', 'updated_at'];
+
+                if (in_array($sort, $allowedSorts)) {
+                    $query->orderBy($sort, $direction);
+                }
             }
 
             // 3. Pagination Limit

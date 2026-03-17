@@ -155,6 +155,11 @@ paths:
           enum:
             - asc
             - desc
+        - in: query
+          name: random
+          type: boolean
+          description: "Randomize results (Optional, default: false)"
+          default: false
       responses:
         "200":
           description: Success retrieve categories
@@ -280,6 +285,12 @@ paths:
           name: limit
           required: false
           type: integer
+        - description: "Randomize results"
+          in: query
+          name: random
+          required: false
+          type: boolean
+          default: false
       responses:
         "200":
           description: "Success retrieve tags list"
@@ -372,6 +383,12 @@ paths:
           name: is_featured
           required: false
           type: boolean
+        - description: "Randomize results"
+          in: query
+          name: random
+          required: false
+          type: boolean
+          default: false
       responses:
         "200":
           description: "Success retrieve articles list"
@@ -437,6 +454,12 @@ paths:
           name: is_featured
           required: false
           type: boolean
+        - description: "Randomize results"
+          in: query
+          name: random
+          required: false
+          type: boolean
+          default: false
       responses:
         "200":
           description: "Success retrieve articles summary list"
