@@ -2871,6 +2871,174 @@ paths:
       summary: "Post article comment"
       tags:
         - Comments
+  /api/v1/web-settings:
+    get:
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success retrieve web settings
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: Web settings retrieved successfully
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/WebSetting"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Failed to retrieve web settings
+                type: string
+              error:
+                example: Error message here
+                type: string
+            type: object
+      description: Get all web settings (public endpoint)
+      operationId: getWebSettings
+      summary: Get all web settings
+      tags:
+        - Web Settings
+    patch:
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              web_name:
+                example: "My Blog"
+                type: string
+              tagline:
+                example: "Sharing knowledge, one post at a time"
+                type: string
+              description:
+                example: "A blog about technology, programming, and web development"
+                type: string
+              keywords:
+                example: "blog, programming, web development, tutorial"
+                type: string
+              email:
+                example: "contact@example.com"
+                type: string
+              link_fb:
+                example: "https://www.facebook.com/username"
+                type: string
+              link_ig:
+                example: "https://www.instagram.com/username"
+                type: string
+              link_tiktok:
+                example: "https://www.tiktok.com/@username"
+                type: string
+              link_youtube:
+                example: "https://www.youtube.com/channel/username"
+                type: string
+              link_twitter:
+                example: "https://twitter.com/username"
+                type: string
+              link_linkedin:
+                example: "https://www.linkedin.com/in/username"
+                type: string
+              link_github:
+                example: "https://github.com/username"
+                type: string
+              google_analytics:
+                example: "G-XXXXXXXXXX"
+                type: string
+              google_adsense:
+                example: "ca-pub-123456789"
+                type: string
+              can_join_contributor:
+                example: true
+                type: boolean
+              web_name_variant:
+                example: "vars1"
+                type: string
+                enum:
+                  - vars1
+                  - vars2
+                  - vars3
+              before_close_head:
+                example: "<meta name='verification' content='abc123'>"
+                type: string
+              before_close_body:
+                example: "<script>console.log('tracking');</script>"
+                type: string
+              app_logo:
+                type: string
+                format: binary
+                description: "PNG image file (max 700KB)"
+              favicon:
+                type: string
+                format: binary
+                description: "PNG image file, 512x512 or less (max 548KB)"
+            type: object
+      responses:
+        "200":
+          description: Success update web settings
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: Settings updated successfully
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/WebSetting"
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          description: Forbidden - Missing required ability
+          schema:
+            properties:
+              message:
+                example: You do not have permission to perform this action.
+                type: string
+              success:
+                example: false
+                type: boolean
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Failed to update settings
+                type: string
+              error:
+                example: Error message here
+                type: string
+            type: object
+      description: Update web settings (requires authentication with web-setting.manage ability)
+      operationId: updateWebSettings
+      summary: Update web settings
+      tags:
+        - Web Settings
+      security:
+        - bearerAuth: []
 tags:
   - name: Auth
     description: Authentication & Authorization endpoints
@@ -2882,6 +3050,8 @@ tags:
     description: Tag Master Data endpoints
   - name: Comments
     description: Article Comments endpoints
+  - name: Web Settings
+    description: Web Settings Management endpoints
 definitions:
   ErrorUnauthorized:
     type: object
@@ -3206,6 +3376,18 @@ definitions:
         type: string
         format: date-time
         example: "2024-10-13T14:12:08.000000Z"
+  WebSetting:
+    type: object
+    properties:
+      key:
+        type: string
+        example: "web_name"
+      value:
+        type: string
+        example: "My Blog"
+      type:
+        type: string
+        example: "string"
 
 responses:
   Unauthorized:

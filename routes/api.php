@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\WebSettingController;
 use App\Http\Controllers\Api\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -119,6 +120,17 @@ Route::prefix('v1')->as('api.')->group(function () {
         Route::get('/archive/{year}/{month?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByMonth'])->name('month');
         Route::get('/{slug}', [\App\Http\Controllers\Api\PublicArticleController::class, 'show'])->name('show');
     });
+
+    /*
+    |----------------------------------------------------------------------
+    | Web Settings
+    |----------------------------------------------------------------------
+    */
+    // Public — list only
+    Route::get('web-settings', [WebSettingController::class, 'index'])->name('web-settings.index');
+
+    // Protected — update (requires: ability:web-setting.manage)
+    Route::middleware(['auth:sanctum', 'ability:web-setting.manage'])->patch('web-settings', [WebSettingController::class, 'update'])->name('web-settings.update');
 
 });
 

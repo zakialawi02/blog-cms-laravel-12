@@ -225,7 +225,13 @@
       "name": "Login",
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\r\n  \"id_user\": \"admin\",\r\n  \"password\": \"admin\"\r\n}\r\n",
@@ -1632,11 +1638,16 @@
             "value": "application/json",
             "description": "application/json",
             "type": "text"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "a",
+            "type": "text"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"name\" : \"John doe2\",\r\n    \"email\": \"john_doe2@mail.com\"\r\n}",
+          "raw": "{\r\n    \"name\" : \"admin2\",\r\n    \"email\": \"admin@mail.com\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -3464,7 +3475,7 @@
           "formdata": []
         },
         "url": {
-          "raw": "{{base_url}}/api/v1/categories?page=1&limit=&search=&sort=&direction=",
+          "raw": "{{base_url}}/api/v1/categories?page=1&limit=&search=&sort=&direction=&random",
           "host": [
             "{{base_url}}"
           ],
@@ -3498,6 +3509,12 @@
               "key": "direction",
               "value": "",
               "description": "Optional. default: asc  (asc or desc)"
+            },
+            {
+              "key": "random",
+              "value": null,
+              "description": "default: false",
+              "type": "text"
             }
           ]
         }
@@ -4686,7 +4703,7 @@
           "formdata": []
         },
         "url": {
-          "raw": "{{base_url}}/api/v1/tags?page=1&limit=&search=&sort=&direction=",
+          "raw": "{{base_url}}/api/v1/tags?page=1&limit=&search=&sort=&direction=&random",
           "host": [
             "{{base_url}}"
           ],
@@ -4720,6 +4737,12 @@
               "key": "direction",
               "value": "",
               "description": "Optional. default: asc  (asc or desc)"
+            },
+            {
+              "key": "random",
+              "value": null,
+              "description": "default: false",
+              "type": "text"
             }
           ]
         }
@@ -5822,6 +5845,11 @@
             "value": "application/json",
             "description": "application/json",
             "type": "text"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "a",
+            "type": "text"
           }
         ],
         "body": {
@@ -5829,7 +5857,7 @@
           "formdata": []
         },
         "url": {
-          "raw": "{{base_url}}/api/v1/articles?page=&limit=&search=&sort=&direction=&is_featured=",
+          "raw": "{{base_url}}/api/v1/articles?page=&limit=&search=&sort=&direction=&is_featured=&random=true",
           "host": [
             "{{base_url}}"
           ],
@@ -5866,7 +5894,13 @@
             },
             {
               "key": "is_featured",
-              "value": ""
+              "value": "",
+              "description": "default: false"
+            },
+            {
+              "key": "random",
+              "value": "true",
+              "description": "default: false"
             }
           ]
         }
@@ -6376,6 +6410,11 @@
             "value": "application/json",
             "description": "application/json",
             "type": "text"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "a",
+            "type": "text"
           }
         ],
         "body": {
@@ -6730,6 +6769,11 @@
             "key": "Accept",
             "value": "application/json",
             "description": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "a",
             "type": "text"
           }
         ],
@@ -8361,6 +8405,523 @@
       ]
     },
     {
+      "name": "Get comment in article (Public)",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/articles/:article_slug/comments?page=&limit=&sort=&direction=",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "articles",
+            ":article_slug",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "",
+              "description": "default:1"
+            },
+            {
+              "key": "limit",
+              "value": "",
+              "description": "defautl: 10"
+            },
+            {
+              "key": "sort",
+              "value": "",
+              "description": "defautl: created_at ."
+            },
+            {
+              "key": "direction",
+              "value": "",
+              "description": "defautl: desc ."
+            }
+          ],
+          "variable": [
+            {
+              "key": "article_slug",
+              "value": "escaping-the-trap-of-vibe-coding-and-why-you-still-need-to-understand-your-code"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "a",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/articles/:article_slug/comments?page=&limit=&sort=&direction=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "articles",
+                ":article_slug",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "",
+                  "description": "default:1"
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "defautl: 10"
+                },
+                {
+                  "key": "sort",
+                  "value": "",
+                  "description": "defautl: created_at ."
+                },
+                {
+                  "key": "direction",
+                  "value": "",
+                  "description": "defautl: desc ."
+                }
+              ],
+              "variable": [
+                {
+                  "key": "article_slug",
+                  "value": "escaping-the-trap-of-vibe-coding-and-why-you-still-need-to-understand-your-code"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 16 Mar 2026 06:52:28 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKTPNRCB6DXKWPNPZT8ARMGV"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"success\": true,\n    \"message\": \"Comments retrieved successfully\",\n    \"data\": [\n        {\n            \"id\": 4,\n            \"user\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"profile_photo_path\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"content\": \"This is a great article! Thanks for sharing.\",\n            \"parent_id\": null,\n            \"is_approved\": true,\n            \"replies\": [],\n            \"created_at\": \"2026-03-16T06:47:02.000000Z\",\n            \"updated_at\": \"2026-03-16T06:47:02.000000Z\"\n        },\n        {\n            \"id\": 2,\n            \"user\": {\n                \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                \"name\": \"Admin User\",\n                \"username\": \"admin\",\n                \"profile_photo_path\": \"http://localhost:8000/assets/img/profile/admin.png\"\n            },\n            \"content\": \"im admin into comment\",\n            \"parent_id\": null,\n            \"is_approved\": true,\n            \"replies\": [],\n            \"created_at\": \"2026-03-16T06:43:17.000000Z\",\n            \"updated_at\": \"2026-03-16T06:43:17.000000Z\"\n        },\n        {\n            \"id\": 1,\n            \"user\": {\n                \"id\": \"5d7e4d11-3eb4-41d2-b534-cd56b479cfda\",\n                \"name\": \"Regular User\",\n                \"username\": \"user\",\n                \"profile_photo_path\": \"http://localhost:8000/assets/img/profile/user.png\"\n            },\n            \"content\": \"hello testing the comment\",\n            \"parent_id\": null,\n            \"is_approved\": true,\n            \"replies\": [\n                {\n                    \"id\": 3,\n                    \"user\": {\n                        \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n                        \"name\": \"Admin User\",\n                        \"username\": \"admin\",\n                        \"profile_photo_path\": \"http://localhost:8000/assets/img/profile/admin.png\"\n                    },\n                    \"content\": \"yuahh tested replied\",\n                    \"parent_id\": 1,\n                    \"is_approved\": true,\n                    \"replies\": [],\n                    \"created_at\": \"2026-03-16T06:43:32.000000Z\",\n                    \"updated_at\": \"2026-03-16T06:43:32.000000Z\"\n                }\n            ],\n            \"created_at\": \"2026-03-16T06:43:02.000000Z\",\n            \"updated_at\": \"2026-03-16T06:43:02.000000Z\"\n        }\n    ],\n    \"meta\": {\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"per_page\": 10,\n        \"total\": 3\n    },\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/v1/articles/escaping-the-trap-of-vibe-coding-and-why-you-still-need-to-understand-your-code/comments?page=1\",\n        \"last\": \"http://localhost:8000/api/v1/articles/escaping-the-trap-of-vibe-coding-and-why-you-still-need-to-understand-your-code/comments?page=1\",\n        \"prev\": null,\n        \"next\": null\n    }\n}"
+        },
+        {
+          "name": "Error: article not found",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "a",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/articles/:article_slug/comments?page=&limit=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "articles",
+                ":article_slug",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "",
+                  "description": "default:1"
+                },
+                {
+                  "key": "limit",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "article_slug",
+                  "value": "ini-slug"
+                }
+              ]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 16 Mar 2026 06:44:59 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKTP81HMCKRZ3B0Y5VWRSX5Q"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"success\": false,\n    \"message\": \"Article not found\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Create new comment in article",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"content\": \"This is a great article! Thanks for sharing.\",\r\n  \"parent_id\": null\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/articles/:article_slug/comments",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "articles",
+            ":article_slug",
+            "comments"
+          ],
+          "variable": [
+            {
+              "key": "article_slug",
+              "value": "escaping-the-trap-of-vibe-coding-and-why-you-still-need-to-understand-your-code"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "a",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"This is a great article! Thanks for sharing.\",\r\n  \"parent_id\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/articles/:article_slug/comments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "articles",
+                ":article_slug",
+                "comments"
+              ],
+              "variable": [
+                {
+                  "key": "article_slug",
+                  "value": "escaping-the-trap-of-vibe-coding-and-why-you-still-need-to-understand-your-code"
+                }
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "",
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 16 Mar 2026 06:47:02 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKTPBT2SWR1ZECJNYVSY6J2P"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            }
+          ],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\n    \"success\": true,\n    \"message\": \"Comment posted successfully\",\n    \"data\": {\n        \"id\": 4,\n        \"user\": {\n            \"id\": \"5ab69007-4d67-4751-bd9b-80618d201c63\",\n            \"name\": \"Admin User\",\n            \"username\": \"admin\",\n            \"profile_photo_path\": \"http://localhost:8000/assets/img/profile/admin.png\"\n        },\n        \"content\": \"This is a great article! Thanks for sharing.\",\n        \"parent_id\": null,\n        \"is_approved\": true,\n        \"created_at\": \"2026-03-16T06:47:02.000000Z\",\n        \"updated_at\": \"2026-03-16T06:47:02.000000Z\"\n    }\n}"
+        },
+        {
+          "name": "Error: article not found",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "a",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/articles/:article_id/comments?page=&limit=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "articles",
+                ":article_id",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "",
+                  "description": "default:1"
+                },
+                {
+                  "key": "limit",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "article_id",
+                  "value": "abc"
+                }
+              ]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 16 Mar 2026 05:58:45 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KKTKKCKBMKWYS84KJYA9F6FV"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"success\": false,\n    \"message\": \"Article not found\"\n}"
+        }
+      ]
+    },
+    {
       "name": "Get menus list (public)",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
@@ -8878,6 +9439,85 @@
           "body": "{\n    \"success\": true,\n    \"message\": \"Menu details for location retrieved successfully\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"Header Top\",\n        \"location\": \"header-top\",\n        \"items\": [\n            {\n                \"id\": 4,\n                \"label\": \"Home\",\n                \"link\": \"/\",\n                \"parent\": null,\n                \"sort\": 0,\n                \"class\": null,\n                \"menu\": 2,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n                \"updated_at\": \"2025-06-11T07:52:33.000000Z\"\n            },\n            {\n                \"id\": 19,\n                \"label\": \"About\",\n                \"link\": \"https://zakialawi.my.id/\",\n                \"parent\": null,\n                \"sort\": 1,\n                \"class\": \"\",\n                \"menu\": 2,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-11T07:52:25.000000Z\",\n                \"updated_at\": \"2025-06-11T07:52:33.000000Z\"\n            },\n            {\n                \"id\": 18,\n                \"label\": \"Contact\",\n                \"link\": \"/p/contact\",\n                \"parent\": null,\n                \"sort\": 2,\n                \"class\": \"\",\n                \"menu\": 2,\n                \"depth\": 0,\n                \"created_at\": \"2025-06-11T07:51:44.000000Z\",\n                \"updated_at\": \"2025-06-11T07:52:33.000000Z\"\n            }\n        ],\n        \"created_at\": \"2025-06-03T02:06:18.000000Z\",\n        \"updated_at\": \"2025-06-03T02:06:18.000000Z\"\n    }\n}"
         }
       ]
+    },
+    {
+      "name": "Get Web Setting",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/web-settings",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "web-settings"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Web Setting",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"web_name\": \"My Blog 2\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/web-settings",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "web-settings"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "auth": {
@@ -8885,7 +9525,7 @@
     "bearer": [
       {
         "key": "token",
-        "value": "11|SFKHZjqmvxLKyU7h634NgNzm9sTjACJDKYJvSIV2dbc81823",
+        "value": "18|ASfSEwtZ0swKnsn06N8o5fkaDC31c98UEYaHjmZT4682562f",
         "type": "string"
       }
     ]
