@@ -26,7 +26,7 @@ class PublicArticleController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $filters = $request->only(['search', 'sort', 'direction', 'is_featured']);
+            $filters = $request->only(['search', 'sort', 'direction', 'is_featured', 'random']);
             $filters['per_page'] = $request->query('limit');
 
             $articles = $this->articleService->fetchArticles($filters);
@@ -50,7 +50,7 @@ class PublicArticleController extends Controller
     public function summary(Request $request): JsonResponse
     {
         try {
-            $filters = $request->only(['search', 'sort', 'direction', 'is_featured']);
+            $filters = $request->only(['search', 'sort', 'direction', 'is_featured', 'random']);
             $filters['per_page'] = $request->query('limit');
 
             $articles = $this->articleService->fetchArticles($filters);

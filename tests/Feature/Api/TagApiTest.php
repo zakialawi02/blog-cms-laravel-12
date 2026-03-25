@@ -207,9 +207,7 @@ it('can delete specific tag', function () {
         ->withHeaders(['Authorization' => 'Bearer ' . $token])
         ->deleteJson('/api/v1/tags/' . $tag->slug);
 
-    if ($response->status() !== 200) {
-        dd($response->json());
-    }
+
 
     $response
         ->assertOk()

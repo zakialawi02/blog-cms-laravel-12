@@ -1189,6 +1189,11 @@ paths:
           enum:
             - asc
             - desc
+        - in: query
+          name: random
+          type: boolean
+          description: "Randomize results (Optional, default: false)"
+          default: false
       responses:
         "200":
           description: Success retrieve categories
@@ -1850,6 +1855,12 @@ paths:
           name: limit
           required: false
           type: integer
+        - description: "Randomize results"
+          in: query
+          name: random
+          required: false
+          type: boolean
+          default: false
       responses:
         "200":
           description: "Success retrieve tags list"
@@ -2179,6 +2190,12 @@ paths:
           name: is_featured
           required: false
           type: boolean
+        - description: "Randomize results"
+          in: query
+          name: random
+          required: false
+          type: boolean
+          default: false
       responses:
         "200":
           description: "Success retrieve articles list"
@@ -2244,6 +2261,12 @@ paths:
           name: is_featured
           required: false
           type: boolean
+        - description: "Randomize results"
+          in: query
+          name: random
+          required: false
+          type: boolean
+          default: false
       responses:
         "200":
           description: "Success retrieve articles summary list"
@@ -2690,6 +2713,645 @@ paths:
       summary: Get public article details by slug
       tags:
         - Public Articles
+  /api/v1/articles/{slug}/comments:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Article slug"
+          in: path
+          name: slug
+          required: true
+          type: string
+        - description: "Page number"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Items per page"
+          in: query
+          name: limit
+          required: false
+          type: integer
+          default: 10
+        - description: "Sort by field"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "created_at"
+        - description: "Sort order (asc/desc)"
+          in: query
+          name: order
+          required: false
+          type: string
+          default: "desc"
+      responses:
+        "200":
+          description: "Success retrieve comments"
+          schema:
+            example:
+              success: true
+              message: "Comments retrieved successfully"
+              data:
+                - id: 2
+                  user:
+                    id: "5ab69007-4d67-4751-bd9b-80618d201c63"
+                    name: "Admin User"
+                    username: "admin"
+                    profile_photo_path: "http://localhost:8000/assets/img/profile/admin.png"
+                  content: "im admin into comment"
+                  parent_id: null
+                  is_approved: true
+                  replies: []
+                  created_at: "2026-03-16T06:43:17.000000Z"
+                  updated_at: "2026-03-16T06:43:17.000000Z"
+                - id: 1
+                  user:
+                    id: "5d7e4d11-3eb4-41d2-b534-cd56b479cfda"
+                    name: "Regular User"
+                    username: "user"
+                    profile_photo_path: "http://localhost:8000/assets/img/profile/user.png"
+                  content: "hello testing the comment"
+                  parent_id: null
+                  is_approved: true
+                  replies:
+                    - id: 3
+                      user:
+                        id: "5ab69007-4d67-4751-bd9b-80618d201c63"
+                        name: "Admin User"
+                        username: "admin"
+                        profile_photo_path: "http://localhost:8000/assets/img/profile/admin.png"
+                      content: "yuahh tested replied"
+                      parent_id: 1
+                      is_approved: true
+                      replies: []
+                      created_at: "2026-03-16T06:43:32.000000Z"
+                      updated_at: "2026-03-16T06:43:32.000000Z"
+                  created_at: "2026-03-16T06:43:02.000000Z"
+                  updated_at: "2026-03-16T06:43:02.000000Z"
+              meta:
+                current_page: 1
+                last_page: 1
+                per_page: 10
+                total: 2
+              links:
+                first: "http://localhost:8000/api/v1/articles/slug/comments?page=1"
+                last: "http://localhost:8000/api/v1/articles/slug/comments?page=1"
+                prev: null
+                next: null
+        "404":
+          $ref: "#/responses/NotFound"
+        "500":
+          description: "Server error"
+      description: "Get list of comments for an article (nested)"
+      operationId: "getArticleComments"
+      summary: "Get article comments"
+      tags:
+        - Comments
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: "Article slug"
+          in: path
+          name: slug
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              content:
+                example: "This is my comment"
+                type: string
+              parent_id:
+                example: null
+                type: integer
+            type: object
+            required:
+              - content
+      responses:
+        "201":
+          description: "Success post comment"
+          schema:
+            example:
+              success: true
+              message: "Comment posted successfully"
+              data:
+                id: 4
+                user:
+                  id: "5ab69007-4d67-4751-bd9b-80618d201c63"
+                  name: "Admin User"
+                  username: "admin"
+                  profile_photo_path: "http://localhost:8000/assets/img/profile/admin.png"
+                content: "This is a great article! Thanks for sharing."
+                parent_id: null
+                is_approved: true
+                created_at: "2026-03-16T06:47:02.000000Z"
+                updated_at: "2026-03-16T06:47:02.000000Z"
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "404":
+          $ref: "#/responses/NotFound"
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: "Server error"
+      description: "Post a new comment or reply to an article"
+      operationId: "postArticleComment"
+      summary: "Post article comment"
+      tags:
+        - Comments
+  /api/v1/web-settings:
+    get:
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success retrieve web settings
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: Web settings retrieved successfully
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/WebSetting"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Failed to retrieve web settings
+                type: string
+              error:
+                example: Error message here
+                type: string
+            type: object
+      description: Get all web settings (public endpoint)
+      operationId: getWebSettings
+      summary: Get all web settings
+      tags:
+        - Web Settings
+    patch:
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              web_name:
+                example: "My Blog"
+                type: string
+              tagline:
+                example: "Sharing knowledge, one post at a time"
+                type: string
+              description:
+                example: "A blog about technology, programming, and web development"
+                type: string
+              keywords:
+                example: "blog, programming, web development, tutorial"
+                type: string
+              email:
+                example: "contact@example.com"
+                type: string
+              link_fb:
+                example: "https://www.facebook.com/username"
+                type: string
+              link_ig:
+                example: "https://www.instagram.com/username"
+                type: string
+              link_tiktok:
+                example: "https://www.tiktok.com/@username"
+                type: string
+              link_youtube:
+                example: "https://www.youtube.com/channel/username"
+                type: string
+              link_twitter:
+                example: "https://twitter.com/username"
+                type: string
+              link_linkedin:
+                example: "https://www.linkedin.com/in/username"
+                type: string
+              link_github:
+                example: "https://github.com/username"
+                type: string
+              google_analytics:
+                example: "G-XXXXXXXXXX"
+                type: string
+              google_adsense:
+                example: "ca-pub-123456789"
+                type: string
+              can_join_contributor:
+                example: true
+                type: boolean
+              web_name_variant:
+                example: "vars1"
+                type: string
+                enum:
+                  - vars1
+                  - vars2
+                  - vars3
+              before_close_head:
+                example: "<meta name='verification' content='abc123'>"
+                type: string
+              before_close_body:
+                example: "<script>console.log('tracking');</script>"
+                type: string
+              app_logo:
+                type: string
+                format: binary
+                description: "PNG image file (max 700KB)"
+              favicon:
+                type: string
+                format: binary
+                description: "PNG image file, 512x512 or less (max 548KB)"
+            type: object
+      responses:
+        "200":
+          description: Success update web settings
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: Settings updated successfully
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/WebSetting"
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          description: Forbidden - Missing required ability
+          schema:
+            properties:
+              message:
+                example: You do not have permission to perform this action.
+                type: string
+              success:
+                example: false
+                type: boolean
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Failed to update settings
+                type: string
+              error:
+                example: Error message here
+                type: string
+            type: object
+      description: Update web settings (requires authentication with web-setting.manage ability)
+      operationId: updateWebSettings
+      summary: Update web settings
+      tags:
+        - Web Settings
+      security:
+        - bearerAuth: []
+  /api/v1/newsletters:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: "Page number for pagination (Optional, default: 1)"
+          default: 1
+        - in: query
+          name: limit
+          type: integer
+          description: "Number of items per page (Optional, default: 10)"
+          default: 10
+        - in: query
+          name: search
+          type: string
+          description: Search keyword for email (Optional)
+        - in: query
+          name: subscribed
+          type: string
+          description: Filter by subscription status (Optional)
+          enum:
+            - "true"
+            - "false"
+        - in: query
+          name: sort
+          type: string
+          description: "Column to sort by (Optional, default: created_at)"
+          enum:
+            - id
+            - email
+            - is_subscribed
+            - created_at
+            - updated_at
+          default: created_at
+        - in: query
+          name: direction
+          type: string
+          description: "Sort direction (Optional, default: desc)"
+          default: desc
+          enum:
+            - asc
+            - desc
+      responses:
+        "200":
+          description: Success
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Newsletter"
+              links:
+                properties:
+                  first:
+                    example: "http://127.0.0.1:8000/api/v1/newsletters?page=1"
+                    type: string
+                  last:
+                    example: "http://127.0.0.1:8000/api/v1/newsletters?page=2"
+                    type: string
+                  prev:
+                    example: null
+                    type: string
+                  next:
+                    example: "http://127.0.0.1:8000/api/v1/newsletters?page=2"
+                    type: string
+                type: object
+              meta:
+                properties:
+                  current_page:
+                    example: 1
+                    type: integer
+                  from:
+                    example: 1
+                    type: integer
+                  last_page:
+                    example: 2
+                    type: integer
+                  path:
+                    example: "http://127.0.0.1:8000/api/v1/newsletters"
+                    type: string
+                  per_page:
+                    example: 10
+                    type: integer
+                  to:
+                    example: 10
+                    type: integer
+                  total:
+                    example: 15
+                    type: integer
+                type: object
+              success:
+                example: true
+                type: boolean
+              message:
+                example: List of all newsletter subscribers
+                type: string
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
+      description: List all newsletter subscribers (Admin & Superadmin Only)
+      operationId: getNewsletters
+      summary: List all newsletter subscribers
+      tags:
+        - Newsletter
+      security:
+        - bearerAuth: []
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              email:
+                example: "user@example.com"
+                type: string
+            required:
+              - email
+            type: object
+      responses:
+        "201":
+          description: Success subscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully subscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "200":
+          description: Success resubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully resubscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "409":
+          description: Conflict - Already subscribed
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: This email address is already subscribed.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+      description: Subscribe to newsletter (public endpoint)
+      operationId: subscribeNewsletter
+      summary: Subscribe to newsletter
+      tags:
+        - Newsletter
+  /api/v1/newsletters/{id}:
+    delete:
+      produces:
+        - application/json
+      parameters:
+        - description: Newsletter subscriber ID
+          in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success unsubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: Subscriber has been unsubscribed successfully.
+                type: string
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
+        "404":
+          $ref: "#/responses/NotFound"
+      description: Unsubscribe a subscriber (Admin & Superadmin Only)
+      operationId: unsubscribeNewsletter
+      summary: Unsubscribe a subscriber
+      tags:
+        - Newsletter
+      security:
+        - bearerAuth: []
+  /api/v1/newsletters/{newsletter}/unsubscribe:
+    patch:
+      produces:
+        - application/json
+      parameters:
+        - description: Newsletter subscriber ID
+          in: path
+          name: newsletter
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success unsubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have been successfully unsubscribed from our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "401":
+          description: Invalid or expired signature
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Invalid or expired signature.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: An unexpected error occurred. Please try again later.
+                type: string
+            type: object
+      description: Unsubscribe from newsletter (self-service with signed URL security)
+      operationId: unsubscribeNewsletterSelf
+      summary: Unsubscribe from newsletter (self-service)
+      tags:
+        - Newsletter
+  /api/v1/newsletters/{newsletter}/resubscribe:
+    patch:
+      produces:
+        - application/json
+      parameters:
+        - description: Newsletter subscriber ID
+          in: path
+          name: newsletter
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success resubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully resubscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "401":
+          description: Invalid or expired signature
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Invalid or expired signature.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: An unexpected error occurred. Please try again later.
+                type: string
+            type: object
+      description: Resubscribe to newsletter (self-service with signed URL security)
+      operationId: resubscribeNewsletterSelf
+      summary: Resubscribe to newsletter (self-service)
+      tags:
+        - Newsletter
 tags:
   - name: Auth
     description: Authentication & Authorization endpoints
@@ -2699,6 +3361,12 @@ tags:
     description: Category Master Data endpoints
   - name: Tag
     description: Tag Master Data endpoints
+  - name: Comments
+    description: Article Comments endpoints
+  - name: Web Settings
+    description: Web Settings Management endpoints
+  - name: Newsletter
+    description: Newsletter Subscription Management endpoints
 definitions:
   ErrorUnauthorized:
     type: object
@@ -2742,6 +3410,24 @@ definitions:
       message:
         type: string
         example: "Forbidden: You do not have the required permission."
+  ErrorApiKeyMissing:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      message:
+        type: string
+        example: "Invalid or missing API Key"
+      hint:
+        type: string
+        example: "Please include X-API-Key in your request headers"
+      example:
+        type: string
+        example: "X-API-Key: your-api-key-here"
+      support:
+        type: string
+        example: "Contact administrator for further assistance"
   PaginationMeta:
     type: object
     properties:
@@ -3005,6 +3691,38 @@ definitions:
         type: string
         format: date-time
         example: "2024-10-13T14:12:08.000000Z"
+  WebSetting:
+    type: object
+    properties:
+      key:
+        type: string
+        example: "web_name"
+      value:
+        type: string
+        example: "My Blog"
+      type:
+        type: string
+        example: "string"
+  Newsletter:
+    type: object
+    properties:
+      id:
+        type: string
+        example: "01abc123-def456-ghi789"
+      email:
+        type: string
+        example: "user@example.com"
+      is_subscribed:
+        type: boolean
+        example: true
+      created_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T14:12:08.000000Z"
+      updated_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T14:12:08.000000Z"
 
 responses:
   Unauthorized:
@@ -3023,9 +3741,18 @@ responses:
     description: Forbidden access
     schema:
       $ref: "#/definitions/ErrorForbidden"
+  ApiKeyMissing:
+    description: API Key missing or invalid
+    schema:
+      $ref: "#/definitions/ErrorApiKeyMissing"
 securityDefinitions:
   bearerAuth:
     type: apiKey
     name: Authorization
     in: header
     description: Enter token in format (Bearer <token>)
+  apiKey:
+    type: apiKey
+    name: X-API-Key
+    in: header
+    description: API Key for accessing the API. Contact administrator to obtain your API key.

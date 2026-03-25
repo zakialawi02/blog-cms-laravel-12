@@ -1,10 +1,21 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleCommentController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\WebSettingController;
+use App\Http\Controllers\Api\NewsletterController;
+use App\Http\Controllers\Api\WelcomeController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Welcome Route
+|--------------------------------------------------------------------------
+*/
+Route::get('/', WelcomeController::class)->name('api.welcome');
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +24,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->as('api.')->group(function () {
+
+    /*
+    |----------------------------------------------------------------------
+    | API v1 Welcome
+    |----------------------------------------------------------------------
+    */
+    Route::get('/', WelcomeController::class)->name('v1.welcome');
 
     /*
     |----------------------------------------------------------------------
@@ -77,6 +95,10 @@ Route::prefix('v1')->as('api.')->group(function () {
     Route::apiResource('menus', MenuController::class)->only(['index', 'show']);
     Route::get('menus/location/{location}', [MenuController::class, 'showByLocation'])->name('menus.location');
 
+    // Article Comments
+    Route::get('articles/{slug}/comments', [ArticleCommentController::class, 'index'])->name('articles.comments.index');
+    Route::post('articles/{slug}/comments', [ArticleCommentController::class, 'store'])->middleware('auth:sanctum')->name('articles.comments.store');
+
     // Protected — store, update, destroy, and sync items (requires: ability:menu.manage)
     Route::middleware(['auth:sanctum', 'ability:menu.manage'])->group(function () {
         Route::apiResource('menus', MenuController::class)->except(['index', 'show']);
@@ -99,6 +121,36 @@ Route::prefix('v1')->as('api.')->group(function () {
         Route::get('/archive/{year}/{month?}', [\App\Http\Controllers\Api\PublicArticleController::class, 'articlesByMonth'])->name('month');
         Route::get('/{slug}', [\App\Http\Controllers\Api\PublicArticleController::class, 'show'])->name('show');
     });
+
+    /*
+    |----------------------------------------------------------------------
+    | Web Settings
+    |----------------------------------------------------------------------
+    */
+    // Public — list only
+    Route::get('web-settings', [WebSettingController::class, 'index'])->name('web-settings.index');
+
+    // Protected — update (requires: ability:web-setting.manage)
+    Route::middleware(['auth:sanctum', 'ability:web-setting.manage'])->patch('web-settings', [WebSettingController::class, 'update'])->name('web-settings.update');
+
+    /*
+    |----------------------------------------------------------------------
+    | Newsletter
+    |----------------------------------------------------------------------
+    */
+    // Public - subscribe only
+    Route::apiResource('newsletters', NewsletterController::class)->only(['store']);
+
+    // Protected - admin only (requires: ability:newsletter.manage)
+    Route::middleware(['auth:sanctum', 'ability:newsletter.manage'])->group(function () {
+        Route::apiResource('newsletters', NewsletterController::class)->only(['index', 'destroy']);
+    });
+
+    // Public - self-service with signed URL security
+    Route::patch('newsletters/{newsletter}/unsubscribe', [NewsletterController::class, 'unsubscribe'])
+        ->name('newsletters.unsubscribe');
+    Route::patch('newsletters/{newsletter}/resubscribe', [NewsletterController::class, 'resubscribe'])
+        ->name('newsletters.resubscribe');
 
 });
 

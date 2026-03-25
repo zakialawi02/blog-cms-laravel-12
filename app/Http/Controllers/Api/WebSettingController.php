@@ -1,41 +1,50 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\WebSetting;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use App\Http\Resources\WebSettingResource;
+use App\Rules\ValidScriptContentRule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Rules\ValidScriptContentRule;
 use Illuminate\Support\Facades\Storage;
 
 class WebSettingController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of all web settings.
+     */
+    public function index(): JsonResponse
     {
-        $data = [
-            'title' => 'Web Setting',
-            // data web_setting sudah di ambil di app/boot middleware
-        ];
-
-        return view('pages.dashboard.web.setting', compact('data'));
+        try {
+            $settings = WebSetting::all();
+            
+            return WebSettingResource::collection($settings)->additional([
+                'success' => true,
+                'message' => 'Web settings retrieved successfully',
+            ])->response()->setStatusCode(Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve web settings',
+                'error' => $th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
-     * Update the web settings with the provided request data.
-     *
-     * Validates and updates various web settings fields including web name, description,
-     * keywords, email, social media links, and optionally uploads new app logo and favicon images.
-     *
-     * @param Request $request The request containing the update data.
-     * @return \Illuminate\Http\RedirectResponse Redirects back with a success message upon successful update.
+     * Update web settings.
      */
-
-    public function update(Request $request)
+    public function update(Request $request): JsonResponse
     {
         $request->validate(
             [
                 'web_name' => 'nullable|string|max:50',
+                'tagline' => 'nullable|string|max:255',
                 'description' => 'nullable|string|max:255',
                 'keywords' => 'nullable|string|max:255',
                 'email' => 'nullable|email',
@@ -56,6 +65,8 @@ class WebSettingController extends Controller
                 'link_github' => 'nullable|url',
                 'google_analytics' => 'nullable|string|min:8|max:50',
                 'google_adsense' => 'nullable|string|min:8|max:50',
+                'can_join_contributor' => 'nullable|boolean',
+                'web_name_variant' => 'nullable|in:vars1,vars2,vars3',
                 'before_close_head' => [
                     'nullable',
                     'string',
@@ -103,7 +114,7 @@ class WebSettingController extends Controller
             ]
         );
 
-        DB::beginTransaction(); // Start a transaction for atomicity
+        DB::beginTransaction();
 
         try {
             // Define keys for standard string settings that directly map from request
@@ -127,27 +138,29 @@ class WebSettingController extends Controller
             ];
 
             foreach ($stringSettings as $key) {
-                if ($request->has($key)) { // Update if key is present in request (even if value is null)
+                // Use array_key_exists to check if the key was provided (even if null/empty)
+                if (array_key_exists($key, $request->all())) {
                     WebSetting::setSetting($key, $request->input($key), 'string');
                 }
             }
 
-            // Handle specific boolean/derived settings
-            // For 'can_join_contributor', typically a checkbox sends 'on' when checked, or is not present if unchecked.
-            $canJoinContributorValue = $request->has('can_join_contributor') && $request->input('can_join_contributor') === 'on' ? 1 : 0;
-            WebSetting::setSetting('can_join_contributor', $canJoinContributorValue, 'boolean'); // Store as boolean or integer
-
-            // Handle 'web_name_variant'
-            if ($request->has('web_name_variant')) {
-                $variantValue = '1'; // Default
-                if ($request->input('web_name_variant') == 'vars2') {
-                    $variantValue = '2';
-                } elseif ($request->input('web_name_variant') == 'vars3') {
-                    $variantValue = '3';
-                }
-                WebSetting::setSetting('web_name_variant', $variantValue, 'string'); // Or 'integer'
+            // Handle 'can_join_contributor' boolean setting
+            if (array_key_exists('can_join_contributor', $request->all())) {
+                $val = $request->input('can_join_contributor');
+                $canJoinContributorValue = ($val === true || $val === 1 || $val === '1') ? 1 : 0;
+                WebSetting::setSetting('can_join_contributor', $canJoinContributorValue, 'boolean');
             }
 
+            // Handle 'web_name_variant' setting
+            if (array_key_exists('web_name_variant', $request->all())) {
+                $variantValue = '1'; // Default
+                if ($request->input('web_name_variant') === 'vars2') {
+                    $variantValue = '2';
+                } elseif ($request->input('web_name_variant') === 'vars3') {
+                    $variantValue = '3';
+                }
+                WebSetting::setSetting('web_name_variant', $variantValue, 'string');
+            }
 
             // Handle 'app_logo' file upload
             if ($request->hasFile('app_logo')) {
@@ -164,7 +177,7 @@ class WebSettingController extends Controller
 
                 $timestamp = time();
                 $newLogoFileName = "app_logo_{$timestamp}." . $file->getClientOriginalExtension();
-                $file->move(public_path('assets/app_logo'), $newLogoFileName); // Ensure this path is correct and writable
+                $file->move(public_path('assets/app_logo'), $newLogoFileName);
                 WebSetting::setSetting('app_logo', $newLogoFileName, 'string');
             }
 
@@ -174,8 +187,6 @@ class WebSettingController extends Controller
                 $oldFaviconFileName = WebSetting::getSetting('favicon');
 
                 // Delete old favicon if it exists and is not a default placeholder
-                // Assuming favicons are also in 'assets/app_logo/' based on your original code structure for deletion.
-                // Adjust 'assets/app_logo/' if favicons have a different storage subfolder.
                 if ($oldFaviconFileName && !in_array(basename($oldFaviconFileName), ['favicon.png'])) {
                     $oldFaviconPath = public_path('assets/app_logo/' . basename($oldFaviconFileName));
                     if (Storage::exists($oldFaviconPath)) {
@@ -185,17 +196,25 @@ class WebSettingController extends Controller
 
                 $timestamp = time();
                 $newFaviconFileName = "favicon_{$timestamp}." . $file->getClientOriginalExtension();
-                // Ensure this path is correct for favicons
                 $file->move(public_path('assets/app_logo'), $newFaviconFileName);
                 WebSetting::setSetting('favicon', $newFaviconFileName, 'string');
             }
 
-            DB::commit(); // All settings saved successfully, commit the transaction
-            return redirect()->back()->with('success', 'Settings updated successfully!');
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Settings updated successfully',
+                'data' => WebSettingResource::collection(WebSetting::all())
+            ], Response::HTTP_OK);
         } catch (\Exception $e) {
-            DB::rollBack(); // Something went wrong, rollback changes
-            Log::error('Failed to update web settings: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to update settings. Please try again. ' . $e->getMessage());
+            DB::rollBack();
+            Log::error('Failed to update web settings via API: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update settings',
+                'error' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

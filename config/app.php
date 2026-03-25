@@ -123,4 +123,21 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | API Key Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This key is used to authenticate API requests from frontend applications.
+    | Set this in your .env file and share it securely with your frontend.
+    |
+    */
+
+    'api_key' => env('API_KEY'),
+
+    'allowed_frontend_domains' => array_map(
+        'trim',
+        explode(',', env('ALLOWED_FRONTEND_DOMAINS', ''))
+    ),
+
 ];
