@@ -9518,6 +9518,502 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Get all newsletter subscribers",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "x-api-key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/newsletters?page=&limit=&search=&sort=&direction=&subscribed",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "newsletters"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "",
+              "description": "default:1"
+            },
+            {
+              "key": "limit",
+              "value": "",
+              "description": "default:9"
+            },
+            {
+              "key": "search",
+              "value": "",
+              "description": "Optional [title, content, excerpt, user, username]"
+            },
+            {
+              "key": "sort",
+              "value": "",
+              "description": "default:created_at [id, published_at, title, created_at]"
+            },
+            {
+              "key": "direction",
+              "value": "",
+              "description": "Optional. default: desc  (asc or desc)"
+            },
+            {
+              "key": "subscribed",
+              "value": null,
+              "description": "optional"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "x-api-key",
+                "value": "a",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/newsletters?page=&limit=&search=&sort=&direction=&subscribed",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "newsletters"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "",
+                  "description": "default:1"
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "default:9"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Optional [title, content, excerpt, user, username]"
+                },
+                {
+                  "key": "sort",
+                  "value": "",
+                  "description": "default:created_at [id, published_at, title, created_at]"
+                },
+                {
+                  "key": "direction",
+                  "value": "",
+                  "description": "Optional. default: desc  (asc or desc)"
+                },
+                {
+                  "key": "subscribed",
+                  "value": null,
+                  "description": "optional"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "",
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 19 Mar 2026 09:06:11 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KM2NGR3X71S43RTV24RKKRXF"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            }
+          ],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\n    \"data\": [\n        {\n            \"id\": \"01km2n6zz53h0s9sy4dtkwxk7w\",\n            \"email\": \"user2@example.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2026-03-19T09:00:51.000000Z\",\n            \"updated_at\": \"2026-03-19T09:00:51.000000Z\"\n        },\n        {\n            \"id\": \"01km2n5tff91mr5f20atzer3y5\",\n            \"email\": \"user@example.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2026-03-19T09:00:13.000000Z\",\n            \"updated_at\": \"2026-03-19T09:00:13.000000Z\"\n        },\n        {\n            \"id\": \"01khjpxyjsw2277hv2a0xagmyn\",\n            \"email\": \"zaki.alawi22@gmail.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2026-02-16T07:51:37.000000Z\",\n            \"updated_at\": \"2026-02-16T07:51:37.000000Z\"\n        },\n        {\n            \"id\": \"01KHJPW7KX5W4SM822R07N7V3R\",\n            \"email\": \"z.o.vi.x.e.p87.2@gmail.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2026-01-23T09:47:34.000000Z\",\n            \"updated_at\": \"2026-02-16T07:50:41.000000Z\"\n        },\n        {\n            \"id\": \"01KHJPW7KVRB2XNMB1XB19N6X9\",\n            \"email\": \"e.foq.ucuy.o.r.a7.7.0@gmail.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2026-01-21T11:47:55.000000Z\",\n            \"updated_at\": \"2026-02-16T07:50:41.000000Z\"\n        },\n        {\n            \"id\": \"01KHJPW7KTE8752FDRQAKQ0M61\",\n            \"email\": \"k.a.ja.m.avaq.6.39@gmail.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2026-01-14T06:14:20.000000Z\",\n            \"updated_at\": \"2026-02-16T07:50:41.000000Z\"\n        },\n        {\n            \"id\": \"01KHJPW7KR9KE51AY65FFFD2BF\",\n            \"email\": \"e.w.i.s.af.o.puv.ir.3.7@gmail.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2026-01-11T03:02:55.000000Z\",\n            \"updated_at\": \"2026-02-16T07:50:41.000000Z\"\n        },\n        {\n            \"id\": \"01KHJPW7KQEJYZ6DKVRG09WCN6\",\n            \"email\": \"munedeme946@gmail.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2025-12-25T03:06:01.000000Z\",\n            \"updated_at\": \"2026-02-16T07:50:41.000000Z\"\n        },\n        {\n            \"id\": \"01KHJPW7KPXW3CJQ1399HWQNRH\",\n            \"email\": \"ozikobame134@gmail.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2025-12-09T12:03:45.000000Z\",\n            \"updated_at\": \"2026-02-16T07:50:41.000000Z\"\n        },\n        {\n            \"id\": \"01KHJPW7KN0HBXTWSHXC4XZYC6\",\n            \"email\": \"acoruyenoje855@gmail.com\",\n            \"is_subscribed\": 1,\n            \"created_at\": \"2025-11-21T02:25:03.000000Z\",\n            \"updated_at\": \"2026-02-16T07:50:41.000000Z\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/v1/newsletters?page=1\",\n        \"last\": \"http://localhost:8000/api/v1/newsletters?page=2\",\n        \"prev\": null,\n        \"next\": \"http://localhost:8000/api/v1/newsletters?page=2\"\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 2,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/newsletters?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/newsletters?page=2\",\n                \"label\": \"2\",\n                \"page\": 2,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/v1/newsletters?page=2\",\n                \"label\": \"Next &raquo;\",\n                \"page\": 2,\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://localhost:8000/api/v1/newsletters\",\n        \"per_page\": 10,\n        \"to\": 10,\n        \"total\": 14\n    },\n    \"success\": true,\n    \"message\": \"List of all newsletter subscribers\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Create newsletter (public)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"user2@example.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/newsletters",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "newsletters"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "a",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"user2@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/newsletters",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "newsletters"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "",
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 19 Mar 2026 09:00:51 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KM2N6ZZ8QK9QD3C88CBRVT14"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            }
+          ],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\n    \"success\": true,\n    \"message\": \"You have successfully subscribed to our newsletter.\",\n    \"data\": {\n        \"id\": \"01km2n6zz53h0s9sy4dtkwxk7w\",\n        \"email\": \"user2@example.com\",\n        \"is_subscribed\": true,\n        \"created_at\": \"2026-03-19T09:00:51.000000Z\",\n        \"updated_at\": \"2026-03-19T09:00:51.000000Z\"\n    }\n}"
+        },
+        {
+          "name": "Error: Email Exist",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "a",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"user@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/newsletters",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "newsletters"
+              ]
+            }
+          },
+          "status": "Unprocessable Content",
+          "code": 422,
+          "_postman_previewlanguage": "",
+          "header": [
+            {
+              "key": "Host",
+              "value": "localhost:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.28"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 19 Mar 2026 09:00:16 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "phpdebugbar-id",
+              "value": "01KM2N5XX0DSY8A8QFF4KVA84R"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            }
+          ],
+          "cookie": [
+            {
+              "expires": "Invalid Date",
+              "domain": "",
+              "path": ""
+            }
+          ],
+          "body": "{\n    \"success\": false,\n    \"message\": \"Validation failed.\",\n    \"errors\": {\n        \"email\": [\n            \"The email has already been taken.\"\n        ]\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Delete newsletter",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"user2@example.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/newsletters/:id",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "newsletters",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "01km2n6zz53h0s9sy4dtkwxk7w"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Unsubscribe newsletter (self-service)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "a",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/newsletters/:id/resubscribe",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "newsletters",
+            ":id",
+            "resubscribe"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "01km2n6zz53h0s9sy4dtkwxk7w"
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "auth": {
