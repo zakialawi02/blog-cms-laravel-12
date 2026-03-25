@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\WebSettingController;
+use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -131,6 +132,25 @@ Route::prefix('v1')->as('api.')->group(function () {
 
     // Protected — update (requires: ability:web-setting.manage)
     Route::middleware(['auth:sanctum', 'ability:web-setting.manage'])->patch('web-settings', [WebSettingController::class, 'update'])->name('web-settings.update');
+
+    /*
+    |----------------------------------------------------------------------
+    | Newsletter
+    |----------------------------------------------------------------------
+    */
+    // Public - subscribe only
+    Route::apiResource('newsletters', NewsletterController::class)->only(['store']);
+
+    // Protected - admin only (requires: ability:newsletter.manage)
+    Route::middleware(['auth:sanctum', 'ability:newsletter.manage'])->group(function () {
+        Route::apiResource('newsletters', NewsletterController::class)->only(['index', 'destroy']);
+    });
+
+    // Public - self-service with signed URL security
+    Route::patch('newsletters/{newsletter}/unsubscribe', [NewsletterController::class, 'unsubscribe'])
+        ->name('newsletters.unsubscribe');
+    Route::patch('newsletters/{newsletter}/resubscribe', [NewsletterController::class, 'resubscribe'])
+        ->name('newsletters.resubscribe');
 
 });
 

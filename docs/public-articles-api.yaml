@@ -903,9 +903,321 @@ paths:
       summary: Get public article details by slug
       tags:
         - Public Articles
+  /api/v1/articles/{slug}/comments:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: "Article slug"
+          in: path
+          name: slug
+          required: true
+          type: string
+        - description: "Page number"
+          in: query
+          name: page
+          required: false
+          type: integer
+          default: 1
+        - description: "Items per page"
+          in: query
+          name: limit
+          required: false
+          type: integer
+          default: 10
+        - description: "Sort by field"
+          in: query
+          name: sort
+          required: false
+          type: string
+          default: "created_at"
+        - description: "Sort order (asc/desc)"
+          in: query
+          name: order
+          required: false
+          type: string
+          default: "desc"
+      responses:
+        "200":
+          description: "Success retrieve comments"
+          schema:
+            example:
+              success: true
+              message: "Comments retrieved successfully"
+              data:
+                - id: 2
+                  user:
+                    id: "5ab69007-4d67-4751-bd9b-80618d201c63"
+                    name: "Admin User"
+                    username: "admin"
+                    profile_photo_path: "http://localhost:8000/assets/img/profile/admin.png"
+                  content: "im admin into comment"
+                  parent_id: null
+                  is_approved: true
+                  replies: []
+                  created_at: "2026-03-16T06:43:17.000000Z"
+                  updated_at: "2026-03-16T06:43:17.000000Z"
+                - id: 1
+                  user:
+                    id: "5d7e4d11-3eb4-41d2-b534-cd56b479cfda"
+                    name: "Regular User"
+                    username: "user"
+                    profile_photo_path: "http://localhost:8000/assets/img/profile/user.png"
+                  content: "hello testing the comment"
+                  parent_id: null
+                  is_approved: true
+                  replies:
+                    - id: 3
+                      user:
+                        id: "5ab69007-4d67-4751-bd9b-80618d201c63"
+                        name: "Admin User"
+                        username: "admin"
+                        profile_photo_path: "http://localhost:8000/assets/img/profile/admin.png"
+                      content: "yuahh tested replied"
+                      parent_id: 1
+                      is_approved: true
+                      replies: []
+                      created_at: "2026-03-16T06:43:32.000000Z"
+                      updated_at: "2026-03-16T06:43:32.000000Z"
+                  created_at: "2026-03-16T06:43:02.000000Z"
+                  updated_at: "2026-03-16T06:43:02.000000Z"
+              meta:
+                current_page: 1
+                last_page: 1
+                per_page: 10
+                total: 2
+              links:
+                first: "http://localhost:8000/api/v1/articles/slug/comments?page=1"
+                last: "http://localhost:8000/api/v1/articles/slug/comments?page=1"
+                prev: null
+                next: null
+        "404":
+          $ref: "#/responses/NotFound"
+        "500":
+          description: "Server error"
+      description: "Get list of comments for an article (nested)"
+      operationId: "getArticleComments"
+      summary: "Get article comments"
+      tags:
+        - Comments
+  /api/v1/web-settings:
+    get:
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success retrieve web settings
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: Web settings retrieved successfully
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/WebSetting"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Failed to retrieve web settings
+                type: string
+              error:
+                example: Error message here
+                type: string
+            type: object
+      description: Get all web settings (public endpoint)
+      operationId: getWebSettings
+      summary: Get all web settings
+      tags:
+        - Web Settings
+  /api/v1/newsletters:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              email:
+                example: "user@example.com"
+                type: string
+            required:
+              - email
+            type: object
+      responses:
+        "201":
+          description: Success subscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully subscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "200":
+          description: Success resubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully resubscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "409":
+          description: Conflict - Already subscribed
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: This email address is already subscribed.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+      description: Subscribe to newsletter (public endpoint)
+      operationId: subscribeNewsletter
+      summary: Subscribe to newsletter
+      tags:
+        - Newsletter
+  /api/v1/newsletters/{newsletter}/unsubscribe:
+    patch:
+      produces:
+        - application/json
+      parameters:
+        - description: Newsletter subscriber ID
+          in: path
+          name: newsletter
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success unsubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have been successfully unsubscribed from our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "401":
+          description: Invalid or expired signature
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Invalid or expired signature.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: An unexpected error occurred. Please try again later.
+                type: string
+            type: object
+      description: Unsubscribe from newsletter (self-service with signed URL security)
+      operationId: unsubscribeNewsletterSelf
+      summary: Unsubscribe from newsletter (self-service)
+      tags:
+        - Newsletter
+  /api/v1/newsletters/{newsletter}/resubscribe:
+    patch:
+      produces:
+        - application/json
+      parameters:
+        - description: Newsletter subscriber ID
+          in: path
+          name: newsletter
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success resubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully resubscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "401":
+          description: Invalid or expired signature
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Invalid or expired signature.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: An unexpected error occurred. Please try again later.
+                type: string
+            type: object
+      description: Resubscribe to newsletter (self-service with signed URL security)
+      operationId: resubscribeNewsletterSelf
+      summary: Resubscribe to newsletter (self-service)
+      tags:
+        - Newsletter
 tags:
   - name: Public Articles
     description: Public Articles endpoints for visitors
+  - name: Comments
+    description: Article Comments endpoints
+  - name: Web Settings
+    description: Web Settings Management endpoints
+  - name: Newsletter
+    description: Newsletter Subscription Management endpoints
 definitions:
   ErrorUnauthorized:
     type: object
@@ -1181,6 +1493,38 @@ definitions:
         type: string
         format: date-time
         example: "2024-10-13T13:40:19.000000Z"
+      updated_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T14:12:08.000000Z"
+  WebSetting:
+    type: object
+    properties:
+      key:
+        type: string
+        example: "web_name"
+      value:
+        type: string
+        example: "My Blog"
+      type:
+        type: string
+        example: "string"
+  Newsletter:
+    type: object
+    properties:
+      id:
+        type: string
+        example: "01abc123-def456-ghi789"
+      email:
+        type: string
+        example: "user@example.com"
+      is_subscribed:
+        type: boolean
+        example: true
+      created_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T14:12:08.000000Z"
       updated_at:
         type: string
         format: date-time

@@ -3039,6 +3039,319 @@ paths:
         - Web Settings
       security:
         - bearerAuth: []
+  /api/v1/newsletters:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          description: "Page number for pagination (Optional, default: 1)"
+          default: 1
+        - in: query
+          name: limit
+          type: integer
+          description: "Number of items per page (Optional, default: 10)"
+          default: 10
+        - in: query
+          name: search
+          type: string
+          description: Search keyword for email (Optional)
+        - in: query
+          name: subscribed
+          type: string
+          description: Filter by subscription status (Optional)
+          enum:
+            - "true"
+            - "false"
+        - in: query
+          name: sort
+          type: string
+          description: "Column to sort by (Optional, default: created_at)"
+          enum:
+            - id
+            - email
+            - is_subscribed
+            - created_at
+            - updated_at
+          default: created_at
+        - in: query
+          name: direction
+          type: string
+          description: "Sort direction (Optional, default: desc)"
+          default: desc
+          enum:
+            - asc
+            - desc
+      responses:
+        "200":
+          description: Success
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Newsletter"
+              links:
+                properties:
+                  first:
+                    example: "http://127.0.0.1:8000/api/v1/newsletters?page=1"
+                    type: string
+                  last:
+                    example: "http://127.0.0.1:8000/api/v1/newsletters?page=2"
+                    type: string
+                  prev:
+                    example: null
+                    type: string
+                  next:
+                    example: "http://127.0.0.1:8000/api/v1/newsletters?page=2"
+                    type: string
+                type: object
+              meta:
+                properties:
+                  current_page:
+                    example: 1
+                    type: integer
+                  from:
+                    example: 1
+                    type: integer
+                  last_page:
+                    example: 2
+                    type: integer
+                  path:
+                    example: "http://127.0.0.1:8000/api/v1/newsletters"
+                    type: string
+                  per_page:
+                    example: 10
+                    type: integer
+                  to:
+                    example: 10
+                    type: integer
+                  total:
+                    example: 15
+                    type: integer
+                type: object
+              success:
+                example: true
+                type: boolean
+              message:
+                example: List of all newsletter subscribers
+                type: string
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
+      description: List all newsletter subscribers (Admin & Superadmin Only)
+      operationId: getNewsletters
+      summary: List all newsletter subscribers
+      tags:
+        - Newsletter
+      security:
+        - bearerAuth: []
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              email:
+                example: "user@example.com"
+                type: string
+            required:
+              - email
+            type: object
+      responses:
+        "201":
+          description: Success subscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully subscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "200":
+          description: Success resubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully resubscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "409":
+          description: Conflict - Already subscribed
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: This email address is already subscribed.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+      description: Subscribe to newsletter (public endpoint)
+      operationId: subscribeNewsletter
+      summary: Subscribe to newsletter
+      tags:
+        - Newsletter
+  /api/v1/newsletters/{id}:
+    delete:
+      produces:
+        - application/json
+      parameters:
+        - description: Newsletter subscriber ID
+          in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success unsubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: Subscriber has been unsubscribed successfully.
+                type: string
+            type: object
+        "401":
+          $ref: "#/responses/Unauthorized"
+        "403":
+          $ref: "#/responses/Forbidden"
+        "404":
+          $ref: "#/responses/NotFound"
+      description: Unsubscribe a subscriber (Admin & Superadmin Only)
+      operationId: unsubscribeNewsletter
+      summary: Unsubscribe a subscriber
+      tags:
+        - Newsletter
+      security:
+        - bearerAuth: []
+  /api/v1/newsletters/{newsletter}/unsubscribe:
+    patch:
+      produces:
+        - application/json
+      parameters:
+        - description: Newsletter subscriber ID
+          in: path
+          name: newsletter
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success unsubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have been successfully unsubscribed from our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "401":
+          description: Invalid or expired signature
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Invalid or expired signature.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: An unexpected error occurred. Please try again later.
+                type: string
+            type: object
+      description: Unsubscribe from newsletter (self-service with signed URL security)
+      operationId: unsubscribeNewsletterSelf
+      summary: Unsubscribe from newsletter (self-service)
+      tags:
+        - Newsletter
+  /api/v1/newsletters/{newsletter}/resubscribe:
+    patch:
+      produces:
+        - application/json
+      parameters:
+        - description: Newsletter subscriber ID
+          in: path
+          name: newsletter
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success resubscribed
+          schema:
+            properties:
+              success:
+                example: true
+                type: boolean
+              message:
+                example: You have successfully resubscribed to our newsletter.
+                type: string
+              data:
+                $ref: "#/definitions/Newsletter"
+            type: object
+        "401":
+          description: Invalid or expired signature
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: Invalid or expired signature.
+                type: string
+            type: object
+        "422":
+          $ref: "#/responses/ValidationError"
+        "500":
+          description: Server error
+          schema:
+            properties:
+              success:
+                example: false
+                type: boolean
+              message:
+                example: An unexpected error occurred. Please try again later.
+                type: string
+            type: object
+      description: Resubscribe to newsletter (self-service with signed URL security)
+      operationId: resubscribeNewsletterSelf
+      summary: Resubscribe to newsletter (self-service)
+      tags:
+        - Newsletter
 tags:
   - name: Auth
     description: Authentication & Authorization endpoints
@@ -3052,6 +3365,8 @@ tags:
     description: Article Comments endpoints
   - name: Web Settings
     description: Web Settings Management endpoints
+  - name: Newsletter
+    description: Newsletter Subscription Management endpoints
 definitions:
   ErrorUnauthorized:
     type: object
@@ -3388,6 +3703,26 @@ definitions:
       type:
         type: string
         example: "string"
+  Newsletter:
+    type: object
+    properties:
+      id:
+        type: string
+        example: "01abc123-def456-ghi789"
+      email:
+        type: string
+        example: "user@example.com"
+      is_subscribed:
+        type: boolean
+        example: true
+      created_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T14:12:08.000000Z"
+      updated_at:
+        type: string
+        format: date-time
+        example: "2024-10-13T14:12:08.000000Z"
 
 responses:
   Unauthorized:
