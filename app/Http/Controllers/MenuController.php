@@ -27,7 +27,7 @@ class MenuController extends Controller
             $menus = Menu::withCount('items')->get();
             return response()->json($menus);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'An error occurred', 'error' => \App\Support\ErrorReporter::refString($e, 'MenuController::getMenus')], 500);
         }
     }
 
@@ -168,7 +168,7 @@ class MenuController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error occurred while updating menu order',
-                'error' => $e->getMessage()
+                'error' => \App\Support\ErrorReporter::refString($e, 'MenuController::updateMenuStructure')
             ], 500);
         }
     }

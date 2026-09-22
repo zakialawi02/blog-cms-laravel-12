@@ -28,8 +28,8 @@ class ArticleService
         if ($random) {
             $query->inRandomOrder();
         } else {
-            $sort = $filters['sort'] ?? 'published_at';
-            $direction = $filters['direction'] ?? 'desc';
+            $sort = in_array($filters['sort'] ?? null, ['published_at', 'created_at', 'updated_at', 'title'], true) ? $filters['sort'] : 'published_at';
+            $direction = strtolower((string) ($filters['direction'] ?? 'desc')) === 'asc' ? 'asc' : 'desc';
             $query->orderBy($sort, $direction);
         }
 
@@ -65,7 +65,10 @@ class ArticleService
             $query->where('is_featured', filter_var($filters['is_featured'], FILTER_VALIDATE_BOOLEAN));
         }
 
-        return $query->paginate($filters['per_page'] ?? 9)->withQueryString();
+        $perPage = $filters['per_page'] ?? 9;
+        $perPage = is_numeric($perPage) ? max(1, min((int) $perPage, 100)) : 9;
+
+        return $query->paginate($perPage)->withQueryString();
     }
 
     /**

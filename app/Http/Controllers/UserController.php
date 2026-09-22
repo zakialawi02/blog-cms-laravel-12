@@ -178,7 +178,10 @@ class UserController extends Controller
         ];
 
         $query = ModelsRequestContributor::with('user')
-            ->orderBy(request("sort_field", 'request_contributors.created_at'), request("sort_direction", "desc"));
+            ->orderBy(
+                \App\Support\QueryParams::sort(request(), ['request_contributors.created_at', 'users.name', 'users.email'], 'request_contributors.created_at', 'sort_field'),
+                \App\Support\QueryParams::direction(request(), 'desc', 'sort_direction')
+            );
 
         if (request('search')) {
             $query->where(function ($query) {

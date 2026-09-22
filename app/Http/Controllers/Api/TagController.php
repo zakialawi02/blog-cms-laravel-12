@@ -62,7 +62,7 @@ class TagController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve tags',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'TagController::index'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -83,13 +83,13 @@ class TagController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Database error: Failed to create tag.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'TagController::store'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'TagController::store'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -116,7 +116,7 @@ class TagController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'TagController::show'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -143,13 +143,13 @@ class TagController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Database error: Failed to update tag.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'TagController::update'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'TagController::update'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -176,7 +176,7 @@ class TagController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'TagController::destroy'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

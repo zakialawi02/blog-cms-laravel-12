@@ -68,7 +68,7 @@ class SocialiteController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to login using ' . ucfirst($provider) . '. Invalid or expired token.',
-                'error' => $e->getMessage()
+                'error' => \App\Support\ErrorReporter::refString($e, 'SocialiteController::login')
             ], 401);
         }
     }

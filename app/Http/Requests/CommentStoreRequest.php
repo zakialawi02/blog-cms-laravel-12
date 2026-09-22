@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Article;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CommentStoreRequest extends FormRequest
 {
@@ -21,9 +23,18 @@ class CommentStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $article = Article::where('slug', $this->route('slug'))->first();
+
         return [
             'content' => 'required|string|min:3',
-            'parent_id' => 'nullable|exists:comments,id',
+            // Komentar induk harus berada di artikel yang sama.
+            'parent_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('comments', 'id')->where(function ($query) use ($article) {
+                    $query->where('article_id', $article?->id ?? 0);
+                }),
+            ],
         ];
     }
 }

@@ -26,7 +26,10 @@ class PageController extends Controller
             'title' => 'All Pages',
         ];
 
-        $pages = Page::orderBy(request("sort_field", 'created_at'), request("sort_direction", "desc"))->paginate(10)->withQueryString();
+        $pages = Page::orderBy(
+            \App\Support\QueryParams::sort(request(), ['created_at', 'updated_at', 'title', 'slug'], 'created_at', 'sort_field'),
+            \App\Support\QueryParams::direction(request(), 'desc', 'sort_direction')
+        )->paginate(10)->withQueryString();
 
         return view('pages.dashboard.pages.index', compact('data', 'pages'));
     }

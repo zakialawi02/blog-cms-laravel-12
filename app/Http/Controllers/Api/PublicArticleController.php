@@ -27,7 +27,7 @@ class PublicArticleController extends Controller
     {
         try {
             $filters = $request->only(['search', 'sort', 'direction', 'is_featured', 'random']);
-            $filters['per_page'] = $request->query('limit');
+            $filters['per_page'] = \App\Support\QueryParams::perPage($request, 9, 100);
 
             $articles = $this->articleService->fetchArticles($filters);
 
@@ -39,7 +39,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve articles',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::index'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -51,7 +51,7 @@ class PublicArticleController extends Controller
     {
         try {
             $filters = $request->only(['search', 'sort', 'direction', 'is_featured', 'random']);
-            $filters['per_page'] = $request->query('limit');
+            $filters['per_page'] = \App\Support\QueryParams::perPage($request, 9, 100);
 
             $articles = $this->articleService->fetchArticles($filters);
 
@@ -63,7 +63,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve articles summary',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::summary'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -74,8 +74,7 @@ class PublicArticleController extends Controller
     public function popularPost(Request $request): JsonResponse
     {
         try {
-            $limit = $request->query('limit');
-            $limit = (is_numeric($limit) && $limit > 0) ? (int) $limit : null;
+            $limit = \App\Support\QueryParams::optionalLimit($request, 100);
 
             $articles = $this->articleService->getPopularPosts($limit);
 
@@ -87,7 +86,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve popular articles',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::popularPost'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -106,7 +105,7 @@ class PublicArticleController extends Controller
 
         try {
             $filters = $request->only(['search', 'sort', 'direction']);
-            $filters['per_page'] = $request->query('limit');
+            $filters['per_page'] = \App\Support\QueryParams::perPage($request, 9, 100);
             $filters['category'] = $slug;
 
             $articles = $this->articleService->fetchArticles($filters);
@@ -119,7 +118,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve category articles',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::articlesByCategory'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -138,7 +137,7 @@ class PublicArticleController extends Controller
 
         try {
             $filters = $request->only(['search', 'sort', 'direction']);
-            $filters['per_page'] = $request->query('limit');
+            $filters['per_page'] = \App\Support\QueryParams::perPage($request, 9, 100);
             $filters['tag'] = $slug;
 
             $articles = $this->articleService->fetchArticles($filters);
@@ -151,7 +150,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve tag articles',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::articlesByTag'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -170,7 +169,7 @@ class PublicArticleController extends Controller
 
         try {
             $filters = $request->only(['search', 'sort', 'direction']);
-            $filters['per_page'] = $request->query('limit');
+            $filters['per_page'] = \App\Support\QueryParams::perPage($request, 9, 100);
             $filters['user'] = $username;
 
             $articles = $this->articleService->fetchArticles($filters);
@@ -183,7 +182,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve user articles',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::articlesByUser'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -209,7 +208,7 @@ class PublicArticleController extends Controller
 
         try {
             $filters = $request->only(['search', 'sort', 'direction']);
-            $filters['per_page'] = $request->query('limit');
+            $filters['per_page'] = \App\Support\QueryParams::perPage($request, 9, 100);
             $filters['year'] = $year;
 
             $articles = $this->articleService->fetchArticles($filters);
@@ -222,7 +221,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve archive articles',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::articlesByYear'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -248,7 +247,7 @@ class PublicArticleController extends Controller
 
         try {
             $filters = $request->only(['search', 'sort', 'direction']);
-            $filters['per_page'] = $request->query('limit');
+            $filters['per_page'] = \App\Support\QueryParams::perPage($request, 9, 100);
             $filters['month'] = $month;
             $filters['year'] = $year;
 
@@ -262,7 +261,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve archive articles',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::articlesByMonth'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -291,7 +290,7 @@ class PublicArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PublicArticleController::show'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

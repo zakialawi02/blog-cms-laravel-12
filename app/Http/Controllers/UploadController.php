@@ -23,12 +23,13 @@ class UploadController extends Controller
     public function upload(Request $request): JsonResponse
     {
         $request->validate([
-            'upload' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+            'upload' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         try {
             $file = $request->file('upload');
-            $filename = time() . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $extension = \App\Support\ImageExtension::fromUpload($file, 'upload');
+            $filename = time() . '_' . Str::uuid() . '.' . $extension;
 
             Storage::disk('public')->putFileAs('media/uploads', $file, $filename);
 

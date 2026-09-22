@@ -66,7 +66,7 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::index'),
             ], 500);
         }
     }
@@ -90,7 +90,7 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::show'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -110,13 +110,13 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Database error: Failed to create user.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'UserController::store'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'UserController::store'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -168,13 +168,13 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not found.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'UserController::update'),
             ], Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::update'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -201,13 +201,13 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not found.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'UserController::destroy'),
             ], Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::destroy'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -232,7 +232,7 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::me'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -259,7 +259,7 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::updateMyProfile'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -268,14 +268,14 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'photo_profile' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'photo_profile' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             ]);
 
             // Mengambil file yang diupload
             $file = $request->file('photo_profile');
             $timestamp = now()->timestamp;
             $randomString = uniqid();
-            $extension = $file->getClientOriginalExtension();
+            $extension = \App\Support\ImageExtension::fromUpload($file, 'photo_profile');
             $newFileName = $timestamp . '_' . $randomString . '.' . $extension;
 
             // Cek jika pengguna sudah memiliki foto profil yang lama
@@ -304,12 +304,12 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation error.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'UserController::updateMyPhotoProfile'),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::updateMyPhotoProfile'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -336,7 +336,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not found.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'UserController::destroyMyAccount'),
             ], Response::HTTP_NOT_FOUND);
         } catch (ValidationException $e) {
             return response()->json([
@@ -348,7 +348,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::destroyMyAccount'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -369,13 +369,13 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not found or is not deleted.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'UserController::restore'),
             ], Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::restore'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -409,7 +409,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'UserController::updateMyPassword'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

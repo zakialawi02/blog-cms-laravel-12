@@ -21,9 +21,9 @@ class ArticleCommentController extends Controller
         try {
             $article = Article::where('slug', $slug)->firstOrFail();
 
-            $limit = $request->query('limit', 10);
-            $sort = $request->query('sort', 'created_at');
-            $order = $request->query('order', 'desc');
+            $limit = \App\Support\QueryParams::perPage($request, 10, 50);
+            $sort = \App\Support\QueryParams::sort($request, ['created_at', 'updated_at'], 'created_at');
+            $order = \App\Support\QueryParams::direction($request, 'desc', 'order');
 
             // Fetch only top-level comments (parent_id is null)
             // Nested replies will be loaded recursively via the relationship in CommentResource
@@ -62,7 +62,7 @@ class ArticleCommentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while fetching comments',
-                'error' => $th->getMessage()
+                'error' => \App\Support\ErrorReporter::refString($th, 'ArticleCommentController::index')
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -76,6 +76,16 @@ class ArticleCommentController extends Controller
             $article = Article::where('slug', $slug)->firstOrFail();
 
             $validated = $request->validated();
+
+            // Pertahanan ganda: pastikan komentar induk memang milik artikel ini.
+            $parentId = $validated['parent_id'] ?? null;
+
+            if ($parentId !== null && ! Comment::whereKey($parentId)->where('article_id', $article->id)->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Komentar induk tidak valid untuk artikel ini.',
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             $comment = $article->comments()->create([
                 'user_id' => $request->user()->id,
@@ -98,7 +108,7 @@ class ArticleCommentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while posting comment',
-                'error' => $th->getMessage()
+                'error' => \App\Support\ErrorReporter::refString($th, 'ArticleCommentController::store')
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

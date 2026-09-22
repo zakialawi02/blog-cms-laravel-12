@@ -62,7 +62,7 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve categories',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'CategoryController::index'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -83,13 +83,13 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Database error: Failed to create category.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'CategoryController::store'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'CategoryController::store'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -116,7 +116,7 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'CategoryController::show'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -143,13 +143,13 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Database error: Failed to update category.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'CategoryController::update'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'CategoryController::update'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -176,7 +176,7 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'CategoryController::destroy'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
