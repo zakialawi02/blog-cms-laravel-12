@@ -38,33 +38,49 @@ class SectionContentService
         $sectionsContent = [];
 
         foreach (LayoutSection::values() as $sectionKey) {
-            $config = $allSettings[$sectionKey] ?? null;
+            // Kunci section SELALU diisi, walau baris web_settings-nya belum ada.
+            // Tanpa ini, view yang mengakses $sectionsContent['<key>'] akan fatal
+            // ("Undefined array key") saat instalasi baru, restore DB parsial, atau
+            // cache 'web_setting' sempat terisi sebelum datanya lengkap.
+            // Lihat issue Sentry BLOG-CMS-LARAVEL-3B.
+            $config = (array) ($allSettings[$sectionKey] ?? []);
+            $config += ['is_visible' => false]; // pastikan flag ini selalu tersedia
 
-            // Process if the basic configuration for this section exists
-            if ($config) {
-                $itemsKey = $config['items'] ?? null;
-                $total = (int)($config['total'] ?? 3); // Default number of items
-                $label = $config['label'] ?? $this->getDefaultLabelForKey($sectionKey); // Get the label
-                $isVisible = $config['is_visible'] ?? false; // Get the visibility status
+            $itemsKey = $config['items'] ?? null;
+            $total = (int)($config['total'] ?? 3); // Default number of items
+            $label = $config['label'] ?? $this->getDefaultLabelForKey($sectionKey); // Get the label
+            $isVisible = $config['is_visible'] ?? false; // Get the visibility status
 
-                $dataForSection = collect(); // Initialize the data as an empty collection
+            $dataForSection = collect(); // Initialize the data as an empty collection
 
-                // Only run the query to retrieve data if the section is visible
-                if ($isVisible) {
-                    $dataForSection = $this->articleService->articlesMappingArray($this->getLayoutSectionData($itemsKey, $total));
-                }
-                // Always add section information to $sectionsContent
-                // The view will use $config['is_visible'] to decide how to display it
-                $sectionsContent[$sectionKey] = [
-                    'label' => $label,
-                    'itemsKey' => $itemsKey,
-                    'data' => $dataForSection, // Will be an empty collection if is_visible is false
-                    'config' => $config,       // Contains the original 'is_visible' flag and other config
-                ];
+            // Only run the query to retrieve data if the section is visible
+            if ($isVisible && $itemsKey) {
+                $dataForSection = $this->articleService->articlesMappingArray($this->getLayoutSectionData($itemsKey, $total));
             }
+
+            // Always add section information to $sectionsContent
+            // The view will use $config['is_visible'] to decide how to display it
+            $sectionsContent[$sectionKey] = [
+                'label' => $label,
+                'itemsKey' => $itemsKey,
+                'data' => $dataForSection, // Will be an empty collection if is_visible is false
+                'config' => $config,       // Contains the original 'is_visible' flag and other config
+            ];
         }
 
         return $sectionsContent;
+    }
+
+    /**
+     * Label default untuk sebuah section bila konfigurasinya belum memiliki label.
+     * ("home_feature_section" -> "Home Feature Section")
+     *
+     * Method ini sebelumnya dipanggil tetapi tidak pernah ada — tidak terasa karena
+     * hanya dievaluasi ketika kunci 'label' kosong.
+     */
+    private function getDefaultLabelForKey(string $sectionKey): string
+    {
+        return ucwords(str_replace('_', ' ', $sectionKey));
     }
 
     /**

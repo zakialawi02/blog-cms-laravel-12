@@ -38,7 +38,7 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        @if (filled($data['web_setting']['google_analytics'] ?? false))
+        @if (filled($data['web_setting']['google_analytics'] ?? null))
             <script async src="https://www.googletagmanager.com/gtag/js?id={{ $data['web_setting']['google_analytics'] }}"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
@@ -51,11 +51,11 @@
             </script>
         @endif
 
-        @if (filled($data['web_setting']['google_adsense'] ?? false))
+        @if (filled($data['web_setting']['google_adsense'] ?? null))
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $data['web_setting']['google_adsense'] }}" crossorigin="anonymous"></script>
         @endif
 
-        @if (filled($data['web_setting']['before_close_head'] ?? false))
+        @if (filled($data['web_setting']['before_close_head'] ?? null))
             {!! $data['web_setting']['before_close_head'] ?? null !!}
         @endif
 
@@ -77,7 +77,7 @@
         @stack('javascript')
         {{ $javascript ?? '' }}
 
-        @if (filled($data['web_setting']['before_close_body'] ?? false))
+        @if (filled($data['web_setting']['before_close_body'] ?? null))
             {!! $data['web_setting']['before_close_body'] ?? null !!}
         @endif
     </body>

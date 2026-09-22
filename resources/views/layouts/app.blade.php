@@ -38,7 +38,7 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app-dashboard.js', 'resources/js/app.js'])
 
-        @if (filled($data['web_setting']['before_close_head'] ?? false))
+        @if (filled($data['web_setting']['before_close_head'] ?? null))
             {!! $data['web_setting']['before_close_head'] ?? null !!}
         @endif
     </head>
@@ -134,7 +134,7 @@
                 }
             });
 
-            @if (filled($data['web_setting']['before_close_body'] ?? false))
+            @if (filled($data['web_setting']['before_close_body'] ?? null))
                 {!! $data['web_setting']['before_close_body'] ?? null !!}
             @endif
         </script>

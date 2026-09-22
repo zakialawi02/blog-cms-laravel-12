@@ -4,7 +4,7 @@
 
 <x-app-front-layout>
     <!-- Sticky/Featured/Popular Blog Post -->
-    @if ($sectionsContent['home_feature_section']['config']['is_visible'] == '1' ?? false)
+    @if (($sectionsContent['home_feature_section']['config']['is_visible'] ?? '0') == '1')
         @unless ((request()->has('search') && request()->get('search') != '') || (request()->has('page') && request()->get('page') != 1))
             <section class="pb-0 pt-4">
                 <div class="mx-auto px-3 2xl:container sm:px-4 xl:px-2">
@@ -65,7 +65,7 @@
         @endunless
     @endif
 
-    @if ($sectionsContent['ads_featured']['config']['is_visible'] == '1' ?? false)
+    @if (($sectionsContent['ads_featured']['config']['is_visible'] ?? '0') == '1')
         <div class="container flex items-center justify-center">
             <x-home-section-layout :sectionKey="$sectionsContent['ads_featured']['itemsKey']" :sectionData="$sectionsContent['ads_featured']" />
         </div>
@@ -74,61 +74,61 @@
     <div class="container mb-10 grid grid-cols-1 gap-2 md:gap-4 lg:grid-cols-4">
         <div class="lg:col-span-3">
             <!-- SECTION 1 -->
-            @if ($sectionsContent['home_section_1']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_section_1']['config']['is_visible'] ?? '0') == '1')
                 <x-home-section-layout :sectionKey="$sectionsContent['home_section_1']['itemsKey']" :sectionData="$sectionsContent['home_section_1']" />
             @endif
 
             <!-- SECTION 2 -->
-            @if ($sectionsContent['home_section_2']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_section_2']['config']['is_visible'] ?? '0') == '1')
                 <x-home-section-layout :sectionKey="$sectionsContent['home_section_2']['itemsKey']" :sectionData="$sectionsContent['home_section_2']" />
             @endif
 
             <!-- SECTION 3 -->
-            @if ($sectionsContent['home_section_3']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_section_3']['config']['is_visible'] ?? '0') == '1')
                 <x-home-section-layout :sectionKey="$sectionsContent['home_section_3']['itemsKey']" :sectionData="$sectionsContent['home_section_3']" />
             @endif
 
             <!-- SECTION 4 -->
-            @if ($sectionsContent['home_section_4']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_section_4']['config']['is_visible'] ?? '0') == '1')
                 <x-home-section-layout :sectionKey="$sectionsContent['home_section_4']['itemsKey']" :sectionData="$sectionsContent['home_section_4']" />
             @endif
 
             <!-- SECTION 5 -->
-            @if ($sectionsContent['home_section_5']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_section_5']['config']['is_visible'] ?? '0') == '1')
                 <x-home-section-layout :sectionKey="$sectionsContent['home_section_5']['itemsKey']" :sectionData="$sectionsContent['home_section_5']" />
             @endif
         </div>
 
         <div class="text-dark dark:text-dark-light mt-2 pt-4" id="sidebar">
-            @if ($sectionsContent['home_sidebar_1']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_sidebar_1']['config']['is_visible'] ?? '0') == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_1']" />
             @endif
-            @if ($sectionsContent['ads_sidebar_1']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['ads_sidebar_1']['config']['is_visible'] ?? '0') == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_1']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_1']" />
             @endif
-            @if ($sectionsContent['home_sidebar_2']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_sidebar_2']['config']['is_visible'] ?? '0') == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_2']" />
             @endif
-            @if ($sectionsContent['home_sidebar_3']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_sidebar_3']['config']['is_visible'] ?? '0') == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_3']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_3']" />
             @endif
-            @if ($sectionsContent['home_sidebar_4']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['home_sidebar_4']['config']['is_visible'] ?? '0') == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['home_sidebar_4']['itemsKey']" :sectionData="$sectionsContent['home_sidebar_4']" />
             @endif
-            @if ($sectionsContent['ads_sidebar_2']['config']['is_visible'] == '1' ?? false)
+            @if (($sectionsContent['ads_sidebar_2']['config']['is_visible'] ?? '0') == '1')
                 <x-home-sidebar-layout :sectionKey="$sectionsContent['ads_sidebar_2']['itemsKey']" :sectionData="$sectionsContent['ads_sidebar_2']" />
             @endif
         </div>
     </div>
 
-    @if ($sectionsContent['ads_bottom_1']['config']['is_visible'] == '1' ?? false)
+    @if (($sectionsContent['ads_bottom_1']['config']['is_visible'] ?? '0') == '1')
         <div class="container flex items-center justify-center">
             <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_1']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_1']" />
         </div>
     @endif
 
     <!-- You Missed/Random Posts Section -->
-    @if ($sectionsContent['home_bottom_section_1']['config']['is_visible'] == '1' ?? false)
+    @if (($sectionsContent['home_bottom_section_1']['config']['is_visible'] ?? '0') == '1')
         <section class="fluid container px-6 py-5 md:px-4">
             <h2 class="text-dark dark:text-dark-light mb-5 text-2xl font-bold">{{ $sectionsContent['home_bottom_section_1']['config']['label'] }}</h2>
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
@@ -151,7 +151,7 @@
         </section>
     @endif
 
-    @if ($sectionsContent['ads_bottom_2']['config']['is_visible'] == '1' ?? false)
+    @if (($sectionsContent['ads_bottom_2']['config']['is_visible'] ?? '0') == '1')
         <div class="container flex items-center justify-center">
             <x-home-section-layout :sectionKey="$sectionsContent['ads_bottom_2']['itemsKey']" :sectionData="$sectionsContent['ads_bottom_2']" />
         </div>
