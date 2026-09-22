@@ -31,7 +31,7 @@ class WebSettingController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve web settings',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'WebSettingController::index'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -176,7 +176,7 @@ class WebSettingController extends Controller
                 }
 
                 $timestamp = time();
-                $newLogoFileName = "app_logo_{$timestamp}." . $file->getClientOriginalExtension();
+                $newLogoFileName = "app_logo_{$timestamp}." . \App\Support\ImageExtension::fromUpload($file, 'app_logo');
                 $file->move(public_path('assets/app_logo'), $newLogoFileName);
                 WebSetting::setSetting('app_logo', $newLogoFileName, 'string');
             }
@@ -195,7 +195,7 @@ class WebSettingController extends Controller
                 }
 
                 $timestamp = time();
-                $newFaviconFileName = "favicon_{$timestamp}." . $file->getClientOriginalExtension();
+                $newFaviconFileName = "favicon_{$timestamp}." . \App\Support\ImageExtension::fromUpload($file, 'favicon');
                 $file->move(public_path('assets/app_logo'), $newFaviconFileName);
                 WebSetting::setSetting('favicon', $newFaviconFileName, 'string');
             }
@@ -213,7 +213,7 @@ class WebSettingController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update settings',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'WebSettingController::update'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

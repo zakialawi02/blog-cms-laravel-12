@@ -163,7 +163,7 @@ class WebSettingController extends Controller
                 }
 
                 $timestamp = time();
-                $newLogoFileName = "app_logo_{$timestamp}." . $file->getClientOriginalExtension();
+                $newLogoFileName = "app_logo_{$timestamp}." . \App\Support\ImageExtension::fromUpload($file, 'app_logo');
                 $file->move(public_path('assets/app_logo'), $newLogoFileName); // Ensure this path is correct and writable
                 WebSetting::setSetting('app_logo', $newLogoFileName, 'string');
             }
@@ -184,7 +184,7 @@ class WebSettingController extends Controller
                 }
 
                 $timestamp = time();
-                $newFaviconFileName = "favicon_{$timestamp}." . $file->getClientOriginalExtension();
+                $newFaviconFileName = "favicon_{$timestamp}." . \App\Support\ImageExtension::fromUpload($file, 'favicon');
                 // Ensure this path is correct for favicons
                 $file->move(public_path('assets/app_logo'), $newFaviconFileName);
                 WebSetting::setSetting('favicon', $newFaviconFileName, 'string');
@@ -195,7 +195,7 @@ class WebSettingController extends Controller
         } catch (\Exception $e) {
             DB::rollBack(); // Something went wrong, rollback changes
             Log::error('Failed to update web settings: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to update settings. Please try again. ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update settings. Please try again. (' . \App\Support\ErrorReporter::refString($e, 'WebSettingController::update') . ')');
         }
     }
 }

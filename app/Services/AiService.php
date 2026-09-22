@@ -321,7 +321,7 @@ class AiService
             $statusCode = is_int($e->getCode()) && $e->getCode() > 0 ? $e->getCode() : 500;
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Terjadi kesalahan pada server. (' . \App\Support\ErrorReporter::refString($e, 'AiService::generateImage') . ')',
             ], $statusCode);
         }
     }
@@ -422,7 +422,7 @@ class AiService
         } catch (Exception $e) {
             return [
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Terjadi kesalahan pada server. (' . \App\Support\ErrorReporter::refString($e, 'AiService::generateArticle') . ')',
             ];
         }
     }
@@ -454,7 +454,7 @@ class AiService
         } catch (Exception $e) {
             return [
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => 'Terjadi kesalahan pada server. (' . \App\Support\ErrorReporter::refString($e, 'AiService::generateTopicIdeas') . ')'
             ];
         }
     }

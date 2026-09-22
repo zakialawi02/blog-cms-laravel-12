@@ -23,7 +23,7 @@ class LogoutController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => 'Terjadi kesalahan pada server. (' . \App\Support\ErrorReporter::refString($e, 'LogoutController::logout') . ')'
             ], 401);
         }
     }

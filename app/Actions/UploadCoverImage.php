@@ -25,7 +25,7 @@ class UploadCoverImage
         }
 
         $baseFilename = time() . '_' . Str::random(20);
-        $extension = $file->getClientOriginalExtension();
+        $extension = \App\Support\ImageExtension::fromUpload($file, 'cover');
 
         $largeFilename = $baseFilename . '_large.' . $extension;
         $smallFilename = $baseFilename . '_small.' . $extension;

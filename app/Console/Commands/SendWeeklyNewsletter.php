@@ -2,34 +2,36 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Mail\WeeklyNewsletter;
 use App\Models\Article;
 use App\Models\Newsletter;
-use App\Mail\WeeklyNewsletter;
-use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class SendWeeklyNewsletter extends Command
 {
     /**
-     * The name and signature of the console command.
+     * --dry-run : tampilkan rencana tanpa mengantre email
+     * --limit=N : batasi jumlah subscriber yang diproses (0 = semua)
      *
      * @var string
      */
-    protected $signature = 'newsletter:send-weekly';
+    protected $signature = 'newsletter:send-weekly
+                            {--dry-run : Tampilkan rencana pengiriman tanpa mengantre email}
+                            {--limit=0 : Batasi jumlah subscriber yang diproses (0 = semua)}';
 
     /**
-     * The console command description.
-     *
      * @var string
      */
-    protected $description = 'Send weekly newsletter with latest 3 articles to subscribers';
+    protected $description = 'Antre newsletter mingguan (3 artikel terbaru) untuk subscriber aktif';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): int
     {
+        $dryRun = (bool) $this->option('dry-run');
+        $limit = max(0, (int) $this->option('limit'));
+
         $startDate = Carbon::now()->subDays(7);
         $endDate = Carbon::now();
 
@@ -46,24 +48,54 @@ class SendWeeklyNewsletter extends Command
             ->get();
 
         if ($articles->isEmpty()) {
-            $this->info('No articles published in the last week. Newsletter skipped.');
-            return;
+            $this->info('Tidak ada artikel terbit dalam 7 hari terakhir — newsletter dilewati.');
+            $this->logRun($dryRun, 0, 'tidak ada artikel baru');
+
+            return self::SUCCESS;
         }
 
-        $subscribers = Newsletter::where('is_subscribed', true)->get();
+        $subscribers = Newsletter::where('is_subscribed', true)
+            ->when($limit > 0, fn ($query) => $query->limit($limit))
+            ->get();
 
         if ($subscribers->isEmpty()) {
-            $this->info('No subscribers found.');
-            return;
+            $this->info('Tidak ada subscriber aktif.');
+            $this->logRun($dryRun, 0, 'tidak ada subscriber');
+
+            return self::SUCCESS;
         }
 
-        $this->info("Found {$articles->count()} articles and {$subscribers->count()} subscribers. Sending newsletters...");
+        $this->info(sprintf(
+            '%s | artikel baru: %d | artikel acak: %d | subscriber: %d%s',
+            $dryRun ? 'DRY-RUN (tidak ada email dikirim)' : 'KIRIM',
+            $articles->count(),
+            $randomPosts->count(),
+            $subscribers->count(),
+            $limit > 0 ? " (dibatasi --limit={$limit})" : ''
+        ));
 
         foreach ($subscribers as $subscriber) {
+            if ($dryRun) {
+                $this->line('  - ' . $subscriber->email);
+                continue;
+            }
+
             Mail::to($subscriber->email)
                 ->queue((new WeeklyNewsletter($articles, $randomPosts, $subscriber))->onQueue('emails'));
         }
 
-        $this->info('All newsletters have been queued.');
+        $this->info($dryRun ? 'Dry-run selesai — tidak ada email yang diantre.' : 'Semua newsletter sudah masuk antrean (queue: emails).');
+        $this->logRun($dryRun, $subscribers->count(), $dryRun ? 'dry-run' : 'diantre');
+
+        return self::SUCCESS;
+    }
+
+    private function logRun(bool $dryRun, int $count, string $note): void
+    {
+        Log::info('newsletter:send-weekly dijalankan', [
+            'dry_run' => $dryRun,
+            'subscriber_diproses' => $count,
+            'keterangan' => $note,
+        ]);
     }
 }

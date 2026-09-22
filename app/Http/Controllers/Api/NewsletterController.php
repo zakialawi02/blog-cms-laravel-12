@@ -66,7 +66,7 @@ class NewsletterController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'NewsletterController::index'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -123,14 +123,14 @@ class NewsletterController extends Controller
 
         } catch (Exception $e) {
             Log::error('Newsletter subscription failed', [
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'NewsletterController::store'),
                 'request' => $request->all(),
             ]);
 
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred. Please try again later.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'NewsletterController::store'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -157,13 +157,13 @@ class NewsletterController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Subscriber not found.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'NewsletterController::destroy'),
             ], Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'NewsletterController::destroy'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -194,14 +194,14 @@ class NewsletterController extends Controller
 
         } catch (\Throwable $th) {
             Log::error('Newsletter unsubscribe failed', [
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'NewsletterController::unsubscribe'),
                 'newsletter_id' => $newsletter->id,
             ]);
 
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred. Please try again later.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'NewsletterController::unsubscribe'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -232,14 +232,14 @@ class NewsletterController extends Controller
 
         } catch (\Throwable $th) {
             Log::error('Newsletter resubscribe failed', [
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'NewsletterController::resubscribe'),
                 'newsletter_id' => $newsletter->id,
             ]);
 
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred. Please try again later.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'NewsletterController::resubscribe'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

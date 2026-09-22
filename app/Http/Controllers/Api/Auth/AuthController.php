@@ -116,7 +116,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Terjadi kesalahan pada server. (' . \App\Support\ErrorReporter::refString($e, 'AuthController::emailVerificationNotification') . ')',
             ], 500);
         }
 
@@ -147,7 +147,7 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'message' => $th->getMessage(),
+                'message' => 'Terjadi kesalahan pada server. (' . \App\Support\ErrorReporter::refString($th, 'AuthController::verifyEmail') . ')',
             ], 500);
         }
     }

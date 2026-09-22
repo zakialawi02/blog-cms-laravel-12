@@ -33,7 +33,7 @@ class MenuController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'MenuController::index'),
             ], 500);
         }
     }
@@ -55,7 +55,7 @@ class MenuController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'MenuController::store'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -84,7 +84,7 @@ class MenuController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'MenuController::show'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -112,7 +112,7 @@ class MenuController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'MenuController::showByLocation'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -135,13 +135,13 @@ class MenuController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Menu not found.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'MenuController::update'),
             ], Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'MenuController::update'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -165,13 +165,13 @@ class MenuController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Menu not found.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'MenuController::destroy'),
             ], Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'MenuController::destroy'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -208,13 +208,13 @@ class MenuController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Menu not found.',
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'MenuController::syncItems'),
             ], Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred.',
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'MenuController::syncItems'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

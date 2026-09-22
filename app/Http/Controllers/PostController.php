@@ -554,7 +554,7 @@ class PostController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'error' => $th->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($th, 'PostController::generateSlug'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

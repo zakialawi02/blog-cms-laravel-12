@@ -19,7 +19,10 @@ class NewsletterController extends Controller
             'title' => 'Newsletter',
         ];
 
-        $newsletters = Newsletter::orderBy(request("sort_field", 'created_at'), request("sort_direction", "desc"))->paginate(25)->withQueryString();
+        $newsletters = Newsletter::orderBy(
+            \App\Support\QueryParams::sort(request(), ['created_at', 'updated_at', 'email'], 'created_at', 'sort_field'),
+            \App\Support\QueryParams::direction(request(), 'desc', 'sort_direction')
+        )->paginate(25)->withQueryString();
 
         return view('pages.dashboard.newsletter.index', compact('data', 'newsletters'));
     }
@@ -69,7 +72,7 @@ class NewsletterController extends Controller
             ], 201);
         } catch (Exception $e) {
             Log::error('Newsletter subscription failed', [
-                'error' => $e->getMessage(),
+                'error' => \App\Support\ErrorReporter::refString($e, 'NewsletterController::store'),
                 'request' => $request->all(),
             ]);
 

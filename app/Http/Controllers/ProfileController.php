@@ -47,14 +47,14 @@ class ProfileController extends Controller
     public function updatePhoto(Request $request): RedirectResponse
     {
         $request->validate([
-            'photo_profile' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo_profile' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         // Mengambil file yang diupload
         $file = $request->file('photo_profile');
         $timestamp = now()->timestamp;
         $randomString = uniqid();
-        $extension = $file->getClientOriginalExtension();
+        $extension = \App\Support\ImageExtension::fromUpload($file, 'photo_profile');
         $newFileName = $timestamp . '_' . $randomString . '.' . $extension;
 
         // Cek jika pengguna sudah memiliki foto profil yang lama

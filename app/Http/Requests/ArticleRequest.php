@@ -41,7 +41,7 @@ class ArticleRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'content' => 'nullable',
             'excerpt' => 'nullable|max:200',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'meta_title' => 'nullable|min:10|max:80',
             'meta_desc' => 'nullable|min:10|max:180',
             'meta_keywords' => 'nullable|max:255',
