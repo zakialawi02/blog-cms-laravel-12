@@ -8,6 +8,7 @@ class AiArticleGeneration extends Model
 {
     protected $fillable = [
         'user_id',
+        'article_id',
         'topic',
         'language',
         'model',
