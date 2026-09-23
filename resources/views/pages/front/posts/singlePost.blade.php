@@ -16,9 +16,13 @@
                     <div class="mb-3 py-1" id="post-header">
                         <h1 class="mb-2 text-3xl font-bold md:text-4xl">{{ $article->title }}</h1>
                         <div class="inline-flex items-center">
-                            <a class="after:text-secondary hover:text-primary dark:after:text-dark-secondary dark:hover:text-dark-primary inline-flex items-center gap-1 after:relative after:top-[-3px] after:mx-2 after:px-1 after:font-black after:content-['.']" href="{{ route('article.user', $article->user->username) }}" target="_blank" rel="noopener noreferrer">
-                                <img class="w-6" src="{{ $article->user->profile_photo_path }}" alt="author {{ $article->user->username }}">{{ $article->user->username }}
-                            </a>
+                            @if ($article->user)
+                                <a class="after:text-secondary hover:text-primary dark:after:text-dark-secondary dark:hover:text-dark-primary inline-flex items-center gap-1 after:relative after:top-[-3px] after:mx-2 after:px-1 after:font-black after:content-['.']" href="{{ route('article.user', $article->user->username) }}" target="_blank" rel="noopener noreferrer">
+                                    <img class="w-6" src="{{ $article->user->profile_photo_path }}" alt="author {{ $article->user->username }}">{{ $article->user->username }}
+                                </a>
+                            @else
+                                <span class="text-muted dark:text-dark-muted text-lg font-medium">Deleted user</span>
+                            @endif
                             <a class="hover:text-primary dark:hover:text-dark-primary" href="{{ route('article.month', ['year' => $article->published_at->format('Y'), 'month' => $article->published_at->format('m')]) }}" target="_blank" rel="noopener noreferrer">{{ $article->published_at->format('d M Y') }}</a>
                         </div>
                     </div>

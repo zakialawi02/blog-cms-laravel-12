@@ -36,9 +36,13 @@
 
                         <div class="mt-4 flex items-center justify-between">
                             <div>
-                                <a class="text-accent dark:text-dark-accent hover:text-info dark:hover:text-dark-info text-lg font-medium" href="{{ route('article.user', $article->user->username) }}">
-                                    {{ $article?->user?->username }}
-                                </a>
+                                @if ($article->user)
+                                    <a class="text-accent dark:text-dark-accent hover:text-info dark:hover:text-dark-info text-lg font-medium" href="{{ route('article.user', $article->user->username) }}">
+                                        {{ $article?->user?->username }}
+                                    </a>
+                                @else
+                                    <span class="text-muted dark:text-dark-muted text-lg font-medium">Deleted user</span>
+                                @endif
 
                                 <p class="text-muted dark:text-dark-muted text-sm">
                                     {{ $article->published_at->format('F j, Y') }}

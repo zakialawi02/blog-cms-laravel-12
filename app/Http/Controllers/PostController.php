@@ -129,7 +129,7 @@ class PostController extends Controller
                     }
                 })
                 ->addColumn('user', function ($data) {
-                    return $data->user->username;
+                    return $data->user?->username ?? '-';
                 })
                 ->editColumn('title', function ($data) {
                     return Str::limit($data->title, 50);
@@ -152,7 +152,7 @@ class PostController extends Controller
                     return $data->tags->pluck('tag_name')->implode(', ');
                 })
                 ->addColumn('author', function ($data) {
-                    return $data->user->username;
+                    return $data->user?->username ?? '-';
                 })
                 ->editColumn('created_at', function ($data) {
                     return $data->created_at ? $data->created_at->format("d M Y") : '-';
