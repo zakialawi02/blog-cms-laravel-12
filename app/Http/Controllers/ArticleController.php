@@ -300,13 +300,16 @@ class ArticleController extends Controller
      * This method fetches articles based on the provided year
      * and returns a view displaying the articles.
      *
-     * @param int $year The year to filter articles by.
+     * @param string $year The four digit year route segment to filter articles by.
      * @return \Illuminate\Contracts\View\View The view displaying the articles associated with the year.
      */
-    public function articlesByYear(int $year)
+    public function articlesByYear(string $year)
     {
-        (!is_numeric($year)) ? abort(404) : $year;
-        (strlen($year) != 4) ? abort(404) : $year;
+        if (!ctype_digit($year) || strlen($year) !== 4) {
+            abort(404);
+        }
+
+        $year = (int) $year;
 
         $data = ['title' => 'Posts in ' . $year];
         $articles = $this->articleService->fetchArticles(['year' => $year]);
@@ -322,16 +325,19 @@ class ArticleController extends Controller
      * This method fetches articles based on the provided year and month,
      * and returns a view displaying the articles.
      *
-     * @param int $year The year to filter articles by.
-     * @param int $month The month to filter articles by.
+     * @param string $year The four digit year route segment to filter articles by.
+     * @param string $month The month route segment (1-12) to filter articles by.
      * @return \Illuminate\Contracts\View\View The view displaying the articles associated with the specified month and year.
      */
-    public function articlesByMonth(int $year, int $month)
+    public function articlesByMonth(string $year, string $month)
     {
-        (!is_numeric($year)) ? abort(404) : $year;
-        (strlen($year) != 4) ? abort(404) : $year;
-        (!is_numeric($month)) ? abort(404) : $month;
-        ($month > 12 || $month < 1) ? abort(404) : $month;
+        if (!ctype_digit($year) || strlen($year) !== 4
+            || !ctype_digit($month) || (int) $month < 1 || (int) $month > 12) {
+            abort(404);
+        }
+
+        $year = (int) $year;
+        $month = (int) $month;
 
         $data = ['title' => 'Posts in ' . date('F', strtotime($year . '-' . $month . '-01')) . ' ' . $year];
         $articles = $this->articleService->fetchArticles(['month' => $month, 'year' => $year]);
