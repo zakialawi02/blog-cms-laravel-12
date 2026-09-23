@@ -31,7 +31,7 @@
                             <tr>
                                 <td>{{ __('Author') }}</td>
                                 <td width:3px>:</td>
-                                <td>{{ $article->user->username }}</td>
+                                <td>{{ $article->user?->username ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td>{{ __('Status') }}</td>

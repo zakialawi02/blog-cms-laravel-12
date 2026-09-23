@@ -21,7 +21,7 @@
                                 </h5>
 
                                 <div class="mt-2 sm:flex sm:items-center sm:gap-2">
-                                    <p class="hidden sm:block sm:text-xs">Posted by <a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>
+                                    <p class="hidden sm:block sm:text-xs">Posted by @if ($popular->user)<a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>@else<span class="text-muted dark:text-dark-muted">Deleted user</span>@endif
                                     </p>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                                 </h3>
 
                                 <div class="mt-2 sm:flex sm:items-center sm:gap-2">
-                                    <p class="hidden sm:block sm:text-xs">Posted by <a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>
+                                    <p class="hidden sm:block sm:text-xs">Posted by @if ($popular->user)<a class="hover:text-primary dark:hover:text-dark-primary font-medium" href="{{ route('article.user', $popular->user->username) }}">{{ $popular->user->username }}</a>@else<span class="text-muted dark:text-dark-muted">Deleted user</span>@endif
                                     </p>
                                 </div>
                             </div>
