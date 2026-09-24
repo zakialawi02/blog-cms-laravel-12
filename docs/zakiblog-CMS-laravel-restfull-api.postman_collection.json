@@ -574,6 +574,42 @@
       ]
     },
     {
+      "name": "Refresh Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/auth/refresh-token",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "refresh-token"
+          ]
+        },
+        "description": "Refresh current token to get updated abilities after role/permission changes. Returns new Bearer token."
+      },
+      "response": []
+    },
+    {
       "name": "Forgot password Link Send",
       "request": {
         "method": "POST",
@@ -8920,6 +8956,253 @@
           "body": "{\n    \"success\": false,\n    \"message\": \"Article not found\"\n}"
         }
       ]
+    },
+    {
+      "name": "Create Article (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "My First API Article",
+              "type": "text",
+              "description": "Required, min 5 chars"
+            },
+            {
+              "key": "slug",
+              "value": "",
+              "type": "text",
+              "description": "Optional, auto from title"
+            },
+            {
+              "key": "content",
+              "value": "<p>Hello world content here...</p>",
+              "type": "text",
+              "description": "Required, min 10 chars"
+            },
+            {
+              "key": "excerpt",
+              "value": "Short excerpt",
+              "type": "text",
+              "description": "Optional, max 200"
+            },
+            {
+              "key": "category_id",
+              "value": "",
+              "type": "text",
+              "description": "Optional, category ID"
+            },
+            {
+              "key": "tags",
+              "value": "[\"laravel\",\"php\"]",
+              "type": "text",
+              "description": "Optional, JSON array of strings or [{value}]"
+            },
+            {
+              "key": "cover",
+              "value": "",
+              "type": "file",
+              "description": "Optional, image max 2MB"
+            },
+            {
+              "key": "meta_title",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "meta_desc",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "meta_keywords",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "is_featured",
+              "value": "false",
+              "type": "text",
+              "description": "Only for admin/superadmin"
+            },
+            {
+              "key": "action",
+              "value": "publish",
+              "type": "text",
+              "description": "publish or draft"
+            },
+            {
+              "key": "type",
+              "value": "post",
+              "type": "text",
+              "description": "post or page"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/articles",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "articles"
+          ]
+        },
+        "description": "Create article. Writer -> pending, Admin/Superadmin -> published. Requires X-API-Key + Bearer token with article.create or article.manage ability."
+      },
+      "response": []
+    },
+    {
+      "name": "Soft Delete Article",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/articles/:article",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "articles",
+            ":article"
+          ],
+          "variable": [
+            {
+              "key": "article",
+              "value": "my-article-slug"
+            }
+          ]
+        },
+        "description": "Soft delete. Writer=own only, admin/superadmin=any. Returns 200 moved to trash, 403 forbidden, 404 not found."
+      },
+      "response": []
+    },
+    {
+      "name": "Restore Article",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/articles/:article/restore",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "articles",
+            ":article",
+            "restore"
+          ],
+          "variable": [
+            {
+              "key": "article",
+              "value": "my-article-slug"
+            }
+          ]
+        },
+        "description": "Restore trashed article. 404 if not in trash."
+      },
+      "response": []
+    },
+    {
+      "name": "Permanently Delete Article",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/articles/:article/permanent",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "articles",
+            ":article",
+            "permanent"
+          ],
+          "variable": [
+            {
+              "key": "article",
+              "value": "my-article-slug"
+            }
+          ]
+        },
+        "description": "Only owner or superadmin. Must be trashed first. 404 if not in trash."
+      },
+      "response": []
     },
     {
       "name": "Get menus list (public)",

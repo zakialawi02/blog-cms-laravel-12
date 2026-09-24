@@ -138,6 +138,36 @@ class ArticleService
     }
 
     /**
+     * Resolve publishing status/data based on requested action and user role.
+     * Extracted from PostController::resolvePublishingData for reuse by API.
+     */
+    public function resolvePublishingData(string $action, ?Article $post, ?string $role, array &$data): void
+    {
+        $isPrivileged = in_array($role, ['superadmin', 'admin'], true);
+
+        if ($action === 'draft') {
+            $data['status'] = 'draft';
+            $data['published_at'] = ($post && $post->status === 'published' && $post->published_at)
+                ? $post->published_at
+                : null;
+            return;
+        }
+
+        if ($isPrivileged) {
+            $data['status'] = 'published';
+            if ($post && $post->published_at) {
+                $data['published_at'] = $post->published_at;
+            } else {
+                $data['published_at'] = $data['published_at'] ?? now();
+            }
+            return;
+        }
+
+        $data['status'] = 'pending';
+        $data['published_at'] = null;
+    }
+
+    /**
      * Modify an array of articles to add excerpt and cover image.
      *
      * If an article does not have an excerpt, it will be generated from the content.

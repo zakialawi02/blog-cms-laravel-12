@@ -15,6 +15,9 @@ class TokenAbility
     const MENU_MANAGE = 'menu.manage';        // CRUD menus
     const WEB_SETTING_MANAGE = 'web-setting.manage'; // Update web settings
     const NEWSLETTER_MANAGE = 'newsletter.manage'; // CRUD newsletters
+    const ARTICLE_MANAGE = 'article.manage';  // Full CRUD articles
+    const ARTICLE_CREATE = 'article.create';  // Create articles (writer can create)
+    const ARTICLE_DELETE = 'article.delete';  // Delete own articles (writer can delete own)
 
     /**
      * Get abilities by role.
@@ -31,10 +34,15 @@ class TokenAbility
                 self::MENU_MANAGE,
                 self::WEB_SETTING_MANAGE,
                 self::NEWSLETTER_MANAGE,
+                self::ARTICLE_MANAGE,
+                self::ARTICLE_CREATE,
+                self::ARTICLE_DELETE,
             ],
             'writer' => [
                 self::PROFILE_MANAGE,
                 self::TAG_CREATE,
+                self::ARTICLE_CREATE,
+                self::ARTICLE_DELETE,
             ],
             'user' => [
                 self::PROFILE_MANAGE,

@@ -24,7 +24,6 @@ Route::get('/', WelcomeController::class)->name('api.welcome');
 */
 
 Route::prefix('v1')->as('api.')->group(function () {
-
     /*
     |----------------------------------------------------------------------
     | API v1 Welcome
@@ -103,6 +102,27 @@ Route::prefix('v1')->as('api.')->group(function () {
     Route::middleware(['auth:sanctum', 'ability:menu.manage'])->group(function () {
         Route::apiResource('menus', MenuController::class)->except(['index', 'show']);
         Route::post('menus/{menu}/items', [MenuController::class, 'syncItems'])->name('menus.syncItems');
+    });
+
+    /*
+    |----------------------------------------------------------------------
+    | Articles — Write (requires: auth + ability:article.create/manage)
+    |----------------------------------------------------------------------
+    */
+    Route::middleware(['auth:sanctum', 'ability:article.create,article.manage'])->group(function () {
+        Route::post('articles', [\App\Http\Controllers\Api\ArticleController::class, 'store'])->name('articles.store');
+    });
+
+    /*
+    |----------------------------------------------------------------------
+    | Articles — Delete/Restore (requires: auth + ability:article.delete/manage)
+    | NOTE: /permanent must be registered BEFORE /{article} to avoid shadowing
+    |----------------------------------------------------------------------
+    */
+    Route::middleware(['auth:sanctum', 'ability:article.delete,article.manage'])->group(function () {
+        Route::delete('articles/{article}/permanent', [\App\Http\Controllers\Api\ArticleController::class, 'forceDestroy'])->name('articles.forceDestroy');
+        Route::delete('articles/{article}', [\App\Http\Controllers\Api\ArticleController::class, 'destroy'])->name('articles.destroy');
+        Route::post('articles/{article}/restore', [\App\Http\Controllers\Api\ArticleController::class, 'restore'])->name('articles.restore');
     });
 
     /*

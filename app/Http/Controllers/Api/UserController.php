@@ -159,7 +159,12 @@ class UserController extends Controller
                     $data['email_verified_at'] = null;
                 }
             }
+            $originalRole = $user->role;
             $user->update($data);
+            // Jika role berubah, hapus semua token agar user dapat abilities baru saat login ulang
+            if (isset($data['role']) && $data['role'] !== $originalRole) {
+                $user->tokens()->delete();
+            }
             return (new UserResource($user))->additional([
                 'success' => true,
                 'message' => 'User updated successfully.',

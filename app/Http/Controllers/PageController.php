@@ -51,7 +51,7 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|min:4',
             'description' => 'required|min:5',
             'slug' => 'required|unique:pages,slug',
@@ -60,12 +60,13 @@ class PageController extends Controller
         // $jsonFilePath = asset('storage/grapesjs/template-default.json');
         $jsonContent = file_get_contents(storage_path('app/public/grapesjs/template-default.json'));
 
-        $requestData = $request->all();
-        // dd($requestData);
-        $requestData['isFullWidth'] = $request->template_id ?? 1;
-        $requestData['content'] = $jsonContent;
-
-        $page = Page::create($requestData);
+        $page = Page::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'slug' => $validated['slug'],
+            'isFullWidth' => $request->input('template_id', 1),
+            'content' => $jsonContent,
+        ]);
 
         return redirect()->route('admin.pages.index');
     }
@@ -103,15 +104,19 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|min:4',
             'description' => 'required|min:5',
             'slug' => 'required|unique:pages,slug,' . $page->id,
             'template_id' => 'required',
         ]);
 
-        $request['isFullWidth'] = $request->template_id ?? 1;
-        $page->update($request->all());
+        $page->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'slug' => $validated['slug'],
+            'isFullWidth' => $validated['template_id'],
+        ]);
 
         return redirect()->route('admin.pages.index')->with('success', 'Page updated successfully');
     }

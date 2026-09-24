@@ -33,7 +33,7 @@
         class="bg-base-100 dark:bg-dark-base-300 border-dark text-dark dark:text-dark-light z-10 flex min-h-20 w-full items-center justify-between border-b border-opacity-50 px-6 md:bg-transparent md:px-14">
         <div class="max-w-[20rem] font-bold uppercase" id="logo-nav">
             @if ($data['web_setting']['web_name_variant'] == '1')
-                <a class="inline-flex max-w-80 items-center text-xl" href="/">
+                <a class="inline-flex max-w-80 items-center text-base sm:text-xl" href="/">
                     <x-application-logo class="h-auto max-h-12 max-w-14" />
                     <h1 class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</h1>
                 </a>
@@ -44,10 +44,10 @@
             @elseif ($data['web_setting']['web_name_variant'] == '3')
                 <a class="block max-w-80 items-center text-xs font-medium capitalize" href="/">
                     <x-application-logo class="mb-0 h-auto max-h-12 max-w-14" />
-                    <h1 class="px-2" id="web_name">{{ $data['web_setting']['tagline'] ?? config('app.name') }}</h1>
+                    <h1 class="px-2 text-sm sm:text-xs" id="web_name">{{ $data['web_setting']['tagline'] ?? config('app.name') }}</h1>
                 </a>
             @else
-                <a class="inline-flex max-w-80 items-center text-xl" href="/">
+                <a class="inline-flex max-w-80 items-center text-base sm:text-xl" href="/">
                     <x-application-logo class="h-auto max-h-12 max-w-14" />
                     <h1 class="px-2" id="web_name">{{ $data['web_setting']['web_name'] ?? config('app.name') }}</h1>
                 </a>

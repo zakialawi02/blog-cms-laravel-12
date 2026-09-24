@@ -35,5 +35,6 @@ Route::prefix('auth')->as('api.auth.')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
+        Route::post('refresh-token', [\App\Http\Controllers\Api\Auth\RefreshTokenController::class, 'refresh'])->name('refresh');
     });
 });
