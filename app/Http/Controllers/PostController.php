@@ -37,32 +37,12 @@ class PostController extends Controller
 
     private function resolvePublishingData(Request $request, array &$data, ?Article $post = null): void
     {
-        $isPrivilegedUser = in_array(Auth::user()->role, ['superadmin', 'admin'], true);
-        $action = $request->input('action');
-
-        if ($action === 'draft') {
-            $data['status'] = 'draft';
-            // Keep the original publish date for posts that were already published.
-            $data['published_at'] = ($post && $post->status === 'published' && $post->published_at)
-                ? $post->published_at
-                : null;
-            return;
-        }
-
-        if ($isPrivilegedUser) {
-            $data['status'] = 'published';
-
-            // If the post has ever been published, preserve its original publish date.
-            if ($post && $post->published_at) {
-                $data['published_at'] = $post->published_at;
-            } else {
-                $data['published_at'] = $data['published_at'] ?? now();
-            }
-            return;
-        }
-
-        $data['status'] = 'pending';
-        $data['published_at'] = null;
+        $this->articleService->resolvePublishingData(
+            (string) $request->input('action'),
+            $post,
+            Auth::user()->role,
+            $data
+        );
     }
 
     /**
@@ -469,6 +449,13 @@ class PostController extends Controller
             // Cari artikel yang sudah dihapus (soft delete)
             $post = Article::onlyTrashed()->where('slug', $slug)->firstOrFail();
 
+            if (! $post->isOwnedOrSuperadmin(Auth::user())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Forbidden: You do not have permission to permanently delete this post.',
+                ], Response::HTTP_FORBIDDEN);
+            }
+
             // Hapus permanen artikel
             $deleted = $deletePost->execute($post);
 
@@ -509,6 +496,13 @@ class PostController extends Controller
         try {
             // Cari artikel yang sudah dihapus (soft delete)
             $post = Article::onlyTrashed()->where('slug', $slug)->firstOrFail();
+
+            if (! $post->isOwnedOrSuperadminOrAdmin(Auth::user())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Forbidden: You do not have permission to restore this post.',
+                ], Response::HTTP_FORBIDDEN);
+            }
 
             // Restore artikel
             $restored = $post->restore();

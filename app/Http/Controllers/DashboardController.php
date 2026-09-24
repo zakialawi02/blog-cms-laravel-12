@@ -124,25 +124,14 @@ class DashboardController extends Controller
     {
         $data = [
             'title' => 'Application Information',
-            'APP_NAME' => env('APP_NAME'),
-            'APP_ENV' => env('APP_ENV'),
-            'APP_DEBUG' => env('APP_DEBUG'),
-            'APP_URL' => env('APP_URL'),
-            'LOG_CHANNEL' => env('LOG_CHANNEL'),
-            'LOG_LEVEL' => env('LOG_LEVEL'),
-            'DB_CONNECTION' => env('DB_CONNECTION'),
-            'DB_HOST' => env('DB_HOST'),
-            'DB_PORT' => env('DB_PORT'),
-            'DB_DATABASE' => env('DB_DATABASE'),
-            'DB_USERNAME' => env('DB_USERNAME'),
-            'CACHE_DRIVER' => env('CACHE_DRIVER'),
-            'QUEUE_CONNECTION' => env('QUEUE_CONNECTION'),
-            'SESSION_DRIVER' => env('SESSION_DRIVER'),
-            'MAIL_MAILER' => env('MAIL_MAILER'),
-            'MAIL_HOST' => env('MAIL_HOST'),
-            'MAIL_PORT' => env('MAIL_PORT'),
-            'MAIL_USERNAME' => env('MAIL_USERNAME'),
-            'MAIL_ENCRYPTION' => env('MAIL_ENCRYPTION'),
+            'app_name' => config('app.name'),
+            'app_env' => config('app.env'),
+            'app_url' => config('app.url'),
+            'app_timezone' => config('app.timezone'),
+            'app_locale' => config('app.locale'),
+            'cache_driver' => config('cache.default'),
+            'queue_connection' => config('queue.default'),
+            'session_driver' => config('session.driver'),
         ];
 
         $phpInfo = [

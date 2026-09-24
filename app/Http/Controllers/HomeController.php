@@ -17,7 +17,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $data = [
-            'title' => env('APP_NAME')
+            'title' => config('app.name')
         ];
 
         $sectionsContent = $this->sectionContentService->getSectionData();

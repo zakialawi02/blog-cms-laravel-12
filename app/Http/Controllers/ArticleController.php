@@ -56,7 +56,7 @@ class ArticleController extends Controller
     protected function getIpVisitor($ip)
     {
         try {
-            $access_token = env('IPINFO_ACCESS_TOKEN');
+            $access_token = config('services.ipinfo.token');
             $client = new IPinfo($access_token);
             $ip_address = $ip;
             $details = $client->getDetails($ip_address);

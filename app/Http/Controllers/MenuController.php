@@ -54,12 +54,12 @@ class MenuController extends Controller
     {
         Cache::forget('nav_menus');
         try {
-            $request->validate([
+            $validated = $request->validate([
                 'name' => 'required|string|unique:menus,name|max:50',
                 'location' => 'required|string|max:50|unique:menus,location',
             ]);
 
-            $menu = Menu::create($request->all());
+            $menu = Menu::create($validated);
             return response()->json([
                 'success' => true,
                 'message' => 'Menu created',

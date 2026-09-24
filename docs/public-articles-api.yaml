@@ -412,6 +412,98 @@ paths:
       description: Get all public articles list
       operationId: getPublicArticles
       summary: Get all public articles list
+    post:
+      consumes:
+        - multipart/form-data
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required: [title, content]
+            properties:
+              title:
+                type: string
+                description: Article title (min 5 chars)
+                example: "My First API Article"
+              slug:
+                type: string
+                description: URL slug (auto-generated from title if omitted)
+                example: "my-first-api-article"
+              content:
+                type: string
+                description: HTML content (min 10 chars)
+                example: "<p>Hello world...</p>"
+              excerpt:
+                type: string
+                description: Short excerpt (max 200 chars)
+                example: "A short summary"
+              category_id:
+                type: integer
+                description: Category ID (nullable)
+                example: 1
+              tags:
+                type: array
+                items: { type: string }
+                description: Tags array of strings or objects with value
+                example: ["laravel", "php"]
+              cover:
+                type: string
+                format: binary
+                description: Cover image (jpeg/png/jpg/gif/webp/avif, max 2MB)
+              meta_title:
+                type: string
+                description: SEO title (10-80 chars)
+              meta_desc:
+                type: string
+                description: SEO description (10-180 chars)
+              meta_keywords:
+                type: string
+                description: SEO keywords (max 255 chars)
+              is_featured:
+                type: boolean
+                description: Featured flag - only honored for admin/superadmin
+                default: false
+              type:
+                type: string
+                enum: [post, page]
+                default: post
+              action:
+                type: string
+                enum: [publish, draft]
+                description: publish means published (admin) or pending (writer), draft means draft
+                default: publish
+              published_at:
+                type: string
+                format: date-time
+                description: Custom publish date (only honored for admin/superadmin)
+      responses:
+        "201":
+          description: Article created
+          schema:
+            type: object
+            properties:
+              success: { type: boolean, example: true }
+              message:
+                type: string
+                example: "Article published successfully."
+              data: { $ref: "#/definitions/Article" }
+        "401": { $ref: "#/responses/Unauthorized" }
+        "403": { $ref: "#/responses/Forbidden" }
+        "422": { $ref: "#/responses/ValidationError" }
+        "500": { description: "Server error" }
+      description: Create a new article (requires auth plus article.create/manage ability)
+      operationId: createArticle
+      summary: Create article
+      tags:
+        - Articles
+      security:
+        - BearerAuth: []
+        - ApiKeyAuth: []
       tags:
         - Public Articles
   /api/v1/articles/summary:
@@ -903,6 +995,48 @@ paths:
       summary: Get public article details by slug
       tags:
         - Public Articles
+  /api/v1/articles/{article}:
+    delete:
+      summary: Soft delete article (move to trash)
+      description: Soft delete by id or slug. Writer can only delete own articles, admin/superadmin can delete any.
+      operationId: deleteArticle
+      tags: [Articles]
+      security: [{ BearerAuth: [] }, { ApiKeyAuth: [] }]
+      parameters:
+        - { name: article, in: path, required: true, type: string, description: "Article id or slug" }
+      responses:
+        "200": { description: Moved to trash, schema: { type: object, properties: { success: { type: boolean, example: true }, message: { type: string, example: "Article moved to trash successfully." } } } }
+        "401": { $ref: "#/responses/Unauthorized" }
+        "403": { $ref: "#/responses/Forbidden" }
+        "404": { $ref: "#/responses/NotFound" }
+  /api/v1/articles/{article}/permanent:
+    delete:
+      summary: Permanently delete trashed article
+      description: Only owner or superadmin can permanently delete. Article must be in trash (soft-deleted) first.
+      operationId: forceDeleteArticle
+      tags: [Articles]
+      security: [{ BearerAuth: [] }, { ApiKeyAuth: [] }]
+      parameters:
+        - { name: article, in: path, required: true, type: string, description: "Article id or slug (must be trashed)" }
+      responses:
+        "200": { description: Permanently deleted, schema: { type: object, properties: { success: { type: boolean, example: true }, message: { type: string, example: "Article permanently deleted." } } } }
+        "401": { $ref: "#/responses/Unauthorized" }
+        "403": { $ref: "#/responses/Forbidden" }
+        "404": { description: Not in trash, schema: { type: object, properties: { success: { type: boolean, example: false }, message: { type: string, example: "Article not found in trash." } } } }
+  /api/v1/articles/{article}/restore:
+    post:
+      summary: Restore trashed article
+      description: Restore soft-deleted article by id or slug. Writer can only restore own, admin/superadmin can restore any.
+      operationId: restoreArticle
+      tags: [Articles]
+      security: [{ BearerAuth: [] }, { ApiKeyAuth: [] }]
+      parameters:
+        - { name: article, in: path, required: true, type: string, description: "Article id or slug (must be trashed)" }
+      responses:
+        "200": { description: Restored, schema: { type: object, properties: { success: { type: boolean, example: true }, message: { type: string, example: "Article restored successfully." }, data: { $ref: "#/definitions/Article" } } } }
+        "401": { $ref: "#/responses/Unauthorized" }
+        "403": { $ref: "#/responses/Forbidden" }
+        "404": { description: Not in trash }
   /api/v1/articles/{slug}/comments:
     get:
       consumes:
@@ -1529,6 +1663,18 @@ definitions:
         type: string
         format: date-time
         example: "2024-10-13T14:12:08.000000Z"
+  /api/auth/refresh-token:
+    post:
+      summary: Refresh current token
+      description: Deletes current token and issues a new one with up-to-date abilities for the user's current role.
+      operationId: refreshToken
+      tags: [Auth]
+      security: [{ BearerAuth: [] }, { ApiKeyAuth: [] }]
+      responses:
+        "200":
+          description: Token refreshed
+          schema: { type: object, properties: { success: { type: boolean, example: true }, message: { type: string, example: "Token refreshed" }, token: { type: string }, token_type: { type: string, example: "Bearer" }, abilities: { type: array, items: { type: string } } } }
+        "401": { $ref: "#/responses/Unauthorized" }
 responses:
   Unauthorized:
     description: Unauthorized access

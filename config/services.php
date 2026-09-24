@@ -65,4 +65,20 @@ return [
         'client_secret' => env('MICROSOFT_CLIENT_SECRET'),
         'redirect' => env('MICROSOFT_CALLBACK_URL'),
     ],
+    'gemini' => [
+        'key' => env('GEMINI_API_KEY'),
+    ],
+    'sumopod' => [
+        'key' => env('SUMOPOD_API_KEY'),
+    ],
+    'qwen' => [
+        'key' => env('DASHSCOPE_API_KEY'),
+    ],
+    'cloudflare' => [
+        'token' => env('CLOUDFLARE_AI_API_TOKEN'),
+        'account_id' => env('CLOUDFLARE_ACCOUNT_ID'),
+    ],
+    'ipinfo' => [
+        'token' => env('IPINFO_ACCESS_TOKEN'),
+    ],
 ];

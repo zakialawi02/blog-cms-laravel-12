@@ -24,11 +24,11 @@ class AiService
 
     public function __construct()
     {
-        $this->geminiApiKey = env('GEMINI_API_KEY');
-        $this->sumopodApiKey = env('SUMOPOD_API_KEY');
-        $this->qwenApiKey = env('DASHSCOPE_API_KEY');
-        $this->cloudflareApiToken = env('CLOUDFLARE_AI_API_TOKEN');
-        $this->cloudflareAccountId = env('CLOUDFLARE_ACCOUNT_ID');
+        $this->geminiApiKey = config('services.gemini.key');
+        $this->sumopodApiKey = config('services.sumopod.key');
+        $this->qwenApiKey = config('services.qwen.key');
+        $this->cloudflareApiToken = config('services.cloudflare.token');
+        $this->cloudflareAccountId = config('services.cloudflare.account_id');
 
         // Build allowed models dynamically from config
         foreach (config('ai.models', []) as $models) {

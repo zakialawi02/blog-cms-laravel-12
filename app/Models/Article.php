@@ -72,17 +72,51 @@ class Article extends Model
     {
         // Gunakan helper `request()` untuk mengambil data tags
         if (request()->has('tags')) {
-            $tags = collect(json_decode(request('tags'), true)); // Decode JSON string ke array
+            $raw = request('tags');
+            // Support both JSON string (dashboard) and array (API)
+            $decoded = is_string($raw) ? json_decode($raw, true) : $raw;
+            // If decoded is a flat string array like ["laravel","php"], normalize to [{value: x}]
+            if (is_array($decoded) && isset($decoded[0]) && is_string($decoded[0])) {
+                $decoded = array_map(fn($v) => ['value' => $v], $decoded);
+            }
+            $tags = collect($decoded);
 
             $tagIds = $tags->map(function ($tag) {
+                $val = is_string($tag) ? $tag : ($tag['value'] ?? $tag['label'] ?? '');
+                if (empty($val)) return null;
                 return Tag::firstOrCreate(
-                    ['tag_name' => ucwords($tag['value'])], // Mencari berdasarkan tag_name
-                    ['slug' => Str::slug($tag['value'])] // Jika tidak ada, buat slug baru
+                    ['tag_name' => ucwords($val)],
+                    ['slug' => Str::slug($val)]
                 )->id;
-            });
+            })->filter();
 
-            $this->tags()->sync($tagIds->toArray()); // Sinkronisasi tag dengan tabel pivot
+            $this->tags()->sync($tagIds->toArray());
         }
+    }
+
+    /**
+     * Explicit tag sync for API — accepts array of strings or [{value/label}] objects.
+     */
+    public function syncTagsFromArray(?array $tags): void
+    {
+        if (empty($tags)) return;
+
+        // Normalize flat strings to objects
+        $normalized = array_map(function ($t) {
+            if (is_string($t)) return ['value' => $t];
+            return $t;
+        }, $tags);
+
+        $tagIds = collect($normalized)->map(function ($tag) {
+            $val = $tag['value'] ?? $tag['label'] ?? '';
+            if (empty($val)) return null;
+            return Tag::firstOrCreate(
+                ['tag_name' => ucwords($val)],
+                ['slug' => Str::slug($val)]
+            )->id;
+        })->filter();
+
+        $this->tags()->sync($tagIds->toArray());
     }
 
     /**
