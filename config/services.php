@@ -81,4 +81,34 @@ return [
     'ipinfo' => [
         'token' => env('IPINFO_ACCESS_TOKEN'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Google reCAPTCHA
+    |--------------------------------------------------------------------------
+    |
+    | Melindungi form register (web & API) dari bot. Verifikasi dilakukan
+    | server-side ke endpoint siteverify milik Google.
+    |
+    | Catatan: rule hanya AKTIF kalau 'secret_key' terisi. Jadi selama secret
+    | belum dipasang, register berjalan normal (tidak ada risiko lockout).
+    |
+    */
+
+    'recaptcha' => [
+        // 'v2' = checkbox "I'm not a robot", 'v3' = invisible (score-based)
+        'version' => env('RECAPTCHA_VERSION', 'v2'),
+        'site_key' => env('RECAPTCHA_SITE_KEY'),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY'),
+        // Kill switch global
+        'enabled' => env('RECAPTCHA_ENABLED', true),
+        // API register: default OFF (API sudah dijaga X-API-Key + Origin)
+        'enabled_for_api' => env('RECAPTCHA_ENABLED_FOR_API', false),
+        'verify_url' => 'https://www.google.com/recaptcha/api/siteverify',
+        // v3 only
+        'min_score' => env('RECAPTCHA_MIN_SCORE', 0.5),
+        // false = fail-closed (tolak kalau Google tidak bisa dihubungi)
+        'fail_open' => env('RECAPTCHA_FAIL_OPEN', false),
+        'timeout' => env('RECAPTCHA_TIMEOUT', 5),
+    ],
 ];

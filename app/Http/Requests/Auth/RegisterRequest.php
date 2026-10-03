@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\User;
+use App\Rules\RecaptchaRule;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Lockout;
@@ -33,6 +34,9 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'indisposable', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            // Token reCAPTCHA — diisi otomatis oleh widget v2 / JS v3.
+            // Rule ini lolos sendiri kalau secret belum dikonfigurasi.
+            'g-recaptcha-response' => [new RecaptchaRule()],
         ];
     }
 
