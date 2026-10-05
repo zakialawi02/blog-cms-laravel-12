@@ -30,7 +30,7 @@ class StoreArticleRequest extends FormRequest
             'excerpt'       => 'nullable|string|max:200',
             'category_id'   => 'nullable|exists:categories,id',
             'tags'          => 'nullable',
-            'cover'         => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
+            'cover'         => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'meta_title'    => 'nullable|string|min:10|max:80',
             'meta_desc'     => 'nullable|string|min:10|max:180',
             'meta_keywords' => 'nullable|string|max:255',

@@ -12,6 +12,12 @@ use Intervention\Image\Drivers\Gd\Driver;
 
 class UploadCoverImage
 {
+    /** Sisi terpanjang maksimum untuk versi _small (px). */
+    private const SMALL_MAX = 500;
+
+    /** Kualitas encode _small — berlaku untuk JPEG & WebP (PNG mengabaikannya). */
+    private const SMALL_QUALITY = 70;
+
     /**
      * @param UploadedFile|null $file
      * @param string|null $oldImageUrl URL ke gambar versi _small
@@ -43,20 +49,22 @@ class UploadCoverImage
             Storage::disk('public')->delete($oldFilePaths);
         }
 
-        Storage::disk('public')->putFileAs('media/img', $file, $largeFilename);
+        $disk = Storage::disk('public');
+        $manager = new ImageManager(new Driver());
 
         try {
-            // <-- 2. Inisialisasi manager dengan driver Imagick
-            $manager = new ImageManager(new Driver());
+            // Versi _large: file asli dari user, disimpan APA ADANYA
+            // (tanpa resize maupun kompresi).
+            $disk->putFileAs('media/img', $file, $largeFilename);
 
-            $fullPathToSaveSmall = Storage::disk('public')->path($smallRelativePath);
-
-            // <-- 3. Gunakan manager untuk membaca (read) file dan memprosesnya
-            $image = $manager->read($file);
-
-            $image->scale(height: 300)->save($fullPathToSaveSmall, 60);
+            // Versi _small: maksimal 500x500 px, quality 70.
+            // scaleDown() menjaga aspek rasio dan tidak memperbesar gambar
+            // yang sudah lebih kecil dari 500 px (beda dengan scale()).
+            $manager->read($file)
+                ->scaleDown(width: self::SMALL_MAX, height: self::SMALL_MAX)
+                ->save($disk->path($smallRelativePath), self::SMALL_QUALITY);
         } catch (Exception $e) {
-            Storage::disk('public')->delete($largeRelativePath);
+            $disk->delete([$largeRelativePath, $smallRelativePath]);
             Log::error('Gagal membuat gambar terkompresi: ' . $e->getMessage());
             throw new Exception('Failed to compress and save cover image.');
         }

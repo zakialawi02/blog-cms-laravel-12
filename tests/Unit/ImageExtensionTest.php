@@ -15,13 +15,20 @@ it('menolak file non-gambar walau bernama .php', function () {
 
 it('mengambil ekstensi dari MIME, bukan dari nama kiriman client', function () {
     // PNG asli dibuat dengan GD supaya MIME hasil deteksi konten pasti image/png
-    $tmp = tempnam(sys_get_temp_dir(), 'zk') . '.png';
+    $base = tempnam(sys_get_temp_dir(), 'zk');
+    $tmp = $base . '.png';
     imagepng(imagecreatetruecolor(2, 2), $tmp);
 
-    // nama kiriman client sengaja berekstensi .php — inilah pola serangan yang ditutup
-    $f = new UploadedFile($tmp, 'x.png.php', 'image/png', null, true);
+    try {
+        // nama kiriman client sengaja berekstensi .php — inilah pola serangan yang ditutup
+        $f = new UploadedFile($tmp, 'x.png.php', 'image/png', null, true);
 
-    expect(ImageExtension::fromUpload($f, 'upload'))->toBe('png');
+        expect(ImageExtension::fromUpload($f, 'upload'))->toBe('png');
+    } finally {
+        // Jangan tinggalkan file sementara setelah test selesai
+        @unlink($base);
+        @unlink($tmp);
+    }
 });
 
 it('menolak svg', function () {

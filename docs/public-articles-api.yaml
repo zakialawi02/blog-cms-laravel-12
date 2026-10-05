@@ -454,7 +454,7 @@ paths:
               cover:
                 type: string
                 format: binary
-                description: Cover image (jpeg/png/jpg/gif/webp/avif, max 2MB)
+                description: Cover image (jpeg/png/webp, max 2MB)
               meta_title:
                 type: string
                 description: SEO title (10-80 chars)
