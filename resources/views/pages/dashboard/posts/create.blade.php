@@ -118,7 +118,7 @@
                                                 </p>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, JPEG or WEBP (MAX. 2MB)</p>
                                             </div>
-                                            <input class="cover hidden" id="dropzone-file" name="cover" type="file" />
+                                            <input class="cover hidden" id="dropzone-file" name="cover" type="file" accept="image/jpeg,image/png,image/webp" />
                                         </label>
                                     </div>
                                     <x-dashboard.input-error class="mt-2" :messages="$errors->get('cover')" />

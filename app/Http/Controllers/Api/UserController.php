@@ -273,7 +273,7 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'photo_profile' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'photo_profile' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             ]);
 
             // Mengambil file yang diupload

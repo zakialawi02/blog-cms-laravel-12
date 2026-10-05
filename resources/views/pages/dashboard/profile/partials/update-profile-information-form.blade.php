@@ -18,7 +18,7 @@
             <img class="h-30 w-30 rounded-full object-cover p-1 ring-2 ring-indigo-300 dark:ring-indigo-500" id="current-photo" src={{ Auth::user()->profile_photo_path }} alt="Current Photo Profile" onerror="this.src='https://placehold.co/100x100'">
 
             <div class="flex flex-col space-y-5 sm:ml-8">
-                <input class="hidden" id="photo_profile" name="photo_profile" type="file" accept="image/*">
+                <input class="hidden" id="photo_profile" name="photo_profile" type="file" accept="image/jpeg,image/png,image/webp">
                 <x-dashboard.primary-button type="button" :size="'small'" onclick="document.getElementById('photo_profile').click()">
                     Change picture
                 </x-dashboard.primary-button>
