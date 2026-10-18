@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Article;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
 class ArticleService
@@ -85,6 +87,12 @@ class ArticleService
     }
 
     /**
+     * Default number of rows returned by getRandomArticles() when no limit is
+     * given, so an unbounded call can never load the whole table.
+     */
+    private const RANDOM_LIMIT_DEFAULT = 10;
+
+    /**
      * Get random articles. If a category slug is given, only articles
      * within that category will be returned. If a limit is given, only
      * that many articles will be returned.
@@ -95,11 +103,54 @@ class ArticleService
      */
     public function getRandomArticles(?int $limit = null, ?string $categorySlug = null)
     {
-        return Article::with(['user', 'category'])
+        $query = Article::with(['user', 'category'])
             ->published()
-            ->when($categorySlug, fn($q) => $q->withCategorySlug($categorySlug))
-            ->inRandomOrder()
-            ->when($limit, fn($q) => $q->take($limit)->get());
+            ->when($categorySlug, fn($q) => $q->withCategorySlug($categorySlug));
+
+        return $this->takeRandomly($query, $limit ?: self::RANDOM_LIMIT_DEFAULT);
+    }
+
+    /**
+     * Pick up to $limit rows at random without sorting the whole table.
+     *
+     * `ORDER BY RAND()` (Laravel's inRandomOrder()) makes the database copy
+     * every matching row into a temporary table and sort the entire set before
+     * keeping a handful, which turns each widget into a full table read. This
+     * picks a random id inside the id range of the filtered set, walks forward
+     * from there and wraps around for the shortfall, so it only ever touches a
+     * bounded number of rows.
+     */
+    private function takeRandomly(Builder $query, int $limit): Collection
+    {
+        $limit = max(1, $limit);
+
+        $bounds = (clone $query)
+            ->selectRaw('min(id) as min_id, max(id) as max_id')
+            ->first();
+
+        if (!$bounds || $bounds->min_id === null) {
+            return $query->get();
+        }
+
+        $picked = (clone $query)
+            ->where('id', '>=', random_int((int) $bounds->min_id, (int) $bounds->max_id))
+            ->reorder()
+            ->orderBy('id')
+            ->take($limit)
+            ->get();
+
+        if ($picked->count() < $limit) {
+            $wrap = (clone $query)
+                ->when($picked->isNotEmpty(), fn($q) => $q->whereNotIn('id', $picked->pluck('id')->all()))
+                ->reorder()
+                ->orderByDesc('id')
+                ->take($limit - $picked->count())
+                ->get();
+
+            $picked = $picked->concat($wrap);
+        }
+
+        return $picked;
     }
 
     /**
@@ -124,15 +175,12 @@ class ArticleService
             $remainingCount = $total - $featured->count();
 
             // Exclude already fetched featured articles
-            $nonFeatured = Article::with(['user', 'category'])
+            $nonFeaturedQuery = Article::with(['user', 'category'])
                 ->published()
                 ->where('is_featured', false)
-                ->whereNotIn('id', $featured->pluck('id'))
-                ->inRandomOrder()
-                ->take($remainingCount)
-                ->get();
+                ->whereNotIn('id', $featured->pluck('id'));
 
-            $featured = $featured->concat($nonFeatured);
+            $featured = $featured->concat($this->takeRandomly($nonFeaturedQuery, $remainingCount));
         }
         return $featured;
     }
