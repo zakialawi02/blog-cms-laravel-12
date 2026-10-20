@@ -83,7 +83,7 @@ class AiService
             $model = 'gemini-3-flash-preview';
         }
 
-        $url = $this->geminiTextApiUrl . $model . ':generateContent?key=' . $this->geminiApiKey;
+        $url = $this->geminiTextApiUrl . $model . ':generateContent';
 
         $payload = [
             'contents' => [
@@ -98,17 +98,19 @@ class AiService
 
         try {
             $response = Http::timeout($this->timeout)
+                ->withHeaders(['x-goog-api-key' => $this->geminiApiKey])
                 ->post($url, $payload);
 
             if ($response->failed()) {
-                Log::error('Gemini API Error', ['response' => $response->json(), 'url' => $url]);
-                throw new Exception('Failed to get a valid response from Gemini: ' . $response->body(), $response->status());
+                // Provider error bodies may echo credentials; log only safe request metadata.
+                Log::error('Gemini API Error', ['status' => $response->status(), 'url' => $url]);
+                throw new Exception('Failed to get a valid response from Gemini.', $response->status());
             }
 
             $text = $response->json('candidates.0.content.parts.0.text');
 
             if (is_null($text)) {
-                Log::warning('Gemini returned empty content', ['response' => $response->json()]);
+                Log::warning('Gemini returned empty content', ['status' => $response->status(), 'url' => $url]);
                 throw new Exception('Gemini returned an empty response.');
             }
 
@@ -251,8 +253,7 @@ class AiService
      */
     public function textToImage(string $prompt): array
     {
-        // Buat URL lengkap dengan API Key
-        $fullUrl = $this->geminiImageApiUrl . '?key=' . $this->geminiApiKey;
+        $fullUrl = $this->geminiImageApiUrl;
 
         // Struktur payload untuk model image generation Gemini
         $payload = [
@@ -267,16 +268,15 @@ class AiService
         ];
 
         try {
-            $response = Http::post($fullUrl, $payload);
+            $response = Http::withHeaders(['x-goog-api-key' => $this->geminiApiKey])
+                ->post($fullUrl, $payload);
 
             if ($response->failed()) {
-                $errorDetails = $response->json() ?? ['error' => ['message' => $response->body()]];
                 Log::error('Gemini Image API Error', [
                     'status' => $response->status(),
-                    'response' => $errorDetails
+                    'url' => $fullUrl,
                 ]);
-                $errorMessage = $errorDetails['error']['message'] ?? 'Failed to get a valid response from the Gemini image service.';
-                throw new Exception($errorMessage, $response->status());
+                throw new Exception('Failed to get a valid response from the Gemini image service.', $response->status());
             }
 
             // Ekstrak data gambar base64 dari response.
@@ -284,7 +284,7 @@ class AiService
             $imageData = $response->json('candidates.0.content.parts.0.inlineData.data');
 
             if (is_null($imageData)) {
-                Log::warning('Gemini Image API returned empty content', ['response' => $response->json()]);
+                Log::warning('Gemini Image API returned empty content', ['status' => $response->status(), 'url' => $fullUrl]);
                 throw new Exception('The AI service returned an empty image response.');
             }
 
